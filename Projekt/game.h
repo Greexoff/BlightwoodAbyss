@@ -10,11 +10,12 @@ public:
 	Game();
 	~Game();
 	void Draw();
-	void UpdateLocation();
+	void Update();
 	void InputHandle();
 	bool isGameOver();
+	void beginNextWave();
 private:
-	Issac Postac;
+	Character Player;
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
 	char Direction='~';
@@ -24,8 +25,10 @@ private:
 	int EnemyDirectionY;
 	vector<enemyTears>EnemyTears;
 	void EnemyShootTears();
-	constexpr static float enemyShootingGap = 1.5;
+	double enemyShootingGap;
+	double enemyHittingGap;
 	double lastTearFired;
+	double lastTimePlayerWasTouched;
 	void CollisionCheck();
 	int amountofEnemies;
 

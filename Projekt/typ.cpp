@@ -2,50 +2,52 @@
 #include "raylib.h"
 #include "typ.h"
 
-Issac::Issac()
+Character::Character()
 {
 	image = LoadTexture("graf.png");
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
 	playerHealth = 3;
+	maxPlayerHealth = 3;
+	playerSpeed = 4.5;
 }
-Issac::~Issac() {
+Character::~Character() {
 	UnloadTexture(image);
 }
-void Issac::Draw() {
+void Character::Draw() {
 	DrawTextureV(image, position, WHITE);
 }
-void Issac::moveDown() {
-	position.y += 4;
+void Character::moveDown() {
+	position.y += playerSpeed;
 	if (position.y>GetScreenHeight()-image.height)
 	{
 		position.y = GetScreenHeight() - image.height;
 	}
 }
-void Issac::moveUp()
+void Character::moveUp()
 {
-	position.y -= 4;
+	position.y -= playerSpeed;
 	if (position.y < 0)
 	{
 		position.y = 0;
 	}
 }
-void Issac::moveLeft() {
-	position.x -= 4;
+void Character::moveLeft() {
+	position.x -= playerSpeed;
 	if (position.x < 0)
 	{
 		position.x = 0;
 	}
 }
-void Issac::moveRight() {
-	position.x += 4;
+void Character::moveRight() {
+	position.x += playerSpeed;
 	if (position.x > GetScreenWidth() - image.width)
 	{
 		position.x = GetScreenWidth() - image.width;
 	}
 }
-void Issac::shootTears(char pozycja) {
+void Character::shootTears(char pozycja) {
 	if (GetTime() - lastTearTime >= 0.3) {
 		switch (pozycja)
 		{
@@ -68,19 +70,26 @@ void Issac::shootTears(char pozycja) {
 		}
 	}
 }
-Vector2 Issac::GetPlayerPosition()
+Vector2 Character::GetPlayerPosition()
 {
 	return { position.x,position.y };
 }
-Rectangle Issac::getPlayerRect()
+Rectangle Character::getPlayerRect()
 {
 	return { position.x,position.y,(float)image.width,(float)image.height };
 }
-int Issac::getPlayerHealth()
+int Character::getPlayerHealth()
 {
 	return playerHealth;
 }
-int Issac::setPlayerHealth()
+int Character::changePlayerHealth(int typeOfChange)
 {
-	return playerHealth--;
+	if (playerHealth <= maxPlayerHealth)
+	{
+		return playerHealth += typeOfChange;
+	}
+	else
+	{
+		return playerHealth;
+	}
 }

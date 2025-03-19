@@ -12,23 +12,25 @@ Enemy::~Enemy()
 {
 	UnloadTexture(image);
 }
-Monster1::Monster1(Vector2 position)//tank na 4 hity?
+Monster1::Monster1(Vector2 position)//Tank
 	: Enemy(position) {
 	image = LoadTexture("potwor1.png");
 	enemyHealth = 4;
+	enemySpeed = 0.5;
 }
 
 Monster1::~Monster1() { UnloadTexture(image); }
 
-Monster2::Monster2(Vector2 position)//szybki na strzala?
+Monster2::Monster2(Vector2 position)//Szybki 
 	: Enemy(position) {
 	image = LoadTexture("potwor2.png");
 	enemyHealth = 1;
+	enemySpeed = 2;
 }
 
 Monster2::~Monster2() { UnloadTexture(image); }
 
-Monster3::Monster3(Vector2 position)// strzelajacy na 2 hity?
+Monster3::Monster3(Vector2 position)//Strzelajacy
 	: Enemy(position) {
 	image = LoadTexture("potwor3.png");
 	enemyHealth = 2;
@@ -39,16 +41,15 @@ Monster3::~Monster3() { UnloadTexture(image); }
 void Enemy::Draw() {
 	DrawTextureV(image, position, WHITE);
 }	
-void Enemy::Update(Vector2 PlayerPosition,int directionX, int directionY) {//jeszcze dodac jako parametr speed (*razy speed, gdzie speed to pole prywatne klasy enemy)
+void Enemy::Update(Vector2 PlayerPosition,int directionX, int directionY, float enemySpeed) {
 	if (position.x != PlayerPosition.x)
 	{
-		position.x+=directionX;
+		position.x+=directionX*enemySpeed;
 	}
 	if(position.y != PlayerPosition.y){
-		position.y+=directionY;
+		position.y+=directionY*enemySpeed;
 	}
 }
-//Do ogranięcia po wątkach
 void Enemy::UpdateColl(string CollisionSide)
 {
 	if (CollisionSide == "COLLISION_TOP")
@@ -98,4 +99,8 @@ int Enemy::getEnemyHealth()
 int Enemy::setEnemyHealth()
 {
 	return enemyHealth--;
+}
+float Enemy::getEnemySpeed()
+{
+	return enemySpeed;
 }

@@ -9,7 +9,7 @@ int main()
 	int Width = 1186;
 	int Height = 738;
 
-	InitWindow(Width, Height, "Tower Defense");
+	InitWindow(Width, Height, "Survival Game");
 	Texture2D background = LoadTexture("background.png");
 	SetTargetFPS(60);
 
@@ -17,7 +17,7 @@ int main()
 	while (!WindowShouldClose())
 	{
 		game.InputHandle();
-		game.UpdateLocation();
+		game.Update();
 		BeginDrawing();
 		DrawTexture(background, 0, 0, WHITE);
 		game.Draw();

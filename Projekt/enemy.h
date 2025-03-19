@@ -8,7 +8,7 @@ class Enemy
 {
 public:
 	Enemy(Vector2 position);
-	void Update(Vector2 PlayerPosition, int directionX, int directionY);
+	void Update(Vector2 PlayerPosition, int directionX, int directionY, float enemySpeed);
 	void Draw();
 	virtual ~Enemy();
 	Texture2D image;
@@ -18,8 +18,10 @@ public:
 	string getCollisionSide(Rectangle enemy1, Rectangle enemy2);
 	virtual int setEnemyHealth();
 	virtual int getEnemyHealth();
+	virtual float getEnemySpeed();
 protected:
 	int enemyHealth;
+	float enemySpeed;
 private:
 };
 class Monster1 : public Enemy

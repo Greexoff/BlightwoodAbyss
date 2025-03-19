@@ -4,10 +4,10 @@
 #include "tears.h"
 #include <vector>
 using namespace std;
-class Issac {
+class Character {
 public:
-	Issac();
-	~Issac();
+	Character();
+	~Character();
 	void Draw();
 	void moveLeft();
 	void moveRight();
@@ -18,11 +18,12 @@ public:
 	vector<Tears> tearsy;
 	Rectangle getPlayerRect();
 	int getPlayerHealth();
-	int setPlayerHealth();
+	int changePlayerHealth(int typeOfChange);
 private:
 	Texture2D image;
 	Vector2 position;
 	double lastTearTime;
 	int playerHealth;
-
+	int maxPlayerHealth;
+	float playerSpeed;
 };

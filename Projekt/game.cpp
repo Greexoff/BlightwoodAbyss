@@ -10,14 +10,17 @@ Game::Game() {
 	enemies = CreateEnemy();
 	EnemyDirectionX = 0;
 	EnemyDirectionY = 0;
+	enemyShootingGap = 1.5;
+	enemyHittingGap = 3;
 	lastTearFired = 0.0;
+	lastTimePlayerWasTouched = 0.0;
 	
 }
 Game::~Game() {
 
 }
-void Game::UpdateLocation() {
-	for (auto & tears : Postac.tearsy)
+void Game::Update() {
+	for (auto & tears : Player.tearsy)
 	{		
 		tears.UpdatePosition();
 	}
@@ -25,19 +28,15 @@ void Game::UpdateLocation() {
 	MoveEnemies();
 	for (auto& enTears : EnemyTears)
 	{
-		enTears.UpdatePosition(Postac.GetPlayerPosition());
+		enTears.UpdatePosition(Player.GetPlayerPosition());
 	}
 	CollisionCheck();
 	DeleteInactiveTears();
-	if (enemies.empty())
-	{
-		amountofEnemies++;
-		enemies = CreateEnemy();
-	}
+	beginNextWave();
 }
 void Game::Draw() {
-	Postac.Draw();
-	for (auto& tears : Postac.tearsy) {
+	Player.Draw();
+	for (auto& tears : Player.tearsy) {
 		tears.Draw();
 	}
 	for (auto& enemy : enemies)
@@ -52,48 +51,48 @@ void Game::Draw() {
 void Game::InputHandle() {
 	if (IsKeyDown(KEY_A))
 	{
-		Postac.moveLeft();
+		Player.moveLeft();
 	}
 	if (IsKeyDown(KEY_D))
 	{
-		Postac.moveRight();
+		Player.moveRight();
 	}
 	if (IsKeyDown(KEY_W))
 	{
-		Postac.moveUp();
+		Player.moveUp();
 	}
 	if (IsKeyDown(KEY_S))
 	{
-		Postac.moveDown();
+		Player.moveDown();
 	}
 	if (IsKeyDown(KEY_UP))
 	{
 		Direction = 'u';
-		Postac.shootTears(Direction);
+		Player.shootTears(Direction);
 	}
 	if (IsKeyDown(KEY_DOWN))
 	{
 		Direction = 'd';
-		Postac.shootTears(Direction);
+		Player.shootTears(Direction);
 	}
 	if (IsKeyDown(KEY_LEFT))
 	{
 		Direction = 'l';
-		Postac.shootTears(Direction);
+		Player.shootTears(Direction);
 	}
 	if (IsKeyDown(KEY_RIGHT))
 	{
 		Direction = 'r';
-		Postac.shootTears(Direction);
+		Player.shootTears(Direction);
 	}
 }
 void Game::DeleteInactiveTears()
 {
-	for (auto it = Postac.tearsy.begin(); it != Postac.tearsy.end();)
+	for (auto it = Player.tearsy.begin(); it != Player.tearsy.end();)
 	{
 		if (!it->active)
 		{
-			it = Postac.tearsy.erase(it);
+			it = Player.tearsy.erase(it);
 		}
 		else
 		{
@@ -136,27 +135,26 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 }
 void Game::MoveEnemies()
 {
-
 	for (auto& enemy : enemies)
 	{
 		if (!dynamic_pointer_cast<Monster3>(enemy)) {//tutaj mozna zrobic thread? zeby wykonywal jednoczesnie sprawdzanie dla x i dla y
-			if (Postac.GetPlayerPosition().x > enemy->position.x)
+			if (Player.GetPlayerPosition().x > enemy->position.x)
 			{
 				EnemyDirectionX = 1;
 			}
-			if (Postac.GetPlayerPosition().x < enemy->position.x)
+			if (Player.GetPlayerPosition().x < enemy->position.x)
 			{
 				EnemyDirectionX = -1;
 			}
-			if (Postac.GetPlayerPosition().y > enemy->position.y)
+			if (Player.GetPlayerPosition().y > enemy->position.y)
 			{
 				EnemyDirectionY = 1;
 			}
-			if (Postac.GetPlayerPosition().y < enemy->position.y)
+			if (Player.GetPlayerPosition().y < enemy->position.y)
 			{
 				EnemyDirectionY = -1;
 			}
-			enemy->Update(Postac.GetPlayerPosition(),EnemyDirectionX,EnemyDirectionY);
+			enemy->Update(Player.GetPlayerPosition(),EnemyDirectionX,EnemyDirectionY,enemy->getEnemySpeed());
 		}
 	}
 }
@@ -170,7 +168,7 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, 3, Postac.GetPlayerPosition()));//tu ta 3 zmienic zminna ktora bedzie zalezala od typu przeciwnika
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, 3, Player.GetPlayerPosition()));//tu ta 3 zmienic zminna ktora bedzie zalezala od typu przeciwnika
 			}
 			lastTearFired = GetTime();
 		}
@@ -179,7 +177,7 @@ void Game::EnemyShootTears()
 }
 void Game::CollisionCheck()
 {
-	for (auto& tear : Postac.tearsy)
+	for (auto& tear : Player.tearsy)
 	{
 		if (enemies.empty()) {
 			break;
@@ -207,37 +205,66 @@ void Game::CollisionCheck()
 		
 		}
 	}
+	double currentTime = GetTime();
+	auto it = enemies.begin();
+	while (it != enemies.end())
+	{	
+		if (CheckCollisionRecs((*it)->getEnemyRect(), Player.getPlayerRect())&&currentTime-lastTimePlayerWasTouched>enemyHittingGap)
+		{
+			Player.changePlayerHealth(-1);
+
+			lastTimePlayerWasTouched = GetTime();
+		}
+		else
+		{
+			++it;
+		}
+	}
 	for (auto& enemTear : EnemyTears)
 	{
-		if (CheckCollisionRecs(enemTear.getTearRect(), Postac.getPlayerRect()))
+		if (CheckCollisionRecs(enemTear.getTearRect(), Player.getPlayerRect()))
 		{
-			Postac.setPlayerHealth();
+			Player.changePlayerHealth(-1);
 			enemTear.active = false;
 		}
 	}
 	
-	for (size_t i = 0; i < enemies.size(); i++)//sprobowac poprawic zeby nie miec 3petli wewnatrz siebie
+	for (size_t i = 0; i < enemies.size(); i++)//sprobowac poprawic zeby nie miec 3petli wewnatrz siebie, jeszcze poprawic calosc bo nwm czy chce zeby to tak funkcjonowało
 	{
 		for (size_t j = i + 1; j < enemies.size(); j++)
 		{
-			while(CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))
+			if (!dynamic_pointer_cast<Monster3>(enemies[i]) || !dynamic_pointer_cast<Monster3>(enemies[j]))
 			{
-				if (!dynamic_pointer_cast<Monster3>(enemies[i]))
-				{
-					enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
-					
-				}
-				if(!dynamic_pointer_cast<Monster3>(enemies[j]))
-				{
-					enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
-				}		
+				if ((CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))) {
+				enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+				enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
+			}
 			}
 		}
 	}
 }
+void Game::beginNextWave()
+{
+	if (enemies.empty())
+	{
+		//Tutaj jakas funkcja do wyswietlania komunikatu ze ukonczono fale; Do wykminienia jak robic przerwe miedzy falami
+			Player.changePlayerHealth(1);
+			for (auto& enemTears : EnemyTears)
+			{
+				enemTears.active = false;
+			}
+			for (auto& playerTears : Player.tearsy)
+			{
+				playerTears.active = false;
+			}
+			amountofEnemies++;
+			enemies = CreateEnemy();
+
+	}
+}
 bool Game::isGameOver()
 {
-	if (Postac.getPlayerHealth() == 0)
+	if (Player.getPlayerHealth() == 0)
 	{
 		cout << "Koniec gry" << endl;
 		return true;

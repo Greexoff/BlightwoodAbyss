@@ -22,6 +22,10 @@ int main()
 		DrawTexture(background, 0, 0, WHITE);
 		game.Draw();
 		EndDrawing();
+		if (game.isGameOver())
+		{
+			break;
+		}
 	}
 	UnloadTexture(background);
 	CloseWindow();

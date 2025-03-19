@@ -17,12 +17,12 @@ Game::~Game() {
 
 }
 void Game::UpdateLocation() {
-for (auto & tears : Postac.tearsy)
+	for (auto & tears : Postac.tearsy)
 	{		
 		tears.UpdatePosition();
 	}
-	MoveEnemies();//tutaj ifa jak juz bede mial kolizje? zeny sprawdzac czy enemiesy sie nie stackują
 	EnemyShootTears();
+	MoveEnemies();
 	for (auto& enTears : EnemyTears)
 	{
 		enTears.UpdatePosition(Postac.GetPlayerPosition());
@@ -116,7 +116,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 {
 	vector<shared_ptr<Enemy>> enemiesy;
 
-	for (int i = 0; i < amountofEnemies; i++) {//tutaj zmienic tą piątke, zeby sie zwiekszało po pokonaniu calej fazy, i if, czy nie bylo przegranej?
+	for (int i = 0; i < amountofEnemies; i++) {
 		Vector2 position = { GetRandomValue(100,1036), GetRandomValue(100,638) };
 		int type = GetRandomValue(1,3);
 
@@ -189,22 +189,61 @@ void Game::CollisionCheck()
 		{
 			if (CheckCollisionRecs((*it)->getEnemyRect(), tear.getTearRect()))
 			{
-				it = enemies.erase(it);
+				(*it)->setEnemyHealth();
+				if ((*it)->getEnemyHealth() == 0)
+				{
+					it = enemies.erase(it);
+				}
+				else
+				{
+					++it;
+				}
 				tear.active = false;
 			}
 			else
 			{
 				++it;
 			}
+		
 		}
 	}
 	for (auto& enemTear : EnemyTears)
 	{
 		if (CheckCollisionRecs(enemTear.getTearRect(), Postac.getPlayerRect()))
 		{
+			Postac.setPlayerHealth();
 			enemTear.active = false;
 		}
 	}
-
 	
+	for (size_t i = 0; i < enemies.size(); i++)//sprobowac poprawic zeby nie miec 3petli wewnatrz siebie
+	{
+		for (size_t j = i + 1; j < enemies.size(); j++)
+		{
+			while(CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))
+			{
+				if (!dynamic_pointer_cast<Monster3>(enemies[i]))
+				{
+					enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+					
+				}
+				if(!dynamic_pointer_cast<Monster3>(enemies[j]))
+				{
+					enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
+				}		
+			}
+		}
+	}
+}
+bool Game::isGameOver()
+{
+	if (Postac.getPlayerHealth() == 0)
+	{
+		cout << "Koniec gry" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

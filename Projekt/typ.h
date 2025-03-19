@@ -17,9 +17,12 @@ public:
 	Vector2 GetPlayerPosition();
 	vector<Tears> tearsy;
 	Rectangle getPlayerRect();
+	int getPlayerHealth();
+	int setPlayerHealth();
 private:
 	Texture2D image;
 	Vector2 position;
 	double lastTearTime;
+	int playerHealth;
 
 };

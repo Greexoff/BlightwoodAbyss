@@ -12,6 +12,7 @@ public:
 	void Draw();
 	void UpdateLocation();
 	void InputHandle();
+	bool isGameOver();
 private:
 	Issac Postac;
 	vector <shared_ptr<Enemy>> CreateEnemy();
@@ -27,5 +28,6 @@ private:
 	double lastTearFired;
 	void CollisionCheck();
 	int amountofEnemies;
+
 
 };

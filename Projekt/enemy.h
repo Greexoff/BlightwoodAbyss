@@ -14,6 +14,12 @@ public:
 	Texture2D image;
 	Vector2 position;
 	Rectangle getEnemyRect();
+	void UpdateColl(string CollisionSide);
+	string getCollisionSide(Rectangle enemy1, Rectangle enemy2);
+	virtual int setEnemyHealth();
+	virtual int getEnemyHealth();
+protected:
+	int enemyHealth;
 private:
 };
 class Monster1 : public Enemy
@@ -22,6 +28,7 @@ public:
 	Monster1(Vector2 postion);
 	~Monster1();
 private:
+	
 };
 class Monster2 : public Enemy
 {
@@ -29,6 +36,7 @@ public:
 	Monster2(Vector2 postion);
 	~Monster2();
 private:
+	
 };
 class Monster3 : public Enemy
 {
@@ -36,4 +44,5 @@ public:
 	Monster3(Vector2 postion);
 	~Monster3();
 private:
+	
 };

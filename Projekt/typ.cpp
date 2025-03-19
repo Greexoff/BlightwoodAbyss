@@ -8,6 +8,7 @@ Issac::Issac()
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
+	playerHealth = 3;
 }
 Issac::~Issac() {
 	UnloadTexture(image);
@@ -74,4 +75,12 @@ Vector2 Issac::GetPlayerPosition()
 Rectangle Issac::getPlayerRect()
 {
 	return { position.x,position.y,(float)image.width,(float)image.height };
+}
+int Issac::getPlayerHealth()
+{
+	return playerHealth;
+}
+int Issac::setPlayerHealth()
+{
+	return playerHealth--;
 }

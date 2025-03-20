@@ -110,7 +110,7 @@ float Enemy::getEnemySpeed()
 }
 void Enemy::DrawEnemyHealthBar()
 {
-	switch (enemyHealth)
+	/*switch (enemyHealth)
 	{
 	case 4:
 		DrawTexture(HealthBarImage[3], position.x + 9,position.y - 11, WHITE);
@@ -126,5 +126,11 @@ void Enemy::DrawEnemyHealthBar()
 		break;
 	default:
 		break;
+	}*/
+	int i = 0;
+	while (i != enemyHealth)
+	{
+		DrawTexture(HealthBarImage[0], position.x +10*i, position.y - 11, WHITE);
+		++i;
 	}
 }

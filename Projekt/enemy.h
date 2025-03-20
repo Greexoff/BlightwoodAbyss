@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include <string>
+#include <vector>
 
 
 using namespace std;
@@ -10,6 +11,7 @@ public:
 	Enemy(Vector2 position);
 	void Update(Vector2 PlayerPosition, int directionX, int directionY, float enemySpeed);
 	void Draw();
+	virtual void DrawEnemyHealthBar();
 	virtual ~Enemy();
 	Texture2D image;
 	Vector2 position;
@@ -21,6 +23,7 @@ public:
 	virtual float getEnemySpeed();
 protected:
 	int enemyHealth;
+	vector<Texture2D>HealthBarImage;
 	float enemySpeed;
 private:
 };

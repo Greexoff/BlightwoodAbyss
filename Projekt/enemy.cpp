@@ -6,6 +6,10 @@ using namespace std;
 Enemy::Enemy(Vector2 position)
 {
 	this->position = position;
+	HealthBarImage.push_back(LoadTexture("1H.png"));//To do zmiany, tera tymczasowe
+	HealthBarImage.push_back(LoadTexture("2H.png"));
+	HealthBarImage.push_back(LoadTexture("3H.png"));
+	HealthBarImage.push_back(LoadTexture("4H.png"));
 	
 }
 Enemy::~Enemy()
@@ -103,4 +107,24 @@ int Enemy::setEnemyHealth()
 float Enemy::getEnemySpeed()
 {
 	return enemySpeed;
+}
+void Enemy::DrawEnemyHealthBar()
+{
+	switch (enemyHealth)
+	{
+	case 4:
+		DrawTexture(HealthBarImage[3], position.x + 9,position.y - 11, WHITE);
+		break;
+	case 3:
+		DrawTexture(HealthBarImage[2], position.x+ 14, position.y -11, WHITE);
+		break;
+	case 2:
+		DrawTexture(HealthBarImage[1], position.x+ 19, position.y -11, WHITE);
+		break;
+	case 1:
+		DrawTexture(HealthBarImage[0], position.x+ 24, position.y - 11, WHITE);
+		break;
+	default:
+		break;
+	}
 }

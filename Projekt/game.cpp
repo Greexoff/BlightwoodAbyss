@@ -42,6 +42,7 @@ void Game::Draw() {
 	for (auto& enemy : enemies)
 	{
 		enemy->Draw();
+		enemy->DrawEnemyHealthBar();
 	}
 	for (auto& enemTears : EnemyTears)
 	{

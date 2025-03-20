@@ -90,6 +90,7 @@ int Character::changePlayerHealth(int typeOfChange)
 	}
 	else
 	{
+		playerHealth = maxPlayerHealth;
 		return playerHealth;
 	}
 }

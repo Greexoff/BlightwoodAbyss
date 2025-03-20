@@ -36,6 +36,7 @@ void Game::Update() {
 }
 void Game::Draw() {
 	Player.Draw();
+	Player.DrawPlayerHealthBar();
 	for (auto& tears : Player.tearsy) {
 		tears.Draw();
 	}
@@ -212,7 +213,7 @@ void Game::CollisionCheck()
 	{	
 		if (CheckCollisionRecs((*it)->getEnemyRect(), Player.getPlayerRect())&&currentTime-lastTimePlayerWasTouched>enemyHittingGap)
 		{
-			Player.changePlayerHealth(-1);
+			Player.reducePlayersHealth();
 
 			lastTimePlayerWasTouched = GetTime();
 		}
@@ -225,7 +226,10 @@ void Game::CollisionCheck()
 	{
 		if (CheckCollisionRecs(enemTear.getTearRect(), Player.getPlayerRect()))
 		{
-			Player.changePlayerHealth(-1);
+			if (currentTime - lastTimePlayerWasTouched > enemyHittingGap) {
+				Player.reducePlayersHealth();
+				lastTimePlayerWasTouched = GetTime();
+			}
 			enemTear.active = false;
 		}
 	}
@@ -249,7 +253,7 @@ void Game::beginNextWave()
 	if (enemies.empty())
 	{
 		//Tutaj jakas funkcja do wyswietlania komunikatu ze ukonczono fale; Do wykminienia jak robic przerwe miedzy falami
-			Player.changePlayerHealth(1);
+			Player.increasePlayersHealth();
 			for (auto& enemTears : EnemyTears)
 			{
 				enemTears.active = false;

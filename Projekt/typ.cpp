@@ -5,6 +5,7 @@
 Character::Character()
 {
 	image = LoadTexture("graf.png");
+	imagePlayerHealthBar = LoadTexture("1H.png");
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
@@ -82,15 +83,27 @@ int Character::getPlayerHealth()
 {
 	return playerHealth;
 }
-int Character::changePlayerHealth(int typeOfChange)
+int Character::reducePlayersHealth()
 {
-	if (playerHealth <= maxPlayerHealth)
+	return playerHealth--;
+}
+int Character::increasePlayersHealth()
+{
+	if (playerHealth < maxPlayerHealth)
 	{
-		return playerHealth += typeOfChange;
+		return playerHealth++;
 	}
 	else
 	{
-		playerHealth = maxPlayerHealth;
 		return playerHealth;
+	}
+}
+void Character::DrawPlayerHealthBar()
+{
+	int i = 0;
+	while (i != playerHealth)
+	{
+		DrawTexture(imagePlayerHealthBar, position.x + 10 * i, position.y - 11, WHITE);
+		i++;
 	}
 }

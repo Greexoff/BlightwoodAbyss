@@ -9,6 +9,7 @@ public:
 	Character();
 	~Character();
 	void Draw();
+	void DrawPlayerHealthBar();
 	void moveLeft();
 	void moveRight();
 	void moveUp();
@@ -18,9 +19,11 @@ public:
 	vector<Tears> tearsy;
 	Rectangle getPlayerRect();
 	int getPlayerHealth();
-	int changePlayerHealth(int typeOfChange);
+	int reducePlayersHealth();
+	int increasePlayersHealth();
 private:
 	Texture2D image;
+	Texture2D imagePlayerHealthBar;
 	Vector2 position;
 	double lastTearTime;
 	int playerHealth;

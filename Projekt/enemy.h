@@ -23,7 +23,7 @@ public:
 	virtual float getEnemySpeed();
 protected:
 	int enemyHealth;
-	vector<Texture2D>HealthBarImage;
+	Texture2D imageEnemyHealthBar;
 	float enemySpeed;
 private:
 };

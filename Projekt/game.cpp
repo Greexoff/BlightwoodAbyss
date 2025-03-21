@@ -11,7 +11,7 @@ Game::Game() {
 	EnemyDirectionX = 0;
 	EnemyDirectionY = 0;
 	enemyShootingGap = 1.5;
-	enemyHittingGap = 3;
+	enemyHittingGap = 5;
 	lastTearFired = 0.0;
 	lastTimePlayerWasTouched = 0.0;
 	

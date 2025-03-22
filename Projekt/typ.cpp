@@ -5,7 +5,6 @@
 Character::Character()
 {
 	image = LoadTexture("graf.png");
-	imagePlayerHealthBar = LoadTexture("1H.png");
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
@@ -72,12 +71,14 @@ int Character::increasePlayersHealth()
 }
 void Character::DrawPlayerHealthBar()
 {
-	int i = 0;
-	while (i != playerHealth)
-	{
-		DrawTexture(imagePlayerHealthBar, position.x + 10 * i, position.y - 11, WHITE);
-		i++;
-	}
+	float healthBarWidth = 100;
+	float healthBarHeight = 10;
+
+	Vector2 healthBarPos = {position.x,position.y - 10 };
+	float healthPercent = (float)playerHealth / maxPlayerHealth;
+	float currentHealthWidth = (float)((healthBarWidth - 10) * healthPercent);
+	DrawRectangle(healthBarPos.x, healthBarPos.y, healthBarWidth, healthBarHeight, BLACK);
+	DrawRectangle(healthBarPos.x + 5, healthBarPos.y + 2.5, currentHealthWidth, (healthBarHeight / 2), GREEN);
 }
 Vector2 Character::GetXYPlayerPoint()
 {

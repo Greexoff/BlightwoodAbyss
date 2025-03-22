@@ -6,7 +6,6 @@ using namespace std;
 Enemy::Enemy(Vector2 position)
 {
 	this->position = position;
-	imageEnemyHealthBar = LoadTexture("1H.png");
 	enemyAttackSpeed = 0;
 	enemyHealth = 0;
 	enemySpeed = 0;
@@ -21,7 +20,7 @@ Enemy::~Enemy()
 Monster1::Monster1(Vector2 position)//Tank
 	: Enemy(position) {
 	image = LoadTexture("potwor1.png");
-	enemyHealth = 6;
+	enemyMaxHealth = enemyHealth = 6;
 	enemySpeed = 1;
 	enemyScore = 300;
 }
@@ -31,7 +30,7 @@ Monster1::~Monster1() { UnloadTexture(image); }
 Monster2::Monster2(Vector2 position)//Szybki 
 	: Enemy(position) {
 	image = LoadTexture("potwor2.png");
-	enemyHealth = 1;
+	enemyMaxHealth = enemyHealth = 1;
 	enemySpeed = 2;
 	enemyScore = 100;
 }
@@ -41,7 +40,7 @@ Monster2::~Monster2() { UnloadTexture(image); }
 Monster3::Monster3(Vector2 position)//Strzelajacy
 	: Enemy(position) {
 	image = LoadTexture("potwor3.png");
-	enemyHealth = 2;
+	enemyMaxHealth = enemyHealth = 2;
 	enemyAttackSpeed = 4;
 	enemyScore = 200;
 }
@@ -117,12 +116,14 @@ float Enemy::getEnemySpeed()
 }
 void Enemy::DrawEnemyHealthBar()
 {
-	int i = 0;
-	while (i != enemyHealth)
-	{
-		DrawTexture(imageEnemyHealthBar, position.x + 10 * i, position.y - 11, WHITE);
-		i++;
-	}
+	float healthBarWidth = 60;
+	float healthBarHeight = 10;
+
+	Vector2 healthBarPos = { position.x ,position.y - 15 };
+	float healthPercent = (float)enemyHealth / enemyMaxHealth;
+	float currentHealthWidth = (float)((healthBarWidth-10) * healthPercent);
+	DrawRectangle(healthBarPos.x, healthBarPos.y, healthBarWidth, healthBarHeight, BLACK);
+	DrawRectangle(healthBarPos.x+5, healthBarPos.y+2.5, currentHealthWidth, (healthBarHeight/2), RED);
 }
 int Enemy::getEnemyAttackSpeed()
 {

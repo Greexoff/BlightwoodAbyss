@@ -1,9 +1,15 @@
 ﻿
 #include <iostream>
-#include <thread>
+#include <string>
 #include "raylib.h"
 #include "game.h"
 
+string ScoreWithLeadingZeros(int number, int width)
+{
+	string scoreText = to_string(number);
+	int leadingZeros = width - scoreText.length();
+	return scoreText = string(leadingZeros, '0') + scoreText;
+}
 using namespace std;
 int main()
 {
@@ -13,6 +19,7 @@ int main()
 	InitWindow(Width, Height, "Survival Game");
 	Texture2D background = LoadTexture("background.png");
 	SetTargetFPS(60);
+	Font font = LoadFontEx("arial.ttf", 64, 0, 0);
 
 	Game game;
 	while (!WindowShouldClose())
@@ -21,6 +28,9 @@ int main()
 		game.Update();
 		BeginDrawing();
 		DrawTexture(background, 0, 0, WHITE);
+		DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
+		string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 5);
+		DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
 		game.Draw();
 		EndDrawing();
 		if (game.isGameOver())

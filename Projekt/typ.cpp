@@ -83,3 +83,4 @@ Vector2 Character::GetXYPlayerPoint()
 {
 	return { (position.x + (image.width / 4)),(position.y + (image.width / 4)) };
 }
+

@@ -16,6 +16,7 @@ public:
 	void Update();
 	void InputHandle();
 	bool isGameOver();
+	int playerTotalScore;
 private:
 	Character Player;
 	vector <shared_ptr<Enemy>> CreateEnemy();
@@ -35,4 +36,6 @@ private:
 	void disableEnemyTears();
 	atomic<bool> isCreatingNewWave;
 	atomic<bool> proceedCreatingEnemies;
+	int waveNumber;
+	void increasePlayerTotalScore(int amount);
 };

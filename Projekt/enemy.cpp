@@ -7,6 +7,11 @@ Enemy::Enemy(Vector2 position)
 {
 	this->position = position;
 	imageEnemyHealthBar = LoadTexture("1H.png");
+	enemyAttackSpeed = 0;
+	enemyHealth = 0;
+	enemySpeed = 0;
+	enemyScore = 0;
+	image = LoadTexture("potwor.png");
 	
 }
 Enemy::~Enemy()
@@ -16,8 +21,9 @@ Enemy::~Enemy()
 Monster1::Monster1(Vector2 position)//Tank
 	: Enemy(position) {
 	image = LoadTexture("potwor1.png");
-	enemyHealth = 4;
-	enemySpeed = 0.5;
+	enemyHealth = 6;
+	enemySpeed = 1;
+	enemyScore = 300;
 }
 
 Monster1::~Monster1() { UnloadTexture(image); }
@@ -27,6 +33,7 @@ Monster2::Monster2(Vector2 position)//Szybki
 	image = LoadTexture("potwor2.png");
 	enemyHealth = 1;
 	enemySpeed = 2;
+	enemyScore = 100;
 }
 
 Monster2::~Monster2() { UnloadTexture(image); }
@@ -35,7 +42,8 @@ Monster3::Monster3(Vector2 position)//Strzelajacy
 	: Enemy(position) {
 	image = LoadTexture("potwor3.png");
 	enemyHealth = 2;
-	attackSpeed = 4;
+	enemyAttackSpeed = 4;
+	enemyScore = 200;
 }
 
 Monster3::~Monster3() { UnloadTexture(image); }
@@ -93,7 +101,7 @@ string Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 			return (wy > -hx) ? "COLLISION_RIGHT" : "COLLISION_BOTTOM";
 		}
 	}
-	
+	return "COLLISION_MISSING";
 }
 int Enemy::getEnemyHealth()
 {
@@ -118,5 +126,9 @@ void Enemy::DrawEnemyHealthBar()
 }
 int Enemy::getEnemyAttackSpeed()
 {
-	return attackSpeed;
+	return enemyAttackSpeed;
+}
+int Enemy::getEnemyScore()
+{
+	return enemyScore;
 }

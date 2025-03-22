@@ -13,6 +13,8 @@ Game::Game() {
 	lastTimePlayerWasTouched = 0.0;	
 	isCreatingNewWave = false;
 	proceedCreatingEnemies = false;
+	waveNumber = 1;
+	playerTotalScore = 0;
 }
 Game::~Game() {
 	enemies.clear();
@@ -169,6 +171,7 @@ void Game::CollisionCheck()
 					(*it)->setEnemyHealth();
 					if ((*it)->getEnemyHealth() == 0)
 					{
+						increasePlayerTotalScore((*it)->getEnemyScore());
 						it = enemies.erase(it);
 					}
 					else
@@ -242,7 +245,9 @@ void Game::beginNewWave()
 	Player.increasePlayersHealth();
 	disableEnemyTears();
 	disablePlayerTears();
+	increasePlayerTotalScore(200 * waveNumber);
 	this_thread::sleep_for(chrono::seconds(5));
+	waveNumber++;
 	amountofEnemies++;
 	proceedCreatingEnemies = true;
 	isCreatingNewWave = false;
@@ -261,4 +266,7 @@ void Game::disablePlayerTears()
 		playerTears.active = false;
 	}
 }
-
+void Game::increasePlayerTotalScore(int amount)
+{
+	playerTotalScore += amount;
+}

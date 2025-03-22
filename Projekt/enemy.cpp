@@ -38,6 +38,7 @@ Monster3::Monster3(Vector2 position)//Strzelajacy
 }
 
 Monster3::~Monster3() { UnloadTexture(image); }
+
 //|---------------------------------------------------------------------------------------|
 void Enemy::Draw() {
 	DrawTextureV(image, position, WHITE);

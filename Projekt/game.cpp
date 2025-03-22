@@ -16,12 +16,14 @@ Game::Game() {
 	proceedCreatingEnemies = false;
 }
 Game::~Game() {
-
+	enemies.clear();
 }
 void Game::Update() {
 	if (proceedCreatingEnemies)
 	{
+		disablePlayerTears();
 		enemies = CreateEnemy();
+		lastTimePlayerWasTouched = GetTime();
 		proceedCreatingEnemies = false;
 	}
 	for (auto & tears : Player.tearsy)
@@ -39,7 +41,7 @@ void Game::Update() {
 	if (enemies.empty() && !isCreatingNewWave)
 	{
 		isCreatingNewWave = true;
-		thread t(&Game::createNewEnemies,this);
+		thread t(&Game::beginNewWave,this);
 		t.detach();
 	}
 }
@@ -60,41 +62,28 @@ void Game::Draw() {
 	}
 }
 void Game::InputHandle() {
-	if (IsKeyDown(KEY_A))
-	{
-		Player.moveLeft();
-	}
-	if (IsKeyDown(KEY_D))
-	{
-		Player.moveRight();
-	}
-	if (IsKeyDown(KEY_W))
-	{
-		Player.moveUp();
-	}
-	if (IsKeyDown(KEY_S))
-	{
-		Player.moveDown();
-	}
+	int moveX = 0;
+	int moveY = 0;
+	if (IsKeyDown(KEY_A)){moveX = -1;}
+	if (IsKeyDown(KEY_D)){moveX = 1;}
+	if (IsKeyDown(KEY_W)){moveY = -1;}
+	if (IsKeyDown(KEY_S)){moveY = 1;}
+	Player.movePlayer(moveX, moveY);
 	if (IsKeyDown(KEY_UP))
 	{
-		Direction = 'u';
-		Player.shootTears(Direction);
+		Player.shootTears('u');
 	}
 	if (IsKeyDown(KEY_DOWN))
 	{
-		Direction = 'd';
-		Player.shootTears(Direction);
+		Player.shootTears('d');
 	}
 	if (IsKeyDown(KEY_LEFT))
 	{
-		Direction = 'l';
-		Player.shootTears(Direction);
+		Player.shootTears('l');
 	}
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		Direction = 'r';
-		Player.shootTears(Direction);
+		Player.shootTears('r');
 	}
 }
 void Game::DeleteInactiveTears()
@@ -269,20 +258,28 @@ bool Game::isGameOver()
 		return false;
 	}
 }
-void Game::createNewEnemies()
+void Game::beginNewWave()
+{
+	Player.increasePlayersHealth();
+	disableEnemyTears();
+	disablePlayerTears();
+	this_thread::sleep_for(chrono::seconds(5));
+	amountofEnemies++;
+	proceedCreatingEnemies = true;
+	isCreatingNewWave = false;
+}
+void Game::disableEnemyTears()
 {
 	for (auto& enemTears : EnemyTears)
 	{
 		enemTears.active = false;
 	}
-	Player.increasePlayersHealth();
+}
+void Game::disablePlayerTears()
+{
 	for (auto& playerTears : Player.tearsy)
 	{
 		playerTears.active = false;
 	}
-	this_thread::sleep_for(chrono::seconds(5));
-	amountofEnemies++;
-	proceedCreatingEnemies = true;
-	isCreatingNewWave = false;
 }
 

@@ -10,10 +10,7 @@ public:
 	~Character();
 	void Draw();
 	void DrawPlayerHealthBar();
-	void moveLeft();
-	void moveRight();
-	void moveUp();
-	void moveDown();
+	void movePlayer(int x, int y);
 	void shootTears(char);
 	Vector2 GetPlayerPosition();
 	vector<Tears> tearsy;

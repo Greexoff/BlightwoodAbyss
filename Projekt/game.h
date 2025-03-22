@@ -20,7 +20,6 @@ private:
 	Character Player;
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
-	char Direction='~';
 	vector<shared_ptr<Enemy>> enemies;
 	void MoveEnemies();
 	int EnemyDirectionX;
@@ -33,7 +32,9 @@ private:
 	double lastTimePlayerWasTouched;
 	void CollisionCheck();
 	int amountofEnemies;
-	void createNewEnemies();
+	void beginNewWave();
+	void disablePlayerTears();
+	void disableEnemyTears();
 	atomic<bool> isCreatingNewWave;
 	atomic<bool> proceedCreatingEnemies;
 };

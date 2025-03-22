@@ -19,37 +19,29 @@ Character::~Character() {
 void Character::Draw() {
 	DrawTextureV(image, position, WHITE);
 }
-void Character::moveDown() {
-	position.y += playerSpeed;
-	if (position.y>GetScreenHeight()-image.height)
+void Character::movePlayer(int x, int y)
+{
+	position.x += x * playerSpeed;
+	position.y += y * playerSpeed;
+	if (position.y > GetScreenHeight() - image.height)
 	{
 		position.y = GetScreenHeight() - image.height;
 	}
-}
-void Character::moveUp()
-{
-	position.y -= playerSpeed;
 	if (position.y < 0)
 	{
 		position.y = 0;
 	}
-}
-void Character::moveLeft() {
-	position.x -= playerSpeed;
 	if (position.x < 0)
 	{
 		position.x = 0;
 	}
-}
-void Character::moveRight() {
-	position.x += playerSpeed;
 	if (position.x > GetScreenWidth() - image.width)
 	{
 		position.x = GetScreenWidth() - image.width;
 	}
 }
 void Character::shootTears(char pozycja) {
-	if (GetTime() - lastTearTime >= 0.3) {
+	if (GetTime() - lastTearTime >= 0.5) {
 		switch (pozycja)
 		{
 		case 'u':

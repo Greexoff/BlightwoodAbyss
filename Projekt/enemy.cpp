@@ -35,6 +35,7 @@ Monster3::Monster3(Vector2 position)//Strzelajacy
 	: Enemy(position) {
 	image = LoadTexture("potwor3.png");
 	enemyHealth = 2;
+	attackSpeed = 4;
 }
 
 Monster3::~Monster3() { UnloadTexture(image); }
@@ -43,7 +44,7 @@ Monster3::~Monster3() { UnloadTexture(image); }
 void Enemy::Draw() {
 	DrawTextureV(image, position, WHITE);
 }	
-void Enemy::Update(Vector2 PlayerPosition,int directionX, int directionY, float enemySpeed) {
+void Enemy::Update(Vector2 PlayerPosition, int directionX, int directionY, float enemySpeed) {
 	if (position.x != PlayerPosition.x)
 	{
 		position.x+=directionX*enemySpeed;
@@ -114,4 +115,8 @@ void Enemy::DrawEnemyHealthBar()
 		DrawTexture(imageEnemyHealthBar, position.x + 10 * i, position.y - 11, WHITE);
 		i++;
 	}
+}
+int Enemy::getEnemyAttackSpeed()
+{
+	return attackSpeed;
 }

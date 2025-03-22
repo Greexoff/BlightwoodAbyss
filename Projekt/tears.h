@@ -3,7 +3,7 @@
 
 class Tears {
 public:
-	Tears(Vector2 position, int speed, char direction);
+	Tears(Vector2 position, int speed, int tearDirection_X, int tearDirection_Y);
 	void UpdatePosition();
 	virtual void Draw();
 	bool active;
@@ -11,8 +11,9 @@ public:
 protected:
 	Texture2D image; 
 	Vector2 position;
-	int speed;
-	char direction;
+	int tearSpeed;
+	int tearDirection_X;
+	int tearDirection_Y;
 };
 class enemyTears : public Tears
 {
@@ -24,5 +25,6 @@ public:
 private:
 	Vector2 TearsDirection;
 	int speed;
-	char direction='~';
+	int directionX;
+	int directionY;
 };

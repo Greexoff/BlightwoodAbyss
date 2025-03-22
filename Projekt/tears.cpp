@@ -1,17 +1,17 @@
 #include "tears.h"
 #include <cmath>
 
-Tears::Tears(Vector2 position, int speed, char direction)
+Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirection_Y)
 {
 	image = LoadTexture("tear.png");
 	this->position = position;
-	this->speed = speed;
-	this->direction = direction;
+	this->tearSpeed = tearSpeed;
+	this->tearDirection_X = tearDirection_X;
+	this->tearDirection_Y = tearDirection_Y;
 	active = true;
 
 }
-
-enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos) : Tears(position, speed, direction) {
+enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos) : Tears(position, speed, directionX, directionY) {
 	image = LoadTexture("EnemyTears.png");
 	this->position = position;
 	this->speed = speed;
@@ -32,47 +32,14 @@ void enemyTears::Draw() {
 	}
 }
 void Tears::UpdatePosition() {
-	switch (direction)
-	{
-	case 'u':
-		position.y -= speed;
+		position.y += tearSpeed*tearDirection_Y;
+		position.x += tearSpeed * tearDirection_X;
 		if (active) {
-			if (position.y > GetScreenHeight() || position.y < 0)
+			if (position.y > GetScreenHeight() || position.y < 0 || position.x > GetScreenWidth() || position.x < 0)
 			{
 				active = false;
 			}
 		}
-		break;
-	case 'd':
-		position.y += speed;
-		if (active) {
-			if (position.y > GetScreenHeight() || position.y < 0)
-			{
-				active = false;
-			}
-		}
-		break;
-	case 'l':
-		position.x -= speed;
-		if (active) {
-			if (position.x > GetScreenWidth() || position.x < 0)
-			{
-				active = false;
-			}
-		}
-		break;
-		case 'r':
-			position.x += speed;
-			if (active) {
-				if (position.x > GetScreenWidth() || position.x < 0)
-				{
-					active = false;
-				}
-			}
-			break;
-		default:
-		break;
-	}	
 }
 void enemyTears::UpdatePosition(Vector2 Playerpos)
 {	

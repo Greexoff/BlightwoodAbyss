@@ -1,13 +1,12 @@
 #include "raylib.h"
 #include "game.h"
+#include <thread>
 
 using namespace std;
 
 Game::Game() {
 	amountofEnemies = 5;
 	enemies = CreateEnemy();
-	EnemyDirectionX = 0;
-	EnemyDirectionY = 0;
 	enemyShootingGap = 1.5;
 	enemyHittingGap = 5;
 	lastTearFired = 0.0;
@@ -34,7 +33,7 @@ void Game::Update() {
 	EnemyShootTears();
 	for (auto& enTears : EnemyTears)
 	{
-		enTears.UpdatePosition(Player.GetPlayerPosition());
+		enTears.UpdatePosition(Player.GetXYPlayerPoint());
 	}
 	CollisionCheck();
 	DeleteInactiveTears();
@@ -69,21 +68,17 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_W)){moveY = -1;}
 	if (IsKeyDown(KEY_S)){moveY = 1;}
 	Player.movePlayer(moveX, moveY);
-	if (IsKeyDown(KEY_UP))
-	{
-		Player.shootTears('u');
+	if (IsKeyDown(KEY_UP)) {
+		Player.shootTears(0, -1);
 	}
-	if (IsKeyDown(KEY_DOWN))
-	{
-		Player.shootTears('d');
+	if (IsKeyDown(KEY_DOWN)) {
+		Player.shootTears(0, 1);
 	}
-	if (IsKeyDown(KEY_LEFT))
-	{
-		Player.shootTears('l');
+	if (IsKeyDown(KEY_LEFT)) {
+		Player.shootTears(-1, 0);
 	}
-	if (IsKeyDown(KEY_RIGHT))
-	{
-		Player.shootTears('r');
+	if (IsKeyDown(KEY_RIGHT)) {
+		Player.shootTears(1, 0);
 	}
 }
 void Game::DeleteInactiveTears()
@@ -116,7 +111,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	vector<shared_ptr<Enemy>> enemiesy;
 
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(100,1036), GetRandomValue(100,638) };
+		Vector2 position = { GetRandomValue(100,GetScreenWidth()-100), GetRandomValue(100,GetScreenHeight()-100) };
 		int type = GetRandomValue(1,3);
 
 		switch (type) {
@@ -135,40 +130,26 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 }
 void Game::MoveEnemies()
 {
-	for (auto& enemy : enemies)
-	{
-		if (!dynamic_pointer_cast<Monster3>(enemy)) {//tutaj mozna zrobic thread? zeby wykonywal jednoczesnie sprawdzanie dla x i dla y
-			if (Player.GetPlayerPosition().x > enemy->position.x)
-			{
-				EnemyDirectionX = 1;
-			}
-			if (Player.GetPlayerPosition().x < enemy->position.x)
-			{
-				EnemyDirectionX = -1;
-			}
-			if (Player.GetPlayerPosition().y > enemy->position.y)
-			{
-				EnemyDirectionY = 1;
-			}
-			if (Player.GetPlayerPosition().y < enemy->position.y)
-			{
-				EnemyDirectionY = -1;
-			}
-			enemy->Update(Player.GetPlayerPosition(),EnemyDirectionX,EnemyDirectionY,enemy->getEnemySpeed());
+	for (auto& enemy : enemies) {
+		int enemyDirectionX = 0;
+		int enemyDirectionY = 0;
+		if (!dynamic_pointer_cast<Monster3>(enemy)) {
+			enemyDirectionX = (Player.GetXYPlayerPoint().x> enemy->position.x) ? 1 : (Player.GetXYPlayerPoint().x< enemy->position.x) ? -1 : 0;
+			enemyDirectionY = (Player.GetXYPlayerPoint().y> enemy->position.y) ? 1 : (Player.GetXYPlayerPoint().y < enemy->position.y) ? -1 : 0;
+			enemy->Update(Player.GetXYPlayerPoint(), enemyDirectionX, enemyDirectionY, enemy->getEnemySpeed());
 		}
 	}
 }
 void Game::EnemyShootTears()
 {
 	if (!enemies.empty()) {
-		double currTime = GetTime();
-		if (currTime - lastTearFired >= enemyShootingGap)
+		if (GetTime() - lastTearFired >= enemyShootingGap)
 		{
 			int randomInd = GetRandomValue(0, enemies.size() - 1);
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, 3, Player.GetPlayerPosition()));//tu ta 3 zmienic zminna ktora bedzie zalezala od typu przeciwnika
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));//tu ta 3 zmienic zminna ktora bedzie zalezala od typu przeciwnika
 			}
 			lastTearFired = GetTime();
 		}
@@ -177,54 +158,52 @@ void Game::EnemyShootTears()
 }
 void Game::CollisionCheck()
 {
-	for (auto& tear : Player.tearsy)
-	{
-		if (enemies.empty()) {
-			break;
-		}
-		auto it = enemies.begin();
-		while (it != enemies.end())
+	if (!enemies.empty()) {
+		for (auto& tear : Player.tearsy)
 		{
-			if (CheckCollisionRecs((*it)->getEnemyRect(), tear.getTearRect()))
+			auto it = enemies.begin();
+			while (it != enemies.end())
 			{
-				(*it)->setEnemyHealth();
-				if ((*it)->getEnemyHealth() == 0)
+				if (CheckCollisionRecs((*it)->getEnemyRect(), tear.getTearRect()))
 				{
-					it = enemies.erase(it);
+					(*it)->setEnemyHealth();
+					if ((*it)->getEnemyHealth() == 0)
+					{
+						it = enemies.erase(it);
+					}
+					else
+					{
+						++it;
+					}
+					tear.active = false;
 				}
 				else
 				{
 					++it;
 				}
-				tear.active = false;
+
+			}
+		}
+		auto it = enemies.begin();
+		while (it != enemies.end())
+		{
+			if (CheckCollisionRecs((*it)->getEnemyRect(), Player.getPlayerRect()) && GetTime() - lastTimePlayerWasTouched > enemyHittingGap)
+			{
+				Player.reducePlayersHealth();
+
+				lastTimePlayerWasTouched = GetTime();
 			}
 			else
 			{
 				++it;
 			}
-		
-		}
-	}
-	double currentTime = GetTime();
-	auto it = enemies.begin();
-	while (it != enemies.end())
-	{	
-		if (CheckCollisionRecs((*it)->getEnemyRect(), Player.getPlayerRect())&&currentTime-lastTimePlayerWasTouched>enemyHittingGap)
-		{
-			Player.reducePlayersHealth();
-
-			lastTimePlayerWasTouched = GetTime();
-		}
-		else
-		{
-			++it;
 		}
 	}
 	for (auto& enemTear : EnemyTears)
 	{
 		if (CheckCollisionRecs(enemTear.getTearRect(), Player.getPlayerRect()))
 		{
-			if (currentTime - lastTimePlayerWasTouched > enemyHittingGap) {
+			if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
 				Player.reducePlayersHealth();
 				lastTimePlayerWasTouched = GetTime();
 			}
@@ -232,7 +211,7 @@ void Game::CollisionCheck()
 		}
 	}
 	
-	for (size_t i = 0; i < enemies.size(); i++)//sprobowac poprawic zeby nie miec 3petli wewnatrz siebie, jeszcze poprawic calosc bo nwm czy chce zeby to tak funkcjonowało
+	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		for (size_t j = i + 1; j < enemies.size(); j++)
 		{

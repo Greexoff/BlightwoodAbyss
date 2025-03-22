@@ -22,8 +22,6 @@ private:
 	void DeleteInactiveTears();
 	vector<shared_ptr<Enemy>> enemies;
 	void MoveEnemies();
-	int EnemyDirectionX;
-	int EnemyDirectionY;
 	vector<enemyTears>EnemyTears;
 	void EnemyShootTears();
 	double enemyShootingGap;

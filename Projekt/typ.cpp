@@ -12,6 +12,7 @@ Character::Character()
 	playerHealth = 3;
 	maxPlayerHealth = 3;
 	playerSpeed = 4.5;
+	tearSpeed = 3;
 }
 Character::~Character() {
 	UnloadTexture(image);
@@ -40,32 +41,11 @@ void Character::movePlayer(int x, int y)
 		position.x = GetScreenWidth() - image.width;
 	}
 }
-void Character::shootTears(char pozycja) {
+void Character::shootTears(int tearD_X, int tearD_Y) {
 	if (GetTime() - lastTearTime >= 0.5) {
-		switch (pozycja)
-		{
-		case 'u':
-			tearsy.push_back(Tears({ position.x +(image.width/4)-3,position.y-(image.height/4)-3}, 3,'u'));
-			lastTearTime = GetTime();
-			break;
-		case 'd':
-			tearsy.push_back(Tears({ position.x + (image.width / 4) - 3,position.y + (image.height / 4) + 3 }, 3,'d'));
-			lastTearTime = GetTime();
-			break;
-		case 'l':
-			tearsy.push_back(Tears({ position.x-(image.width/4)-3,position.y + (image.height / 4)-3}, 3,'l'));
-			lastTearTime = GetTime();
-			break;
-		case 'r':
-			tearsy.push_back(Tears({ position.x + (image.width / 4)+3,position.y + (image.height / 4) - 3 }, 3,'r'));
-			lastTearTime = GetTime();
-			break;
-		}
+		tearsy.push_back(Tears({ position.x + (image.width / 4) + 5 * tearD_X, position.y + (image.height / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y));
+		lastTearTime = GetTime();
 	}
-}
-Vector2 Character::GetPlayerPosition()
-{
-	return { position.x,position.y };
 }
 Rectangle Character::getPlayerRect()
 {
@@ -98,4 +78,8 @@ void Character::DrawPlayerHealthBar()
 		DrawTexture(imagePlayerHealthBar, position.x + 10 * i, position.y - 11, WHITE);
 		i++;
 	}
+}
+Vector2 Character::GetXYPlayerPoint()
+{
+	return { (position.x + (image.width / 4)),(position.y + (image.width / 4)) };
 }

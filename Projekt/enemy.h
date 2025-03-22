@@ -21,10 +21,12 @@ public:
 	virtual int setEnemyHealth();
 	virtual int getEnemyHealth();
 	virtual float getEnemySpeed();
+	virtual int getEnemyAttackSpeed();
 protected:
 	int enemyHealth;
 	Texture2D imageEnemyHealthBar;
 	float enemySpeed;
+	int attackSpeed;
 private:
 };
 class Monster1 : public Enemy

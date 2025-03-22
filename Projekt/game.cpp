@@ -8,7 +8,7 @@ Game::Game() {
 	amountofEnemies = 5;
 	enemies = CreateEnemy();
 	enemyShootingGap = 1.5;
-	enemyHittingGap = 5;
+	enemyHittingGap = 2;
 	lastTearFired = 0.0;
 	lastTimePlayerWasTouched = 0.0;	
 	isCreatingNewWave = false;
@@ -133,12 +133,8 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 void Game::MoveEnemies()
 {
 	for (auto& enemy : enemies) {
-		int enemyDirectionX = 0;
-		int enemyDirectionY = 0;
 		if (!dynamic_pointer_cast<Monster3>(enemy)) {
-			enemyDirectionX = (Player.GetXYPlayerPoint().x> enemy->position.x) ? 1 : (Player.GetXYPlayerPoint().x< enemy->position.x) ? -1 : 0;
-			enemyDirectionY = (Player.GetXYPlayerPoint().y> enemy->position.y) ? 1 : (Player.GetXYPlayerPoint().y < enemy->position.y) ? -1 : 0;
-			enemy->Update(Player.GetXYPlayerPoint(), enemyDirectionX, enemyDirectionY, enemy->getEnemySpeed());
+			enemy->Update(Player.GetXYPlayerPoint());
 		}
 	}
 }
@@ -213,17 +209,18 @@ void Game::CollisionCheck()
 			enemTear.active = false;
 		}
 	}
-	
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		for (size_t j = i + 1; j < enemies.size(); j++)
 		{
-			if (!dynamic_pointer_cast<Monster3>(enemies[i]) || !dynamic_pointer_cast<Monster3>(enemies[j]))
-			{
-				if ((CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))) {
-				enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
-				enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
-			}
+			if ((CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))) {
+				if (!dynamic_pointer_cast<Monster3>(enemies[i]))
+				{
+					enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+				}
+				if(!dynamic_pointer_cast<Monster3>(enemies[j])){ 
+						enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
+				}
 			}
 		}
 	}

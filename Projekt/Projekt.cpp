@@ -15,9 +15,8 @@ int main()
 {
 	int Width = 1186;
 	int Height = 738;
-
 	InitWindow(Width, Height, "Survival Game");
-	Texture2D background = LoadTexture("background.png");
+	Texture2D background = LoadTexture("backgroundOG.png");
 	SetTargetFPS(60);
 	Font font = LoadFontEx("arial.ttf", 64, 0, 0);
 

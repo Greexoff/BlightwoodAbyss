@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include <string>
 #include <vector>
+#include <cmath>
 
 
 using namespace std;
@@ -9,20 +10,21 @@ class Enemy
 {
 public:
 	Enemy(Vector2 position);
-	void Update(Vector2 PlayerPosition, int directionX, int directionY, float enemySpeed);
+	void Update(Vector2 PlayerPosition);
 	void Draw();
 	virtual void DrawEnemyHealthBar();
 	virtual ~Enemy();
 	Texture2D image;
 	Vector2 position;
 	Rectangle getEnemyRect();
-	void UpdateColl(string CollisionSide);
-	string getCollisionSide(Rectangle enemy1, Rectangle enemy2);
+	void UpdateColl(Vector2 Direction);
+	Vector2 getCollisionSide(Rectangle enemy1, Rectangle enemy2);
 	virtual int setEnemyHealth();
 	virtual int getEnemyHealth();
 	virtual float getEnemySpeed();
 	virtual int getEnemyAttackSpeed();
 	virtual int getEnemyScore();
+	virtual void CheckOutofTheBorder();
 protected:
 	int enemyHealth;
 	float enemySpeed;

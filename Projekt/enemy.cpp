@@ -51,56 +51,63 @@ Monster3::~Monster3() { UnloadTexture(image); }
 void Enemy::Draw() {
 	DrawTextureV(image, position, WHITE);
 }	
-void Enemy::Update(Vector2 PlayerPosition, int directionX, int directionY, float enemySpeed) {
-	if (position.x != PlayerPosition.x)
-	{
-		position.x+=directionX*enemySpeed;
+void Enemy::Update(Vector2 PlayerPosition) {
+	Vector2 dir;
+	float dx = PlayerPosition.x - position.x;
+	float dy = PlayerPosition.y - position.y; 
+	float length = sqrt(dx * dx + dy * dy);
+
+	if (length != 0) {
+		dir.x = dx / length;
+		dir.y = dy / length;
 	}
-	if(position.y != PlayerPosition.y){
-		position.y+=directionY*enemySpeed;
-	}
-}
-void Enemy::UpdateColl(string CollisionSide)
+	position.x += dir.x * enemySpeed;
+	position.y += dir.y * enemySpeed;
+	
+}	
+void Enemy::UpdateColl(Vector2 Direction)
 {
-	if (CollisionSide == "COLLISION_TOP")
+	position.x += enemySpeed*Direction.x;
+	position.y += enemySpeed*Direction.y;
+	if (position.y > GetScreenHeight() - image.height)
 	{
-		position.y++;
+		position.y = GetScreenHeight() - image.height;
 	}
-	if (CollisionSide == "COLLISION_BOTTOM")
+	if (position.y < 0)
 	{
-		position.y--;
+		position.y = 0;
 	}
-	if (CollisionSide == "COLLISION_LEFT")
+	if (position.x < 0)
 	{
-		position.x--;
+		position.x = 0;
 	}
-	if (CollisionSide == "COLLISION_RIGHT")
+	if (position.x > GetScreenWidth() - image.width)
 	{
-		position.x++;
+		position.x = GetScreenWidth() - image.width;
 	}
 }
 Rectangle Enemy::getEnemyRect()
 {
 	return { position.x,position.y,(float)image.width,(float)image.height};
 }
-string Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
+Vector2 Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 {
 	float dx = (enemy1.x + enemy1.width) - (enemy2.x + enemy2.width);
 	float dy = (enemy1.y + enemy1.height) - (enemy2.y + enemy2.height);
 	float totalWidth = (enemy1.width + enemy2.width);
 	float totalHeight = (enemy1.height + enemy2.height);
+	Vector2 Directions = { 0,0 };
 	if (abs(dx) <= totalWidth && abs(dy) <= totalHeight) {
 		float wy = totalWidth * dy;
 		float hx = totalHeight * dx;
-
 		if (wy > hx) {
-			return (wy > -hx) ? "COLLISION_TOP" : "COLLISION_LEFT";
+			return (wy > -hx) ? Directions = {0, 1} : Directions = {-1,0};
 		}
 		else {
-			return (wy > -hx) ? "COLLISION_RIGHT" : "COLLISION_BOTTOM";
+			return (wy > -hx) ? Directions = {1, 0} : Directions = {0, -1};
 		}
 	}
-	return "COLLISION_MISSING";
+	return Directions;
 }
 int Enemy::getEnemyHealth()
 {
@@ -132,4 +139,23 @@ int Enemy::getEnemyAttackSpeed()
 int Enemy::getEnemyScore()
 {
 	return enemyScore;
+}
+void Enemy::CheckOutofTheBorder()
+{
+	if (position.y > GetScreenHeight() - image.height)
+	{
+		position.y = GetScreenHeight() - image.height;
+	}
+	if (position.y < 0)
+	{
+		position.y = 0;
+	}
+	if (position.x < 0)
+	{
+		position.x = 0;
+	}
+	if (position.x > GetScreenWidth() - image.width)
+	{
+		position.x = GetScreenWidth() - image.width;
+	}
 }

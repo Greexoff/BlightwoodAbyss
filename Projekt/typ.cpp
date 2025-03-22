@@ -8,7 +8,7 @@ Character::Character()
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
-	playerHealth = 3;
+	playerHealth = 300;
 	maxPlayerHealth = 3;
 	playerSpeed = 4.5;
 	tearSpeed = 3;
@@ -41,7 +41,7 @@ void Character::movePlayer(int x, int y)
 	}
 }
 void Character::shootTears(int tearD_X, int tearD_Y) {
-	if (GetTime() - lastTearTime >= 0.5) {
+	if (GetTime() - lastTearTime >= 0.4) {
 		tearsy.push_back(Tears({ position.x + (image.width / 4) + 5 * tearD_X, position.y + (image.height / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y));
 		lastTearTime = GetTime();
 	}

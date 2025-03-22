@@ -8,7 +8,7 @@ Character::Character()
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
-	playerHealth = 300;
+	playerHealth = 3;
 	maxPlayerHealth = 3;
 	playerSpeed = 4.5;
 	tearSpeed = 3;

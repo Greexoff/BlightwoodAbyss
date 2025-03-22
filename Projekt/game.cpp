@@ -1,5 +1,3 @@
-#include <iostream>
-#include <memory>
 #include "raylib.h"
 #include "game.h"
 
@@ -13,37 +11,48 @@ Game::Game() {
 	enemyShootingGap = 1.5;
 	enemyHittingGap = 5;
 	lastTearFired = 0.0;
-	lastTimePlayerWasTouched = 0.0;
-	
+	lastTimePlayerWasTouched = 0.0;	
+	isCreatingNewWave = false;
+	proceedCreatingEnemies = false;
 }
 Game::~Game() {
 
 }
 void Game::Update() {
+	if (proceedCreatingEnemies)
+	{
+		enemies = CreateEnemy();
+		proceedCreatingEnemies = false;
+	}
 	for (auto & tears : Player.tearsy)
 	{		
 		tears.UpdatePosition();
 	}
-	EnemyShootTears();
 	MoveEnemies();
+	EnemyShootTears();
 	for (auto& enTears : EnemyTears)
 	{
 		enTears.UpdatePosition(Player.GetPlayerPosition());
 	}
 	CollisionCheck();
 	DeleteInactiveTears();
-	beginNextWave();
+	if (enemies.empty() && !isCreatingNewWave)
+	{
+		isCreatingNewWave = true;
+		thread t(&Game::createNewEnemies,this);
+		t.detach();
+	}
 }
 void Game::Draw() {
-	Player.Draw();
 	Player.DrawPlayerHealthBar();
+	Player.Draw();	
 	for (auto& tears : Player.tearsy) {
 		tears.Draw();
 	}
 	for (auto& enemy : enemies)
 	{
-		enemy->Draw();
 		enemy->DrawEnemyHealthBar();
+		enemy->Draw();
 	}
 	for (auto& enemTears : EnemyTears)
 	{
@@ -248,25 +257,6 @@ void Game::CollisionCheck()
 		}
 	}
 }
-void Game::beginNextWave()
-{
-	if (enemies.empty())
-	{
-		//Tutaj jakas funkcja do wyswietlania komunikatu ze ukonczono fale; Do wykminienia jak robic przerwe miedzy falami
-			Player.increasePlayersHealth();
-			for (auto& enemTears : EnemyTears)
-			{
-				enemTears.active = false;
-			}
-			for (auto& playerTears : Player.tearsy)
-			{
-				playerTears.active = false;
-			}
-			amountofEnemies++;
-			enemies = CreateEnemy();
-
-	}
-}
 bool Game::isGameOver()
 {
 	if (Player.getPlayerHealth() == 0)
@@ -279,3 +269,20 @@ bool Game::isGameOver()
 		return false;
 	}
 }
+void Game::createNewEnemies()
+{
+	for (auto& enemTears : EnemyTears)
+	{
+		enemTears.active = false;
+	}
+	Player.increasePlayersHealth();
+	for (auto& playerTears : Player.tearsy)
+	{
+		playerTears.active = false;
+	}
+	this_thread::sleep_for(chrono::seconds(5));
+	amountofEnemies++;
+	proceedCreatingEnemies = true;
+	isCreatingNewWave = false;
+}
+

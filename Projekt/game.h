@@ -3,6 +3,9 @@
 #include "tears.h"
 #include "enemy.h"
 #include <random>
+#include <iostream>
+#include <memory>
+#include <thread>
 using namespace std;
 
 class Game {
@@ -13,7 +16,6 @@ public:
 	void Update();
 	void InputHandle();
 	bool isGameOver();
-	void beginNextWave();
 private:
 	Character Player;
 	vector <shared_ptr<Enemy>> CreateEnemy();
@@ -31,6 +33,7 @@ private:
 	double lastTimePlayerWasTouched;
 	void CollisionCheck();
 	int amountofEnemies;
-
-
+	void createNewEnemies();
+	atomic<bool> isCreatingNewWave;
+	atomic<bool> proceedCreatingEnemies;
 };

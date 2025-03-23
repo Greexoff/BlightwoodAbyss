@@ -50,6 +50,7 @@ int main()
 * !^Mozna ewentualnie zrobic ze te przemioty pojawiaja sie tylko podczas tej przerwy miedzy falami
 * !Poprawic dzialanie image przy inicjacji obiektu - stworzyc metody set na ustawianie i je polimorfowac?
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
+* !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali?
 * !Dodac menu (najlepiej nowa klasa, moze modul?)
 * !Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !Dodac klase obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, wyglad menu, KONIECZNIE UI ZE STATSAMI

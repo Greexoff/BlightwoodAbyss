@@ -6,15 +6,15 @@ using namespace std;
 
 Game::Game() {
 	amountofEnemies = 5;
-	enemies = CreateEnemy();
+	waveNumber = 1;
 	enemyShootingGap = 1.5;
 	enemyHittingGap = 2;
 	lastTearFired = 0.0;
 	lastTimePlayerWasTouched = 0.0;	
 	isCreatingNewWave = false;
 	proceedCreatingEnemies = false;
-	waveNumber = 1;
 	playerTotalScore = 0;
+	enemies = CreateEnemy();
 }
 Game::~Game() {
 	enemies.clear();
@@ -111,20 +111,32 @@ void Game::DeleteInactiveTears()
 vector <shared_ptr<Enemy>> Game::CreateEnemy()
 {
 	vector<shared_ptr<Enemy>> enemiesy;
-
+	int poolOfEnemiesTypes = 3;
+	if (waveNumber % 5 == 0)
+	{
+		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
+		enemiesy.push_back(make_shared<Monster5>(position));
+		return enemiesy;
+	}
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(100,GetScreenWidth()-100), GetRandomValue(100,GetScreenHeight()-100) };
-		int type = GetRandomValue(1,3);
-
+		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
+		if (waveNumber >= 3)
+		{
+			poolOfEnemiesTypes = 4;
+		}
+		int type = GetRandomValue(1, poolOfEnemiesTypes);
 		switch (type) {
 		case 1:
-			enemiesy.push_back(make_shared<Monster1>(position));  
+			enemiesy.push_back(make_shared<Monster1>(position));
 			break;
 		case 2:
-			enemiesy.push_back(make_shared<Monster2>(position)); 
+			enemiesy.push_back(make_shared<Monster2>(position));
 			break;
 		case 3:
-			enemiesy.push_back(make_shared<Monster3>(position));  
+			enemiesy.push_back(make_shared<Monster3>(position));
+			break;
+		case 4:
+			enemiesy.push_back(make_shared<Monster4>(position));
 			break;
 		}
 	}
@@ -147,7 +159,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));//tu ta 3 zmienic zminna ktora bedzie zalezala od typu przeciwnika
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));
+			}
+			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
+			{
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));
+			}
+			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
+			{
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));
 			}
 			lastTearFired = GetTime();
 		}
@@ -243,7 +263,7 @@ void Game::beginNewWave()
 	disableEnemyTears();
 	disablePlayerTears();
 	increasePlayerTotalScore(200 * waveNumber);
-	this_thread::sleep_for(chrono::seconds(5));
+	this_thread::sleep_for(chrono::seconds(3));
 	waveNumber++;
 	amountofEnemies++;
 	proceedCreatingEnemies = true;

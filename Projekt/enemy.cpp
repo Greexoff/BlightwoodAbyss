@@ -20,7 +20,7 @@ Enemy::~Enemy()
 Monster1::Monster1(Vector2 position)//Tank
 	: Enemy(position) {
 	image = LoadTexture("potwor1.png");
-	enemyMaxHealth = enemyHealth = 6;
+	enemyMaxHealth = enemyHealth = 4;
 	enemySpeed = 1;
 	enemyScore = 300;
 }
@@ -41,12 +41,31 @@ Monster3::Monster3(Vector2 position)//Strzelajacy
 	: Enemy(position) {
 	image = LoadTexture("potwor3.png");
 	enemyMaxHealth = enemyHealth = 2;
-	enemyAttackSpeed = 4;
+	enemyAttackSpeed = 5;
 	enemyScore = 200;
 }
 
 Monster3::~Monster3() { UnloadTexture(image); }
 
+Monster4::Monster4(Vector2 position)//Strzelajacy Mini-Boss
+	: Enemy(position) {
+	image = LoadTexture("potwor4.png");
+	enemyMaxHealth = enemyHealth = 10;
+	enemySpeed = 1;
+	enemyAttackSpeed = 3;
+	enemyScore = 400;
+}
+Monster4::~Monster4() { UnloadTexture(image); }
+
+Monster5::Monster5(Vector2 position)//Boss
+	: Enemy(position) {
+	image = LoadTexture("potwor5.png");
+	enemyMaxHealth = enemyHealth = 30;
+	enemySpeed = 0.5;
+	enemyAttackSpeed = 5;
+	enemyScore = 800;
+}
+Monster5::~Monster5() { UnloadTexture(image); }
 //|---------------------------------------------------------------------------------------|
 void Enemy::Draw() {
 	DrawTextureV(image, position, WHITE);

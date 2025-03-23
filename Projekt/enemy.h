@@ -57,3 +57,19 @@ public:
 private:
 	
 };
+class Monster4 : public Enemy
+{
+public:
+	Monster4(Vector2 postion);
+	~Monster4();
+private:
+
+};
+class Monster5 : public Enemy
+{
+public:
+	Monster5(Vector2 postion);
+	~Monster5();
+private:
+
+};

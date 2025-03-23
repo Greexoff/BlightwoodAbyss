@@ -4,6 +4,7 @@
 class Tears {
 public:
 	Tears(Vector2 position, int speed, int tearDirection_X, int tearDirection_Y);
+	~Tears();
 	void UpdatePosition();
 	virtual void Draw();
 	bool active;

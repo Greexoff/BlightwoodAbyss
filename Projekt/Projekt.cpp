@@ -21,6 +21,7 @@ int main()
 	Font font = LoadFontEx("arial.ttf", 64, 0, 0);
 
 	Game game;
+	game.setPlayerCharacter(1);
 	while (!WindowShouldClose())
 	{
 		game.InputHandle();
@@ -29,7 +30,7 @@ int main()
 		DrawTexture(background, 0, 0, WHITE);
 		game.Draw();	
 		DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
-		string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 5);
+		string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
 		DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
 		EndDrawing();
 		if (game.isGameOver())
@@ -42,8 +43,8 @@ int main()
 }
 /*
 * Do zrobienia:
-* Nowe postacie (jak mi sie bedzie chcialo)
-* !Dodaj DMG do Character zeby wiecej zadawac dla bossa czy cos
+* DONE		Nowe postacie (jak mi sie bedzie chcialo)
+* DONE		!Dodaj DMG do Character zeby wiecej zadawac dla bossa czy cos	
 * !Dodac itemki do podniesienia w czasie retreata miedzy falami (jak mi sie bedzie chcialo)
 * !Dodac menu (najlepiej nowa klasa, moze modul?)
 * !Dodac klase obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, wyglad menu, 

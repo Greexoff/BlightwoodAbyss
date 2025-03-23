@@ -11,6 +11,9 @@ Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirec
 	active = true;
 
 }
+Tears::~Tears()
+{
+}
 enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos) : Tears(position, speed, directionX, directionY) {
 	image = LoadTexture("EnemyTears.png");
 	this->position = position;

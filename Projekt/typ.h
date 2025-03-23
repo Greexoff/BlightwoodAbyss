@@ -18,7 +18,8 @@ public:
 	int reducePlayersHealth();
 	int increasePlayersHealth();
 	Vector2 GetXYPlayerPoint();
-private:
+	float getPlayerDamage();
+protected:
 	Texture2D image;
 	Texture2D imagePlayerHealthBar;
 	Vector2 position;
@@ -26,5 +27,31 @@ private:
 	int playerHealth;
 	int maxPlayerHealth;
 	float playerSpeed;
-	int tearSpeed;
+	float tearSpeed;
+	float playerDamage;
+	float tearRate;
+};
+class FirstCharacter : public Character
+{
+public:
+	FirstCharacter();
+	~FirstCharacter();
+private:
+
+};
+class SecondCharacter : public Character
+{
+public:
+	SecondCharacter();
+	~SecondCharacter();
+private:
+
+};
+class ThirdCharacter : public Character
+{
+public:
+	ThirdCharacter();
+	~ThirdCharacter();
+private:
+
 };

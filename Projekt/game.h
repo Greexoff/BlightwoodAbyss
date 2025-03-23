@@ -17,8 +17,9 @@ public:
 	void InputHandle();
 	bool isGameOver();
 	int playerTotalScore;
+	void setPlayerCharacter(int Character);
 private:
-	Character Player;
+	unique_ptr<Character> Player;
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
 	vector<shared_ptr<Enemy>> enemies;

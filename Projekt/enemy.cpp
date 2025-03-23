@@ -132,9 +132,9 @@ int Enemy::getEnemyHealth()
 {
 	return enemyHealth;
 }
-int Enemy::setEnemyHealth()
+int Enemy::setEnemyHealth(int playerDamage)
 {
-	return enemyHealth--;
+	return enemyHealth-=playerDamage;
 }
 float Enemy::getEnemySpeed()
 {

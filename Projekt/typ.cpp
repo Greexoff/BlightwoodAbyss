@@ -8,10 +8,12 @@ Character::Character()
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
-	playerHealth = 3;
-	maxPlayerHealth = 3;
-	playerSpeed = 4.5;
-	tearSpeed = 3;
+	playerHealth = 0;
+	maxPlayerHealth = 0;
+	playerSpeed = 0;
+	playerDamage = 0;
+	tearSpeed = 0;
+	tearRate = 0;
 }
 Character::~Character() {
 	UnloadTexture(image);
@@ -41,7 +43,7 @@ void Character::movePlayer(int x, int y)
 	}
 }
 void Character::shootTears(int tearD_X, int tearD_Y) {
-	if (GetTime() - lastTearTime >= 0.4) {
+	if (GetTime() - lastTearTime >= tearRate) {
 		tearsy.push_back(Tears({ position.x + (image.width / 4) + 5 * tearD_X, position.y + (image.height / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y));
 		lastTearTime = GetTime();
 	}
@@ -84,4 +86,49 @@ Vector2 Character::GetXYPlayerPoint()
 {
 	return { (position.x + (image.width / 4)),(position.y + (image.width / 4)) };
 }
-
+float Character::getPlayerDamage()
+{
+	return playerDamage;
+}
+FirstCharacter::FirstCharacter()
+{
+	image = LoadTexture("graf.png");
+	playerHealth = 3;
+	maxPlayerHealth = 3;
+	playerSpeed = 4.5;
+	playerDamage = 1;
+	tearSpeed = 3;
+	tearRate = 0.4;
+}
+FirstCharacter::~FirstCharacter()
+{
+	UnloadTexture(image);
+}
+SecondCharacter::SecondCharacter()
+{
+	image = LoadTexture("SecondCharater.png");
+	playerHealth = 2;
+	maxPlayerHealth = 2;
+	playerSpeed = 6;
+	playerDamage = 0.5;
+	tearSpeed = 5;
+	tearRate = 0.2;
+}
+SecondCharacter::~SecondCharacter()
+{
+	UnloadTexture(image);
+}
+ThirdCharacter::ThirdCharacter()
+{
+	image = LoadTexture("ThirdCharacter.png");
+	playerHealth = 6;
+	maxPlayerHealth = 6;
+	playerSpeed = 2;
+	playerDamage = 4;
+	tearSpeed = 3;
+	tearRate = 0.8;
+}
+ThirdCharacter::~ThirdCharacter()
+{
+	UnloadTexture(image);
+}

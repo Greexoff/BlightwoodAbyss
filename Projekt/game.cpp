@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "game.h"
 #include <thread>
+#include <memory>
 
 using namespace std;
 
@@ -19,6 +20,24 @@ Game::Game() {
 Game::~Game() {
 	enemies.clear();
 }
+void Game::setPlayerCharacter(int Character)
+{
+	switch (Character)
+	{
+	case 1:
+		Player = make_unique<FirstCharacter>();
+		break;
+	case 2:
+		Player = make_unique<SecondCharacter>();
+		break;
+	case 3:
+		Player = make_unique<ThirdCharacter>();
+		break;
+	default:
+		Player = make_unique<FirstCharacter>();
+		break;
+	}
+}
 void Game::Update() {
 	if (proceedCreatingEnemies)
 	{
@@ -27,7 +46,7 @@ void Game::Update() {
 		lastTimePlayerWasTouched = GetTime();
 		proceedCreatingEnemies = false;
 	}
-	for (auto & tears : Player.tearsy)
+	for (auto & tears : Player->tearsy)
 	{		
 		tears.UpdatePosition();
 	}
@@ -35,7 +54,7 @@ void Game::Update() {
 	EnemyShootTears();
 	for (auto& enTears : EnemyTears)
 	{
-		enTears.UpdatePosition(Player.GetXYPlayerPoint());
+		enTears.UpdatePosition(Player->GetXYPlayerPoint());
 	}
 	CollisionCheck();
 	DeleteInactiveTears();
@@ -47,9 +66,9 @@ void Game::Update() {
 	}
 }
 void Game::Draw() {
-	Player.DrawPlayerHealthBar();
-	Player.Draw();	
-	for (auto& tears : Player.tearsy) {
+	Player->DrawPlayerHealthBar();
+	Player->Draw();	
+	for (auto& tears : Player->tearsy) {
 		tears.Draw();
 	}
 	for (auto& enemy : enemies)
@@ -69,27 +88,27 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_D)){moveX = 1;}
 	if (IsKeyDown(KEY_W)){moveY = -1;}
 	if (IsKeyDown(KEY_S)){moveY = 1;}
-	Player.movePlayer(moveX, moveY);
+	Player->movePlayer(moveX, moveY);
 	if (IsKeyDown(KEY_UP)) {
-		Player.shootTears(0, -1);
+		Player->shootTears(0, -1);
 	}
 	if (IsKeyDown(KEY_DOWN)) {
-		Player.shootTears(0, 1);
+		Player->shootTears(0, 1);
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		Player.shootTears(-1, 0);
+		Player->shootTears(-1, 0);
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		Player.shootTears(1, 0);
+		Player->shootTears(1, 0);
 	}
 }
 void Game::DeleteInactiveTears()
 {
-	for (auto it = Player.tearsy.begin(); it != Player.tearsy.end();)
+	for (auto it = Player->tearsy.begin(); it != Player->tearsy.end();)
 	{
 		if (!it->active)
 		{
-			it = Player.tearsy.erase(it);
+			it = Player->tearsy.erase(it);
 		}
 		else
 		{
@@ -146,7 +165,7 @@ void Game::MoveEnemies()
 {
 	for (auto& enemy : enemies) {
 		if (!dynamic_pointer_cast<Monster3>(enemy)) {
-			enemy->Update(Player.GetXYPlayerPoint());
+			enemy->Update(Player->GetXYPlayerPoint());
 		}
 	}
 }
@@ -159,15 +178,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint()));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint()));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player.GetXYPlayerPoint()));
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint()));
 			}
 			lastTearFired = GetTime();
 		}
@@ -177,15 +196,15 @@ void Game::EnemyShootTears()
 void Game::CollisionCheck()
 {
 	if (!enemies.empty()) {
-		for (auto& tear : Player.tearsy)
+		for (auto& tear : Player->tearsy)
 		{
 			auto it = enemies.begin();
 			while (it != enemies.end())
 			{
 				if (CheckCollisionRecs((*it)->getEnemyRect(), tear.getTearRect()))
 				{
-					(*it)->setEnemyHealth();
-					if ((*it)->getEnemyHealth() == 0)
+					(*it)->setEnemyHealth(Player->getPlayerDamage());
+					if ((*it)->getEnemyHealth() <= 0)
 					{
 						increasePlayerTotalScore((*it)->getEnemyScore());
 						it = enemies.erase(it);
@@ -206,9 +225,9 @@ void Game::CollisionCheck()
 		auto it = enemies.begin();
 		while (it != enemies.end())
 		{
-			if (CheckCollisionRecs((*it)->getEnemyRect(), Player.getPlayerRect()) && GetTime() - lastTimePlayerWasTouched > enemyHittingGap)
+			if (CheckCollisionRecs((*it)->getEnemyRect(), Player->getPlayerRect()) && GetTime() - lastTimePlayerWasTouched > enemyHittingGap)
 			{
-				Player.reducePlayersHealth();
+				Player->reducePlayersHealth();
 
 				lastTimePlayerWasTouched = GetTime();
 			}
@@ -220,10 +239,10 @@ void Game::CollisionCheck()
 	}
 	for (auto& enemTear : EnemyTears)
 	{
-		if (CheckCollisionRecs(enemTear.getTearRect(), Player.getPlayerRect()))
+		if (CheckCollisionRecs(enemTear.getTearRect(), Player->getPlayerRect()))
 		{
 			if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
-				Player.reducePlayersHealth();
+				Player->reducePlayersHealth();
 				lastTimePlayerWasTouched = GetTime();
 			}
 			enemTear.active = false;
@@ -247,7 +266,7 @@ void Game::CollisionCheck()
 }
 bool Game::isGameOver()
 {
-	if (Player.getPlayerHealth() == 0)
+	if (Player->getPlayerHealth() == 0)
 	{
 		cout << "Koniec gry" << endl;
 		return true;
@@ -259,7 +278,7 @@ bool Game::isGameOver()
 }
 void Game::beginNewWave()
 {
-	Player.increasePlayersHealth();
+	Player->increasePlayersHealth();
 	disableEnemyTears();
 	disablePlayerTears();
 	increasePlayerTotalScore(200 * waveNumber);
@@ -278,7 +297,7 @@ void Game::disableEnemyTears()
 }
 void Game::disablePlayerTears()
 {
-	for (auto& playerTears : Player.tearsy)
+	for (auto& playerTears : Player->tearsy)
 	{
 		playerTears.active = false;
 	}

@@ -21,7 +21,7 @@ int main()
 	Font font = LoadFontEx("arial.ttf", 64, 0, 0);
 
 	Game game;
-	game.setPlayerCharacter(1);
+	game.setPlayerCharacter(2);
 	while (!WindowShouldClose())
 	{
 		game.InputHandle();

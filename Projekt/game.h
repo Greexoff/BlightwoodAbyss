@@ -2,6 +2,7 @@
 #include "typ.h"
 #include "tears.h"
 #include "enemy.h"
+#include "items.h"
 #include <random>
 #include <iostream>
 #include <memory>
@@ -20,6 +21,8 @@ public:
 	void setPlayerCharacter(int Character);
 private:
 	unique_ptr<Character> Player;
+	unique_ptr<Items> Loot;
+	void createRandomLoot();
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
 	vector<shared_ptr<Enemy>> enemies;

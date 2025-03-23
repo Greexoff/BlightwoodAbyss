@@ -63,6 +63,10 @@ void Game::Update() {
 		isCreatingNewWave = true;
 		thread t(&Game::beginNewWave,this);
 		t.detach();
+		if (waveNumber % 5 == 0)
+		{
+			createRandomLoot();
+		}
 	}
 }
 void Game::Draw() {
@@ -79,6 +83,10 @@ void Game::Draw() {
 	for (auto& enemTears : EnemyTears)
 	{
 		enemTears.Draw();
+	}
+	if (Loot != nullptr)
+	{
+		Loot->DrawItems();
 	}
 }
 void Game::InputHandle() {
@@ -157,7 +165,10 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		case 4:
 			enemiesy.push_back(make_shared<Monster4>(position));
 			break;
+		default:
+			break;
 		}
+
 	}
 	return enemiesy;
 }
@@ -305,4 +316,30 @@ void Game::disablePlayerTears()
 void Game::increasePlayerTotalScore(int amount)
 {
 	playerTotalScore += amount;
+}
+void Game::createRandomLoot()
+{
+	//int type=GetRandomValue(1,5);
+	int type = 1;
+	switch (type)
+	{
+	case 1:
+		Loot = make_unique<DamageTrinket>();
+		break;
+	case 2:
+		Loot = make_unique<TearRateTrinket>();
+		break;
+	case 3:
+		Loot = make_unique<SpeedTrinket>();
+		break;
+	case 4:
+		Loot = make_unique<HealthTrinket>();
+		break;
+	case 5:
+		Loot = make_unique<TearSpeedTrinket>();
+		break;
+	default:
+		break;
+	}
+	
 }

@@ -4,7 +4,6 @@
 
 Character::Character()
 {
-	image = LoadTexture("graf.png");
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
@@ -73,7 +72,7 @@ int Character::increasePlayersHealth()
 }
 void Character::DrawPlayerHealthBar()
 {
-	float healthBarWidth = 100;
+	float healthBarWidth = image.width;
 	float healthBarHeight = 10;
 
 	Vector2 healthBarPos = {position.x,position.y - 10 };
@@ -92,7 +91,7 @@ float Character::getPlayerDamage()
 }
 FirstCharacter::FirstCharacter()
 {
-	image = LoadTexture("graf.png");
+	image = LoadTexture("FirstCharacter.png");
 	playerHealth = 3;
 	maxPlayerHealth = 3;
 	playerSpeed = 4.5;
@@ -106,11 +105,11 @@ FirstCharacter::~FirstCharacter()
 }
 SecondCharacter::SecondCharacter()
 {
-	image = LoadTexture("SecondCharater.png");
-	playerHealth = 2;
-	maxPlayerHealth = 2;
+	image = LoadTexture("SecondCharacter.png");
+	playerHealth = 20;
+	maxPlayerHealth = 20;
 	playerSpeed = 6;
-	playerDamage = 0.5;
+	playerDamage = 4;
 	tearSpeed = 5;
 	tearRate = 0.2;
 }

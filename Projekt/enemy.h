@@ -10,15 +10,15 @@ class Enemy
 {
 public:
 	Enemy(Vector2 position);
-	void Update(Vector2 PlayerPosition);
-	void Draw();
+	virtual void Update(Vector2 PlayerPosition);
+	virtual void Draw();
 	virtual void DrawEnemyHealthBar();
 	virtual ~Enemy();
 	Texture2D image;
 	Vector2 position;
-	Rectangle getEnemyRect();
-	void UpdateColl(Vector2 Direction);
-	Vector2 getCollisionSide(Rectangle enemy1, Rectangle enemy2);
+	virtual Rectangle getEnemyRect();
+	virtual void UpdateColl(Vector2 Direction);
+	virtual Vector2 getCollisionSide(Rectangle enemy1, Rectangle enemy2);
 	virtual int setEnemyHealth(int playerDamage);
 	virtual int getEnemyHealth();
 	virtual float getEnemySpeed();

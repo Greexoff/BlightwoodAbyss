@@ -8,20 +8,19 @@ class Character {
 public:
 	Character();
 	~Character();
-	void Draw();
-	void DrawPlayerHealthBar();
-	void movePlayer(int x, int y);
-	void shootTears(int tearD_X, int tearD_Y);
+	virtual void Draw();
+	virtual void DrawPlayerHealthBar();
+	virtual void movePlayer(int x, int y);
+	virtual void shootTears(int tearD_X, int tearD_Y);
 	vector<Tears> tearsy;
-	Rectangle getPlayerRect();
-	int getPlayerHealth();
-	int reducePlayersHealth();
-	int increasePlayersHealth();
-	Vector2 GetXYPlayerPoint();
-	float getPlayerDamage();
+	virtual Rectangle getPlayerRect();
+	virtual int getPlayerHealth();
+	virtual int reducePlayersHealth();
+	virtual int increasePlayersHealth();
+	virtual	Vector2 GetXYPlayerPoint();
+	virtual float getPlayerDamage();
 protected:
 	Texture2D image;
-	Texture2D imagePlayerHealthBar;
 	Vector2 position;
 	double lastTearTime;
 	int playerHealth;

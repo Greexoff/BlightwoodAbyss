@@ -4,6 +4,7 @@
 
 Character::Character()
 {
+	image = LoadTexture("FirstCharacter.png");
 	position.x = (GetScreenWidth()-image.width)/2;
 	position.y = (GetScreenHeight() - image.height) / 2;
 	lastTearTime = 0;
@@ -106,10 +107,10 @@ FirstCharacter::~FirstCharacter()
 SecondCharacter::SecondCharacter()
 {
 	image = LoadTexture("SecondCharacter.png");
-	playerHealth = 20;
-	maxPlayerHealth = 20;
-	playerSpeed = 6;
-	playerDamage = 4;
+	playerHealth = 2;
+	maxPlayerHealth = 2;
+	playerSpeed = 5;
+	playerDamage = 3;
 	tearSpeed = 5;
 	tearRate = 0.2;
 }
@@ -130,4 +131,24 @@ ThirdCharacter::ThirdCharacter()
 ThirdCharacter::~ThirdCharacter()
 {
 	UnloadTexture(image);
+}
+void Character::setPlayerDamage(float amount)
+{
+	playerDamage +=amount;
+}
+void Character::setPlayerTearSpeed(float amount)
+{
+	tearSpeed +=amount;
+}
+void Character::setPlayerTearRate(float amount)
+{
+	tearRate +=amount;
+}
+void Character::setPlayerSpeed(float amount)
+{
+	playerSpeed +=amount;
+}
+void Character::setPlayerMaxHealth(float amount)
+{
+	maxPlayerHealth +=amount;
 }

@@ -19,6 +19,11 @@ public:
 	virtual int increasePlayersHealth();
 	virtual	Vector2 GetXYPlayerPoint();
 	virtual float getPlayerDamage();
+	virtual void setPlayerDamage(float amount);
+	virtual void setPlayerSpeed(float amount);
+	virtual void setPlayerTearSpeed(float amount);
+	virtual void setPlayerTearRate(float amount);
+	virtual void setPlayerMaxHealth(float amount);
 protected:
 	Texture2D image;
 	Vector2 position;

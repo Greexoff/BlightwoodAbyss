@@ -70,6 +70,10 @@ void Game::Update() {
 	}
 }
 void Game::Draw() {
+	if (Loot != nullptr)
+	{
+		Loot->DrawItems();
+	}
 	Player->DrawPlayerHealthBar();
 	Player->Draw();	
 	for (auto& tears : Player->tearsy) {
@@ -77,16 +81,15 @@ void Game::Draw() {
 	}
 	for (auto& enemy : enemies)
 	{
-		enemy->DrawEnemyHealthBar();
 		enemy->Draw();
+	}
+	for (auto& enemy : enemies)
+	{
+		enemy->DrawEnemyHealthBar();
 	}
 	for (auto& enemTears : EnemyTears)
 	{
 		enemTears.Draw();
-	}
-	if (Loot != nullptr)
-	{
-		Loot->DrawItems();
 	}
 }
 void Game::InputHandle() {
@@ -206,6 +209,12 @@ void Game::EnemyShootTears()
 }
 void Game::CollisionCheck()
 {
+	if (Loot != nullptr && CheckCollisionRecs(Player->getPlayerRect(), Loot->getItemRect()))
+	{
+		//TUTAJ JESZCZE JAKAS FUNKCJA DO WYSWIETLANIA NAPISU ZE PODNIESIONO X I CO TO DAJE
+		Loot->applyEffect(Player.get());
+		Loot.reset();
+	}
 	if (!enemies.empty()) {
 		for (auto& tear : Player->tearsy)
 		{

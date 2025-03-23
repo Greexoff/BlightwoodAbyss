@@ -47,6 +47,7 @@ int main()
 * DONE		!Dodaj DMG do Character zeby wiecej zadawac dla bossa czy cos	
 * !Dodac itemki do podniesienia w czasie retreata miedzy falami (jak mi sie bedzie chcialo)
 * !Dodac menu (najlepiej nowa klasa, moze modul?)
+* !Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !Dodac klase obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, wyglad menu, 
 * !Wykorzystac filesystem do obslugi plikow przy LoadTexture()
 * Raczej nie zrobie - animacje do wszystkiego

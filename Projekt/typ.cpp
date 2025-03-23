@@ -18,6 +18,50 @@ Character::Character()
 Character::~Character() {
 	UnloadTexture(image);
 }
+FirstCharacter::FirstCharacter()
+{
+	image = LoadTexture("FirstCharacter.png");
+	playerHealth = 3;
+	maxPlayerHealth = 3;
+	playerSpeed = 4.5;
+	playerDamage = 1;
+	tearSpeed = 3;
+	tearRate = 0.4;
+}
+FirstCharacter::~FirstCharacter()
+{
+	UnloadTexture(image);
+}
+SecondCharacter::SecondCharacter()
+{
+	image = LoadTexture("SecondCharacter.png");
+	playerHealth = 2;
+	maxPlayerHealth = 2;
+	playerSpeed = 5;
+	playerDamage = 3;
+	tearSpeed = 5;
+	tearRate = 0.2;
+}
+SecondCharacter::~SecondCharacter()
+{
+	UnloadTexture(image);
+}
+ThirdCharacter::ThirdCharacter()
+{
+	image = LoadTexture("ThirdCharacter.png");
+	playerHealth = 6;
+	maxPlayerHealth = 6;
+	playerSpeed = 2;
+	playerDamage = 4;
+	tearSpeed = 3;
+	tearRate = 0.8;
+}
+ThirdCharacter::~ThirdCharacter()
+{
+	UnloadTexture(image);
+}
+
+
 void Character::Draw() {
 	DrawTextureV(image, position, WHITE);
 }
@@ -89,48 +133,6 @@ Vector2 Character::GetXYPlayerPoint()
 float Character::getPlayerDamage()
 {
 	return playerDamage;
-}
-FirstCharacter::FirstCharacter()
-{
-	image = LoadTexture("FirstCharacter.png");
-	playerHealth = 3;
-	maxPlayerHealth = 3;
-	playerSpeed = 4.5;
-	playerDamage = 1;
-	tearSpeed = 3;
-	tearRate = 0.4;
-}
-FirstCharacter::~FirstCharacter()
-{
-	UnloadTexture(image);
-}
-SecondCharacter::SecondCharacter()
-{
-	image = LoadTexture("SecondCharacter.png");
-	playerHealth = 2;
-	maxPlayerHealth = 2;
-	playerSpeed = 5;
-	playerDamage = 3;
-	tearSpeed = 5;
-	tearRate = 0.2;
-}
-SecondCharacter::~SecondCharacter()
-{
-	UnloadTexture(image);
-}
-ThirdCharacter::ThirdCharacter()
-{
-	image = LoadTexture("ThirdCharacter.png");
-	playerHealth = 6;
-	maxPlayerHealth = 6;
-	playerSpeed = 2;
-	playerDamage = 4;
-	tearSpeed = 3;
-	tearRate = 0.8;
-}
-ThirdCharacter::~ThirdCharacter()
-{
-	UnloadTexture(image);
 }
 void Character::setPlayerDamage(float amount)
 {

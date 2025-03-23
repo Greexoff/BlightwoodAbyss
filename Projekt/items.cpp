@@ -17,25 +17,21 @@ DamageTrinket::DamageTrinket()
 	image = LoadTexture("DamageTrinket.png");
 }
 DamageTrinket::~DamageTrinket() { UnloadTexture(image); }
-
 TearRateTrinket::TearRateTrinket() : Items()
 {
 	image = LoadTexture("TearRateTrinket.png");
 }
 TearRateTrinket::~TearRateTrinket() { UnloadTexture(image); }
-
 SpeedTrinket::SpeedTrinket()
 {
 	image = LoadTexture("SpeedTrinket.png");
 }
 SpeedTrinket::~SpeedTrinket() { UnloadTexture(image); }
-
 HealthTrinket::HealthTrinket()
 {
 	image = LoadTexture("HealthTrinket.png");
 }
 HealthTrinket::~HealthTrinket() { UnloadTexture(image); }
-
 TearSpeedTrinket::TearSpeedTrinket()
 {
 	image = LoadTexture("TearSpeedTrinket.png");
@@ -50,7 +46,6 @@ Rectangle Items::getItemRect()
 {
 	return {position.x,position.y,(float)image.width,(float)image.height };
 }
-
 void DamageTrinket::applyEffect(Character* player)
 {
 	player->setPlayerDamage(1);

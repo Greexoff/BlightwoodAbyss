@@ -42,10 +42,8 @@ int main()
 				menu.setLoginMenuActive(false);
 				break;
 			case 2:
-				menu.insertUsername();
-				break;
 			case 3:
-				menu.insertPassword();
+				menu.insertData(setAction);
 			default:
 				break;
 			}
@@ -56,13 +54,11 @@ int main()
 		{
 			game.InputHandle();
 			game.Update();
-			//BeginDrawing();
 			DrawTexture(background, 0, 0, WHITE);
 			game.Draw();
 			DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
 			string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
 			DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
-			//EndDrawing();
 			if (game.isGameOver())
 			{
 				break;
@@ -75,19 +71,20 @@ int main()
 }
 /*
 * Do zrobienia:
-* DONE			Nowe postacie (jak mi sie bedzie chcialo)
-* DONE			!Dodaj DMG do Character zeby wiecej zadawac dla bossa czy cos	
-* PARTIALY DONE !Dodac itemki do podniesienia w czasie retreata miedzy falami (jak mi sie bedzie chcialo)
-* !Dodac image do przedmiotow, nowe przedmioty i sprobawac zrobic ze przerwa miedzy falami jest przez 10 sekund, albo do momentu kiedy gracz wcisnie przycisk
-* !^Mozna ewentualnie zrobic ze te przemioty pojawiaja sie tylko podczas tej przerwy miedzy falami
+* !!!Zamienic menu na moduł
+* !!!Poprawic dzialanie calego wpisywania hasla
+* !!!Dodac baze danych txt i odczytywac oraz w osobnej funkcji po kliknieciu confirm ma byc checking username i password z regexem
+* !!!Dodac mechanizm zeby protekcja zaczynala sie w momencie, kiedy rozpocznie sie rozgrywka, a nie kiedy bedzie InitWindow
+* !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
+* !!Zaczac powoli robic textury dla wszystkich rzeczy, w szczegolnosci lepsze menu i jakis background, tak zeby bylo pod mini-sprawko
+* !Mozna ewentualnie zrobic ze te przemioty pojawiaja sie tylko podczas tej przerwy miedzy falami (raczej nie)
 * !Poprawic dzialanie image przy inicjacji obiektu - stworzyc metody set na ustawianie i je polimorfowac?
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali?
-* !Dodac menu (najlepiej nowa klasa, moze modul?)
-* !Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
-* !Dodac klase obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, wyglad menu, KONIECZNIE UI ZE STATSAMI
+* !Dodac klase UI obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, KONIECZNIE UI ZE STATSAMI
 * !Wykorzystac filesystem do obslugi plikow przy LoadTexture()
 * Raczej nie zrobie - animacje do wszystkiego
+* Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 */
 
 /*

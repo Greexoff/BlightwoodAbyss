@@ -13,8 +13,7 @@ class Menu
 public:
 	Menu();
 	void DrawLoginMenu();
-	void insertUsername();
-	void insertPassword();
+	void insertData(int setAction);
 	void setLoginMenuActive(bool value);
 	void DrawUsername();
 	void DrawPassword();
@@ -30,5 +29,6 @@ private:
 	Rectangle LoginMenu_PasswordBarArea;
 	string username;
 	string password;
+	int fontsize;
 	Font font = LoadFontEx("arial.ttf", 64, 0, 0);//zmienic na tego bahseita czy jakos tak
 };

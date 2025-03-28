@@ -9,6 +9,7 @@ Menu::Menu()
 	LoginMenu_PasswordBarArea = {296, 413, 594, 92};
 	username = "";
 	password = "";
+	fontsize = 55;
 }
 void Menu::DrawLoginMenu()
 {
@@ -42,33 +43,84 @@ bool Menu::getLoginMenuActive()
 {
 	return LoginMenu_active;
 }
-void Menu::insertUsername()
+void Menu::insertData(int setAction)
 {
-	
-	int maxChars = 16;
-	int key = GetCharPressed(); // Pobiera kod znaku, jeśli jakiś został naciśnięty
-	while (key > 0) {
-		if (username.length() < maxChars && key >= 32 && key <= 125) {
-			username += (char)key;  // Dodajemy literę do napisu
+	int key = GetCharPressed();
+	if (setAction == 2)
+	{
+		while (key > 0) {
+			if (key >= 32 && key <= 125) {
+				username += (char)key;
+			}
+			key = GetCharPressed();
 		}
-		key = GetCharPressed(); // Pobierz kolejną literę (jeśli użytkownik nacisnął kilka na raz)
+		if (IsKeyPressed(KEY_BACKSPACE) && !username.empty()) {
+			username.pop_back();
+		}
 	}
-
-	// Obsługa klawisza Backspace
-	if (IsKeyPressed(KEY_BACKSPACE) && !username.empty()) {
-		username.pop_back();
+	if (setAction == 3)
+	{
+		while (key > 0) {
+			if (key >= 32 && key <= 125) {
+				password += (char)key;
+			}
+			key = GetCharPressed();
+		}
+		if (IsKeyPressed(KEY_BACKSPACE) && !password.empty()) {
+			password.pop_back();
+		}
 	}
-	DrawText(username.c_str(), 260, 265, 25, WHITE);
 }
 void Menu::DrawUsername()
 {
-	DrawText(username.c_str(), 260, 265, 25, WHITE);
+	int maxFontSize = 55;
+	int minFontSize = 10;
+	int spacing = 2;
+
+	Vector2 textSize = MeasureTextEx(font, username.c_str(), fontsize, spacing);
+	while (textSize.x > 545 && fontsize > minFontSize)
+	{
+		fontsize -= 1;
+		textSize = MeasureTextEx(font, username.c_str(), fontsize, spacing);
+	}
+	while (textSize.x < 545 && fontsize < maxFontSize)
+	{
+		fontsize += 1;
+		textSize = MeasureTextEx(font, username.c_str(), fontsize, spacing);
+		if (textSize.x > 545)
+		{
+			fontsize -= 1;
+			break;
+		}
+	}
+	float y_position = 235 - (textSize.y / 2);
+
+	DrawTextEx(font, username.c_str(), { 320, y_position }, fontsize, spacing, WHITE);
 }
+
 void Menu::DrawPassword()
 {
-	DrawText(password.c_str(), 260, 265, 25, WHITE);
-}
-void Menu::insertPassword()
-{
+	int maxFontSize = 55;
+	int minFontSize = 10;
+	int spacing = 2;
 
+	Vector2 textSize = MeasureTextEx(font, password.c_str(), fontsize, spacing);
+	while (textSize.x > 545 && fontsize > minFontSize)
+	{
+		fontsize -= 1;
+		textSize = MeasureTextEx(font, password.c_str(), fontsize, spacing);
+	}
+	while (textSize.x < 545 && fontsize < maxFontSize)
+	{
+		fontsize += 1;
+		textSize = MeasureTextEx(font, password.c_str(), fontsize, spacing);
+		if (textSize.x > 545)
+		{
+			fontsize -= 1;
+			break;
+		}
+	}
+	float y_position = 465 - (textSize.y / 2);
+
+	DrawTextEx(font, password.c_str(), { 320, y_position }, fontsize, spacing, WHITE);
 }

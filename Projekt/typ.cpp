@@ -144,7 +144,14 @@ void Character::setPlayerTearSpeed(float amount)
 }
 void Character::setPlayerTearRate(float amount)
 {
-	tearRate +=amount;
+	if (tearRate <= 0.1)
+	{
+		tearRate -= (amount)/2;
+	}
+	else
+	{
+		tearRate -= amount;
+	}
 }
 void Character::setPlayerSpeed(float amount)
 {

@@ -2,37 +2,37 @@
 #include "raylib.h"
 #include "items.h"
 
-Items::Items()
+Items::Items(Vector2 enemyPos)
 {
 	image = LoadTexture("DamageTrinket.png");
-	position.x = (GetScreenWidth() - image.width) / 2;
-	position.y = (GetScreenHeight() - image.height) / 2;
+	position.x = enemyPos.x - 3 * (image.width / 4);
+	position.y = enemyPos.y - 3 * (image.height / 4);
 }
 Items::~Items()
 {
 
 }
-DamageTrinket::DamageTrinket()
+DamageTrinket::DamageTrinket(Vector2 enemyPos) : Items(enemyPos)
 {
 	image = LoadTexture("DamageTrinket.png");
 }
 DamageTrinket::~DamageTrinket() { UnloadTexture(image); }
-TearRateTrinket::TearRateTrinket() : Items()
+TearRateTrinket::TearRateTrinket(Vector2 enemyPos) : Items(enemyPos)
 {
 	image = LoadTexture("TearRateTrinket.png");
 }
 TearRateTrinket::~TearRateTrinket() { UnloadTexture(image); }
-SpeedTrinket::SpeedTrinket()
+SpeedTrinket::SpeedTrinket(Vector2 enemyPos) : Items(enemyPos)
 {
 	image = LoadTexture("SpeedTrinket.png");
 }
 SpeedTrinket::~SpeedTrinket() { UnloadTexture(image); }
-HealthTrinket::HealthTrinket()
+HealthTrinket::HealthTrinket(Vector2 enemyPos) : Items(enemyPos)
 {
 	image = LoadTexture("HealthTrinket.png");
 }
 HealthTrinket::~HealthTrinket() { UnloadTexture(image); }
-TearSpeedTrinket::TearSpeedTrinket()
+TearSpeedTrinket::TearSpeedTrinket(Vector2 enemyPos) : Items(enemyPos)
 {
 	image = LoadTexture("TearSpeedTrinket.png");
 }
@@ -48,15 +48,15 @@ Rectangle Items::getItemRect()
 }
 void DamageTrinket::applyEffect(Character* player)
 {
-	player->setPlayerDamage(1);
+	player->setPlayerDamage(1.5);
 }
 void TearRateTrinket::applyEffect(Character* player)
 {
-	player->setPlayerTearRate(1);
+	player->setPlayerTearRate(0.04);
 }
 void SpeedTrinket::applyEffect(Character* player)
 {
-	player->setPlayerSpeed(1);
+	player->setPlayerSpeed(1.5);
 }
 void HealthTrinket::applyEffect(Character* player)
 {
@@ -64,5 +64,5 @@ void HealthTrinket::applyEffect(Character* player)
 }
 void TearSpeedTrinket::applyEffect(Character* player)
 {
-	player->setPlayerTearSpeed(1);
+	player->setPlayerTearSpeed(0.5);
 }

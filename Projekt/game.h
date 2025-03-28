@@ -22,7 +22,7 @@ public:
 private:
 	unique_ptr<Character> Player;
 	unique_ptr<Items> Loot;
-	void createRandomLoot();
+	void createRandomLoot(Vector2 enemyPos);
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
 	vector<shared_ptr<Enemy>> enemies;

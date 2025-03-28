@@ -31,7 +31,7 @@ Monster2::Monster2(Vector2 position)//Szybki
 	: Enemy(position) {
 	image = LoadTexture("potwor2.png");
 	enemyMaxHealth = enemyHealth = 1;
-	enemySpeed = 2;
+	enemySpeed = 2.5;
 	enemyScore = 100;
 }
 
@@ -51,7 +51,7 @@ Monster4::Monster4(Vector2 position)//Strzelajacy Mini-Boss
 	: Enemy(position) {
 	image = LoadTexture("potwor4.png");
 	enemyMaxHealth = enemyHealth = 10;
-	enemySpeed = 1;
+	enemySpeed = 0.5;
 	enemyAttackSpeed = 3;
 	enemyScore = 400;
 }
@@ -60,9 +60,9 @@ Monster4::~Monster4() { UnloadTexture(image); }
 Monster5::Monster5(Vector2 position)//Boss
 	: Enemy(position) {
 	image = LoadTexture("potwor5.png");
-	enemyMaxHealth = enemyHealth = 30;
-	enemySpeed = 0.5;
-	enemyAttackSpeed = 5;
+	enemyMaxHealth = enemyHealth = 50;
+	enemySpeed = 0.2;
+	enemyAttackSpeed = 8;
 	enemyScore = 800;
 }
 Monster5::~Monster5() { UnloadTexture(image); }
@@ -177,4 +177,8 @@ void Enemy::CheckOutofTheBorder()
 	{
 		position.x = GetScreenWidth() - image.width;
 	}
+}
+Vector2 Enemy::getEnemyPosition()
+{
+	return { position.x+(image.width/2),position.y+(image.height/2) };
 }

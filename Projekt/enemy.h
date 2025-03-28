@@ -25,6 +25,7 @@ public:
 	virtual int getEnemyAttackSpeed();
 	virtual int getEnemyScore();
 	virtual void CheckOutofTheBorder();
+	virtual Vector2 getEnemyPosition();
 protected:
 	int enemyHealth;
 	float enemySpeed;

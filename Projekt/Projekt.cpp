@@ -3,6 +3,7 @@
 #include <string>
 #include "raylib.h"
 #include "game.h"
+#include "menu.h"
 
 string ScoreWithLeadingZeros(int number, int width)
 {
@@ -22,21 +23,35 @@ int main()
 
 	Game game;
 	game.setPlayerCharacter(2);
+	Menu menu;
 	while (!WindowShouldClose())
 	{
-		game.InputHandle();
-		game.Update();
 		BeginDrawing();
-		DrawTexture(background, 0, 0, WHITE);
-		game.Draw();	
-		DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
-		string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
-		DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
-		EndDrawing();
-		if (game.isGameOver())
+		if (menu.LoginMenu_active)
 		{
-			break;
+			menu.DrawLoginMenu();
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				menu.isButtonClicked();
+			}
 		}
+		else
+		{
+			game.InputHandle();
+			game.Update();
+			//BeginDrawing();
+			DrawTexture(background, 0, 0, WHITE);
+			game.Draw();
+			DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
+			string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
+			DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
+			//EndDrawing();
+			if (game.isGameOver())
+			{
+				break;
+			}
+		}
+		EndDrawing();
 	}
 	UnloadTexture(background);
 	CloseWindow();

@@ -63,10 +63,6 @@ void Game::Update() {
 		isCreatingNewWave = true;
 		thread t(&Game::beginNewWave,this);
 		t.detach();
-		if (waveNumber % 5 == 0)
-		{
-			createRandomLoot();
-		}
 	}
 }
 void Game::Draw() {
@@ -227,6 +223,10 @@ void Game::CollisionCheck()
 					if ((*it)->getEnemyHealth() <= 0)
 					{
 						increasePlayerTotalScore((*it)->getEnemyScore());
+						if (waveNumber % 5 == 0)
+						{
+							createRandomLoot((*it)->getEnemyPosition());
+						}
 						it = enemies.erase(it);
 					}
 					else
@@ -300,7 +300,6 @@ void Game::beginNewWave()
 {
 	Player->increasePlayersHealth();
 	disableEnemyTears();
-	disablePlayerTears();
 	increasePlayerTotalScore(200 * waveNumber);
 	this_thread::sleep_for(chrono::seconds(3));
 	waveNumber++;
@@ -326,26 +325,25 @@ void Game::increasePlayerTotalScore(int amount)
 {
 	playerTotalScore += amount;
 }
-void Game::createRandomLoot()
+void Game::createRandomLoot(Vector2 enemyPos)
 {
-	//int type=GetRandomValue(1,5);
-	int type = 1;
+	int type=GetRandomValue(1,5);
 	switch (type)
 	{
 	case 1:
-		Loot = make_unique<DamageTrinket>();
+		Loot = make_unique<DamageTrinket>(enemyPos);
 		break;
 	case 2:
-		Loot = make_unique<TearRateTrinket>();
+		Loot = make_unique<TearRateTrinket>(enemyPos);
 		break;
 	case 3:
-		Loot = make_unique<SpeedTrinket>();
+		Loot = make_unique<SpeedTrinket>(enemyPos);
 		break;
 	case 4:
-		Loot = make_unique<HealthTrinket>();
+		Loot = make_unique<HealthTrinket>(enemyPos);
 		break;
 	case 5:
-		Loot = make_unique<TearSpeedTrinket>();
+		Loot = make_unique<TearSpeedTrinket>(enemyPos);
 		break;
 	default:
 		break;

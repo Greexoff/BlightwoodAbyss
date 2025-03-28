@@ -24,16 +24,33 @@ int main()
 	Game game;
 	game.setPlayerCharacter(2);
 	Menu menu;
+	int setAction =0;
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
-		if (menu.LoginMenu_active)
+		if (menu.getLoginMenuActive())
 		{
 			menu.DrawLoginMenu();
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
-				menu.isButtonClicked();
+				setAction = menu.isButtonClicked();
 			}
+			switch (setAction)
+			{
+			case 1:
+				cout << "TU JEST BUTTON" << endl;
+				menu.setLoginMenuActive(false);
+				break;
+			case 2:
+				menu.insertUsername();
+				break;
+			case 3:
+				menu.insertPassword();
+			default:
+				break;
+			}
+			menu.DrawUsername();
+			menu.DrawPassword();
 		}
 		else
 		{

@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <raylib.h>
 #include <regex>
@@ -12,21 +11,40 @@ class Menu
 {
 public:
 	Menu();
+	void setMenuActive(bool value);
+	bool getMenuActive();
+private:
+	bool Menu_active;
+};
+class LoginMenu : public Menu
+{
+public:
+	LoginMenu();
 	void DrawLoginMenu();
 	void insertData(int setAction);
-	void setLoginMenuActive(bool value);
+	void setMenuActive(bool value);
 	void DrawUsername();
 	void DrawPassword();
-	bool getLoginMenuActive();
+	bool checkIsLoginCorrect();
+	bool getMenuActive();
 	int isButtonClicked();
-	
+	void switchLoginMenuBackground(const char* background_file_name);
+	bool isSignUpCardActive();
+	bool checkIsPlayerInDataBase();
+	void addPlayerToDataBase();
+	void clearUsernameandPassword();
+	void changeSignBarLevel(bool value);
+
 private:
-	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR};
+	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };
 	bool LoginMenu_active;
 	Texture2D LoginMenu_background;
 	Rectangle LoginMenu_ConfirmArea;
 	Rectangle LoginMenu_UsernameBarArea;
 	Rectangle LoginMenu_PasswordBarArea;
+	Rectangle LoginMenu_SingupArea;
+	bool areBarAreasActive;
+	bool isSignupAreaActive;
 	string username;
 	string password;
 	int fontsize;

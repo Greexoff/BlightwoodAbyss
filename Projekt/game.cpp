@@ -144,11 +144,16 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		enemiesy.push_back(make_shared<Monster5>(position));
 		return enemiesy;
 	}
+	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
 		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
-		if (waveNumber >= 3)
+		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;
+		}
+		if (amountOfMiniBoss >= 3)
+		{
+			poolOfEnemiesTypes = 3;
 		}
 		int type = GetRandomValue(1, poolOfEnemiesTypes);
 		switch (type) {
@@ -163,6 +168,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 			break;
 		case 4:
 			enemiesy.push_back(make_shared<Monster4>(position));
+			amountOfMiniBoss++;
 			break;
 		default:
 			break;
@@ -245,7 +251,7 @@ void Game::CollisionCheck()
 		auto it = enemies.begin();
 		while (it != enemies.end())
 		{
-			if (CheckCollisionRecs((*it)->getEnemyRect(), Player->getPlayerRect()) && GetTime() - lastTimePlayerWasTouched > enemyHittingGap)
+			if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap && CheckCollisionRecs((*it)->getEnemyRect(), Player->getPlayerRect()))
 			{
 				Player->reducePlayersHealth();
 
@@ -303,7 +309,10 @@ void Game::beginNewWave()
 	increasePlayerTotalScore(200 * waveNumber);
 	this_thread::sleep_for(chrono::seconds(3));
 	waveNumber++;
-	amountofEnemies++;
+	if (waveNumber < 11)
+	{
+		amountofEnemies++;
+	}
 	proceedCreatingEnemies = true;
 	isCreatingNewWave = false;
 }
@@ -349,4 +358,8 @@ void Game::createRandomLoot(Vector2 enemyPos)
 		break;
 	}
 	
+}
+void Game::setLastTimePlayerWasTouched()
+{
+	lastTimePlayerWasTouched = GetTime();
 }

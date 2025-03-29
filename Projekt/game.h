@@ -19,6 +19,7 @@ public:
 	bool isGameOver();
 	int playerTotalScore;
 	void setPlayerCharacter(int Character);
+	void setLastTimePlayerWasTouched();
 private:
 	unique_ptr<Character> Player;
 	unique_ptr<Items> Loot;

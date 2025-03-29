@@ -6,29 +6,36 @@
 #include <fstream>
 
 using namespace std;
-
 class Menu
 {
 public:
 	Menu();
 	void setMenuActive(bool value);
 	bool getMenuActive();
-private:
+	void DrawMenu();
+	void switchMenuBackground(const char* background_file_name);
+	int isButtonClicked();
+protected:
 	bool Menu_active;
+	Texture2D Menu_background;
+	Font font;
+private:
+	enum Pressed{NOTHING, NEWGAME_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON};
+	Rectangle Menu_NewGameButton;
+	Rectangle Menu_UnlockedItemsButton;
+	Rectangle Menu_HighestScoreButton;
+	Rectangle Menu_Exit;
 };
 class LoginMenu : public Menu
 {
 public:
 	LoginMenu();
-	void DrawLoginMenu();
+	~LoginMenu();
 	void insertData(int setAction);
-	void setMenuActive(bool value);
 	void DrawUsername();
 	void DrawPassword();
 	bool checkIsLoginCorrect();
-	bool getMenuActive();
 	int isButtonClicked();
-	void switchLoginMenuBackground(const char* background_file_name);
 	bool isSignUpCardActive();
 	bool checkIsPlayerInDataBase();
 	void addPlayerToDataBase();
@@ -37,8 +44,6 @@ public:
 
 private:
 	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };
-	bool LoginMenu_active;
-	Texture2D LoginMenu_background;
 	Rectangle LoginMenu_ConfirmArea;
 	Rectangle LoginMenu_UsernameBarArea;
 	Rectangle LoginMenu_PasswordBarArea;
@@ -48,5 +53,11 @@ private:
 	string username;
 	string password;
 	int fontsize;
-	Font font = LoadFontEx("arial.ttf", 64, 0, 0);//zmienic na tego bahseita czy jakos tak
+};
+class StartingMenu : public Menu
+{
+public:
+	StartingMenu();
+	~StartingMenu();
+private:
 };

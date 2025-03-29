@@ -23,76 +23,91 @@ int main()
 
 	Game game;
 	game.setPlayerCharacter(2);
+	StartingMenu Startingmenu;
 	LoginMenu Loginmenu;
 	Menu menu;
-	int setAction =0;
+	int setAction=0;
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
-		if (Loginmenu.getMenuActive())
+		if (Startingmenu.getMenuActive())
 		{
-			Loginmenu.DrawLoginMenu();
+			Startingmenu.DrawMenu();
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
-				setAction = Loginmenu.isButtonClicked();
+				Startingmenu.setMenuActive(false);
+				Loginmenu.setMenuActive(true);
 			}
-			switch (setAction)
-			{
-			case 1:
-				if (Loginmenu.isSignUpCardActive() && Loginmenu.checkIsLoginCorrect())
-				{
-					Loginmenu.addPlayerToDataBase();
-					Loginmenu.setMenuActive(false);
-					menu.setMenuActive(true);
-					Loginmenu.switchLoginMenuBackground("BackgroundLOGGEDIN.png");
-					game.setLastTimePlayerWasTouched();//to trzeba bedzie przeniesc do ostatniej mozliwej funkcji z menu
-				}
-				else
-				{
-					if (Loginmenu.checkIsLoginCorrect() && Loginmenu.checkIsPlayerInDataBase())
-					{
-						Loginmenu.setMenuActive(false);
-						menu.setMenuActive(true);
-						Loginmenu.switchLoginMenuBackground("BackgroundLOGGEDIN.png");
-						game.setLastTimePlayerWasTouched();//to trzeba bedzie przeniesc do ostatniej mozliwej funkcji z menu
-					}
-				}
-				setAction = 0;
-				break;
-			case 2:
-			case 3:
-				Loginmenu.insertData(setAction);
-				break;
-			case 4:		
-				Loginmenu.clearUsernameandPassword();
-				Loginmenu.switchLoginMenuBackground("BackgroundSIGNUP.png");
-				Loginmenu.changeSignBarLevel(false);
-				setAction = 0;
-				break;
-			default:
-				break;
-			}
-			Loginmenu.DrawUsername();
-			Loginmenu.DrawPassword();
 		}
 		else
 		{
-			if (menu.getMenuActive())
+			if (Loginmenu.getMenuActive())
 			{
-				//tutaj rzeczy dla main menu
+				Loginmenu.DrawMenu();
+				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+				{
+					setAction = Loginmenu.isButtonClicked();
+				}
+				switch (setAction)
+				{
+				case 1:
+					if (Loginmenu.isSignUpCardActive() && Loginmenu.checkIsLoginCorrect())
+					{
+						Loginmenu.addPlayerToDataBase();
+						Loginmenu.setMenuActive(false);
+						menu.setMenuActive(true);
+						game.setLastTimePlayerWasTouched();//to trzeba bedzie przeniesc do ostatniej mozliwej funkcji z menu
+					}
+					else
+					{
+						if (Loginmenu.checkIsLoginCorrect() && Loginmenu.checkIsPlayerInDataBase())
+						{
+							Loginmenu.setMenuActive(false);
+							menu.setMenuActive(true);
+							game.setLastTimePlayerWasTouched();//to trzeba bedzie przeniesc do ostatniej mozliwej funkcji z menu
+						}
+					}
+					setAction = 0;
+					break;
+				case 2:
+				case 3:
+					Loginmenu.insertData(setAction);
+					break;
+				case 4:
+					Loginmenu.clearUsernameandPassword();
+					Loginmenu.switchMenuBackground("BackgroundSIGNUP.png");
+					Loginmenu.changeSignBarLevel(false);
+					setAction = 0;
+					break;
+				default:
+					break;
+				}
+				Loginmenu.DrawUsername();
+				Loginmenu.DrawPassword();
 			}
 			else
 			{
-				game.InputHandle();
-				game.Update();
-				DrawTexture(background, 0, 0, WHITE);
-				game.Draw();
-				DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
-				string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
-				DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
-				if (game.isGameOver())
+				if (menu.getMenuActive())
 				{
-					break;
+					menu.DrawMenu();
+					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+					{
+						setAction = menu.isButtonClicked();
+					}
+				}
+				else
+				{
+					game.InputHandle();
+					game.Update();
+					DrawTexture(background, 0, 0, WHITE);
+					game.Draw();
+					DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
+					string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
+					DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
+					if (game.isGameOver())
+					{
+						break;
+					}
 				}
 			}
 		}

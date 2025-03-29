@@ -2,6 +2,16 @@
 Menu::Menu()
 {
 	Menu_active = false;
+	Menu_background = LoadTexture("backgroundMENU.png");
+	font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
+	Menu_NewGameButton = {434, 123, 761-434, 198-123};
+	Menu_UnlockedItemsButton = { 365, 267, 848 - 365, 322 - 267 };
+	Menu_HighestScoreButton = {384, 401, 822-384, 480-401};
+	Menu_Exit = {538, 543, 653-538, 598-543};
+}
+void Menu::setMenuActive(bool value)
+{
+	Menu_active = value;
 }
 bool Menu::getMenuActive()
 {
@@ -11,15 +21,43 @@ bool Menu::getMenuActive()
 	}
 	return false;
 }
-void Menu::setMenuActive(bool value)
+void Menu::DrawMenu()
 {
-	Menu_active = value;
+	DrawTexture(Menu_background, 0, 0, WHITE);
+}
+void Menu::switchMenuBackground(const char* background_file_name)
+{
+	Menu_background = LoadTexture(background_file_name);
+}
+int Menu::isButtonClicked()
+{
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos, Menu_NewGameButton))
+	{
+		cout << "Kliknieto nowa giera" << endl;
+		return NEWGAME_BUTTON;
+	}
+	if (CheckCollisionPointRec(mousePos, Menu_UnlockedItemsButton))
+	{
+		cout << "Kilnieto unlocked items" << endl;
+		return UNLOCKED_BUTTON;
+	}
+	if (CheckCollisionPointRec(mousePos, Menu_HighestScoreButton))
+	{
+		cout << "Kliknieto Highest Score" << endl;
+		return SCORE_BUTTON;
+	}
+	if (CheckCollisionPointRec(mousePos, Menu_Exit))
+	{
+		cout << "Kliknieto Exit" << endl;
+		return EXIT_BUTTON;
+	}
 }
 LoginMenu::LoginMenu()
 {
-	LoginMenu_active = true;//to bede raczej musial zmienic jak chce powitalny screen jeszcze zrobic
+	Menu_active = false;
 	areBarAreasActive = true;
-	LoginMenu_background=LoadTexture("backgroundLOGIN.png");
+	Menu_background=LoadTexture("backgroundLOGIN.png");
 	LoginMenu_ConfirmArea = { 480,548,226,103 };
 	LoginMenu_UsernameBarArea = {296, 185, 594, 92};
 	LoginMenu_PasswordBarArea = {296, 413, 594, 92};
@@ -29,9 +67,9 @@ LoginMenu::LoginMenu()
 	fontsize = 55;
 	isSignupAreaActive = true;
 }
-void LoginMenu::DrawLoginMenu()
+LoginMenu::~LoginMenu()
 {
-	DrawTexture(LoginMenu_background, 0, 0, WHITE);
+	UnloadTexture(Menu_background);
 }
 int LoginMenu::isButtonClicked()
 {
@@ -57,14 +95,6 @@ int LoginMenu::isButtonClicked()
 		return SIGNUP_BAR;
 	}
 	return NOTHING;
-}
-void LoginMenu::setMenuActive(bool value)
-{
-	LoginMenu_active = value;
-}
-bool LoginMenu::getMenuActive()
-{
-	return LoginMenu_active;
 }
 void LoginMenu::insertData(int setAction)
 {
@@ -160,10 +190,6 @@ bool LoginMenu::checkIsLoginCorrect()
 		return false;
 	}
 }
-void LoginMenu::switchLoginMenuBackground(const char* background_file_name)
-{
-	LoginMenu_background = LoadTexture(background_file_name);
-}
 void LoginMenu::changeSignBarLevel(bool value)
 {
 	isSignupAreaActive = value;
@@ -214,4 +240,14 @@ void LoginMenu::clearUsernameandPassword()
 {
 	username = "";
 	password = "";
+}
+
+StartingMenu::StartingMenu()
+{
+	Menu_background = LoadTexture("BackgroundSTARTING.png");
+	Menu_active = true;
+}
+StartingMenu::~StartingMenu()
+{
+	UnloadTexture(Menu_background);
 }

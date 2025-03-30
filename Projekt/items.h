@@ -7,11 +7,11 @@
 class Items
 {
 public:
-	Items(Vector2 enemyPos);
-	 ~Items();
+	virtual ~Items();
 	virtual void DrawItems();
 	virtual Rectangle getItemRect();
 	virtual void applyEffect(Character* player)=0;
+	virtual void setPosition(Vector2 enemyPos);
 protected:
 	Vector2 position;
 	Texture2D image;
@@ -19,7 +19,7 @@ protected:
 class DamageTrinket : public Items
 {
 public:
-	DamageTrinket(Vector2 enemyPos);
+	DamageTrinket(Texture2D loadedImage, Vector2 enemyPos);
 	void applyEffect(Character* player) override;
 	~DamageTrinket();
 private:
@@ -28,7 +28,7 @@ private:
 class TearRateTrinket : public Items
 {
 public:
-	TearRateTrinket(Vector2 enemyPos);
+	TearRateTrinket(Texture2D loadedImage, Vector2 enemyPos);
 	void applyEffect(Character* player) override;
 	~TearRateTrinket();
 private:
@@ -37,7 +37,7 @@ private:
 class SpeedTrinket : public Items
 {
 public:
-	SpeedTrinket(Vector2 enemyPos);
+	SpeedTrinket(Texture2D loadedImage, Vector2 enemyPos);
 	void applyEffect(Character* player) override;
 	~SpeedTrinket();
 private:
@@ -46,7 +46,7 @@ private:
 class HealthTrinket : public Items
 {
 public:
-	HealthTrinket(Vector2 enemyPos);
+	HealthTrinket(Texture2D loadedImage, Vector2 enemyPos);
 	void applyEffect(Character* player) override;
 	~HealthTrinket();
 private:
@@ -55,7 +55,7 @@ private:
 class TearSpeedTrinket : public Items
 {
 public:
-	TearSpeedTrinket(Vector2 enemyPos);
+	TearSpeedTrinket(Texture2D loadedImage, Vector2 enemyPos);
 	void applyEffect(Character* player) override;
 	~TearSpeedTrinket();
 private:

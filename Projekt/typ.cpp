@@ -2,25 +2,13 @@
 #include "raylib.h"
 #include "typ.h"
 
-Character::Character()
-{
-	image = LoadTexture("FirstCharacter.png");
-	position.x = (GetScreenWidth()-image.width)/2;
-	position.y = (GetScreenHeight() - image.height) / 2;
-	lastTearTime = 0;
-	playerHealth = 0;
-	maxPlayerHealth = 0;
-	playerSpeed = 0;
-	playerDamage = 0;
-	tearSpeed = 0;
-	tearRate = 0;
-}
+
 Character::~Character() {
-	UnloadTexture(image);
 }
-FirstCharacter::FirstCharacter()
+FirstCharacter::FirstCharacter(Texture2D loadedImage)
 {
-	image = LoadTexture("FirstCharacter.png");
+	image = loadedImage;
+	setPlayerStartingPosition();
 	playerHealth = 3;
 	maxPlayerHealth = 3;
 	playerSpeed = 4.5;
@@ -30,11 +18,11 @@ FirstCharacter::FirstCharacter()
 }
 FirstCharacter::~FirstCharacter()
 {
-	UnloadTexture(image);
 }
-SecondCharacter::SecondCharacter()
+SecondCharacter::SecondCharacter(Texture2D loadedImage)
 {
-	image = LoadTexture("SecondCharacter.png");
+	image = loadedImage;
+	setPlayerStartingPosition();
 	playerHealth = 2;
 	maxPlayerHealth = 2;
 	playerSpeed = 5;
@@ -44,11 +32,11 @@ SecondCharacter::SecondCharacter()
 }
 SecondCharacter::~SecondCharacter()
 {
-	UnloadTexture(image);
 }
-ThirdCharacter::ThirdCharacter()
+ThirdCharacter::ThirdCharacter(Texture2D loadedImage)
 {
-	image = LoadTexture("ThirdCharacter.png");
+	image = loadedImage;
+	setPlayerStartingPosition();
 	playerHealth = 6;
 	maxPlayerHealth = 6;
 	playerSpeed = 2;
@@ -58,10 +46,13 @@ ThirdCharacter::ThirdCharacter()
 }
 ThirdCharacter::~ThirdCharacter()
 {
-	UnloadTexture(image);
 }
 
-
+void Character::setPlayerStartingPosition()
+{
+	position.x = (GetScreenWidth() - image.width) / 2;
+	position.y = (GetScreenHeight() - image.height) / 2;
+}
 void Character::Draw() {
 	DrawTextureV(image, position, WHITE);
 }

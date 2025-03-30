@@ -3,69 +3,63 @@
 using namespace std;
 //		Konstruktory i Destruktory Klas Enemy i pochodnych
 //|---------------------------------------------------------------------------------------|
-Enemy::Enemy(Vector2 position)
-{
-	this->position = position;
-	enemyAttackSpeed = 0;
-	enemyHealth = 0;
-	enemySpeed = 0;
-	enemyScore = 0;
-	image = LoadTexture("potwor.png");
-	
-}
 Enemy::~Enemy()
 {
-	UnloadTexture(image);
 }
-Monster1::Monster1(Vector2 position)//Tank
-	: Enemy(position) {
-	image = LoadTexture("potwor1.png");
-	enemyMaxHealth = enemyHealth = 4;
+Monster1::Monster1(Vector2 position, Texture2D loadedImage)//Tank
+{
+	image = loadedImage;
+	this->position = position;
+	enemyMaxHealth = enemyHealth=4;
 	enemySpeed = 1;
+	enemyAttackSpeed = 0;
 	enemyScore = 300;
 }
+Monster1::~Monster1() {}
 
-Monster1::~Monster1() { UnloadTexture(image); }
-
-Monster2::Monster2(Vector2 position)//Szybki 
-	: Enemy(position) {
-	image = LoadTexture("potwor2.png");
+Monster2::Monster2(Vector2 position, Texture2D loadedImage)//Szybki 
+{
+	image = loadedImage;
+	this->position = position;
 	enemyMaxHealth = enemyHealth = 1;
 	enemySpeed = 2.5;
+	enemyAttackSpeed = 0;
 	enemyScore = 100;
 }
+Monster2::~Monster2() {}
 
-Monster2::~Monster2() { UnloadTexture(image); }
-
-Monster3::Monster3(Vector2 position)//Strzelajacy
-	: Enemy(position) {
-	image = LoadTexture("potwor3.png");
+Monster3::Monster3(Vector2 position, Texture2D loadedImage)//Strzelajacy
+{
+	image = loadedImage;
+	this->position = position;
 	enemyMaxHealth = enemyHealth = 2;
+	enemySpeed = 0;
 	enemyAttackSpeed = 5;
 	enemyScore = 200;
 }
+Monster3::~Monster3() {}
 
-Monster3::~Monster3() { UnloadTexture(image); }
-
-Monster4::Monster4(Vector2 position)//Strzelajacy Mini-Boss
-	: Enemy(position) {
-	image = LoadTexture("potwor4.png");
+Monster4::Monster4(Vector2 position, Texture2D loadedImage)//Strzelajacy Mini-Boss
+{
+	image = loadedImage;
+	this->position = position;
 	enemyMaxHealth = enemyHealth = 10;
 	enemySpeed = 0.5;
 	enemyAttackSpeed = 3;
 	enemyScore = 400;
 }
-Monster4::~Monster4() { UnloadTexture(image); }
+Monster4::~Monster4() {}
 
-Monster5::Monster5(Vector2 position)//Boss
-	: Enemy(position) {
-	image = LoadTexture("potwor5.png");
+Monster5::Monster5(Vector2 position, Texture2D loadedImage)//Boss
+{
+	image = loadedImage;
+	this->position = position;
 	enemyMaxHealth = enemyHealth = 50;
 	enemySpeed = 0.2;
 	enemyAttackSpeed = 8;
 	enemyScore = 800;
 }
-Monster5::~Monster5() { UnloadTexture(image); }
+Monster5::~Monster5() {}
 //|---------------------------------------------------------------------------------------|
 void Enemy::Draw() {
 	DrawTextureV(image, position, WHITE);

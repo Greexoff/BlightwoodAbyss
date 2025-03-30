@@ -52,6 +52,7 @@ int Menu::isButtonClicked()
 		cout << "Kliknieto Exit" << endl;
 		return EXIT_BUTTON;
 	}
+	return NOTHING;
 }
 LoginMenu::LoginMenu()
 {
@@ -248,6 +249,16 @@ StartingMenu::StartingMenu()
 	Menu_active = true;
 }
 StartingMenu::~StartingMenu()
+{
+	UnloadTexture(Menu_background);
+}
+
+CharacterSelectMenu::CharacterSelectMenu()
+{
+	Menu_background = LoadTexture("backgroundCHARSELECT.png");
+	Menu_active = false;
+}
+CharacterSelectMenu::~CharacterSelectMenu()
 {
 	UnloadTexture(Menu_background);
 }

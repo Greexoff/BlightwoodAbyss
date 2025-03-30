@@ -26,8 +26,10 @@ int main()
 	StartingMenu Startingmenu;
 	LoginMenu Loginmenu;
 	Menu menu;
+	CharacterSelectMenu Charactermenu;
 	int setAction=0;
-	while (!WindowShouldClose())
+	bool shouldEnd = false;
+	while (!WindowShouldClose() && !shouldEnd)
 	{
 		BeginDrawing();
 		if (Startingmenu.getMenuActive())
@@ -92,21 +94,47 @@ int main()
 					menu.DrawMenu();
 					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 					{
-						setAction = menu.isButtonClicked();
+						setAction =menu.isButtonClicked();
 					}
+					switch (setAction)
+					{
+					case 1:
+						menu.setMenuActive(false);
+						Charactermenu.setMenuActive(true);
+						break;
+					case 2:
+						//tutaj rzeczy dla unlocked
+						break;
+					case 3:
+						//tutaj dla highest score
+						break;
+					case 4:
+						shouldEnd = true;
+						break;
+					default:
+						break;
+					}
+					setAction = 0;
 				}
 				else
 				{
-					game.InputHandle();
-					game.Update();
-					DrawTexture(background, 0, 0, WHITE);
-					game.Draw();
-					DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
-					string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
-					DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
-					if (game.isGameOver())
+					if(Charactermenu.getMenuActive())
+					//{ 
+
+					//}
+					//else
 					{
-						break;
+						game.InputHandle();
+						game.Update();
+						DrawTexture(background, 0, 0, WHITE);
+						game.Draw();
+						DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
+						string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
+						DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
+						if (game.isGameOver())
+						{
+							break;
+						}
 					}
 				}
 			}

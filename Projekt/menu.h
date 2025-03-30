@@ -20,7 +20,7 @@ protected:
 	Texture2D Menu_background;
 	Font font;
 private:
-	enum Pressed{NOTHING, NEWGAME_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON};
+	enum Pressed { NOTHING, NEWGAME_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON};
 	Rectangle Menu_NewGameButton;
 	Rectangle Menu_UnlockedItemsButton;
 	Rectangle Menu_HighestScoreButton;
@@ -60,4 +60,10 @@ public:
 	StartingMenu();
 	~StartingMenu();
 private:
+};
+class CharacterSelectMenu : public Menu
+{
+public:
+	CharacterSelectMenu();
+	~CharacterSelectMenu();
 };

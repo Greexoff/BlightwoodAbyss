@@ -22,6 +22,8 @@ public:
 	void setLastTimePlayerWasTouched();
 private:
 	unique_ptr<Character> Player;
+	vector<Texture2D> loadImages;
+	vector<const char*> textureNames;
 	unique_ptr<Items> Loot;
 	void createRandomLoot(Vector2 enemyPos);
 	vector <shared_ptr<Enemy>> CreateEnemy();
@@ -42,5 +44,6 @@ private:
 	atomic<bool> isCreatingNewWave;
 	atomic<bool> proceedCreatingEnemies;
 	int waveNumber;
+	void loadTexturesIntoVector();
 	void increasePlayerTotalScore(int amount);
 };

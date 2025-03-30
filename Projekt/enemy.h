@@ -9,7 +9,6 @@ using namespace std;
 class Enemy
 {
 public:
-	Enemy(Vector2 position);
 	virtual void Update(Vector2 PlayerPosition);
 	virtual void Draw();
 	virtual void DrawEnemyHealthBar();
@@ -27,6 +26,7 @@ public:
 	virtual void CheckOutofTheBorder();
 	virtual Vector2 getEnemyPosition();
 protected:
+	vector<Texture2D> loadImages;
 	int enemyHealth;
 	float enemySpeed;
 	int enemyAttackSpeed;
@@ -37,7 +37,7 @@ private:
 class Monster1 : public Enemy
 {
 public:
-	Monster1(Vector2 postion);
+	Monster1(Vector2 postion, Texture2D loadedImage);
 	~Monster1();
 private:
 	
@@ -45,7 +45,7 @@ private:
 class Monster2 : public Enemy
 {
 public:
-	Monster2(Vector2 postion);
+	Monster2(Vector2 postion, Texture2D loadedImage);
 	~Monster2();
 private:
 	
@@ -53,7 +53,7 @@ private:
 class Monster3 : public Enemy
 {
 public:
-	Monster3(Vector2 postion);
+	Monster3(Vector2 postion, Texture2D loadedImage);
 	~Monster3();
 private:
 	
@@ -61,7 +61,7 @@ private:
 class Monster4 : public Enemy
 {
 public:
-	Monster4(Vector2 postion);
+	Monster4(Vector2 postion, Texture2D loadedImage);
 	~Monster4();
 private:
 
@@ -69,7 +69,7 @@ private:
 class Monster5 : public Enemy
 {
 public:
-	Monster5(Vector2 postion);
+	Monster5(Vector2 postion, Texture2D loadedImage);
 	~Monster5();
 private:
 

@@ -6,6 +6,10 @@
 using namespace std;
 
 Game::Game() {
+	textureNames = {
+	"potwor1.png", "potwor2.png", "potwor3.png", "potwor4.png", "potwor5.png",
+	"DamageTrinket.png", "TearRateTrinket.png", "SpeedTrinket.png", "HealthTrinket.png", "TearSpeedTrinket.png", "tear.png", "EnemyTears.png", "FirstCharacter.png", "SecondCharacter.png"};
+	loadTexturesIntoVector();
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
@@ -19,22 +23,26 @@ Game::Game() {
 }
 Game::~Game() {
 	enemies.clear();
+	for (int i = 0; i < loadImages.size(); i++)
+	{
+		UnloadTexture(loadImages[i]);
+	}
 }
 void Game::setPlayerCharacter(int Character)
 {
 	switch (Character)
 	{
 	case 1:
-		Player = make_unique<FirstCharacter>();
+		Player = make_unique<FirstCharacter>(loadImages[12]);
 		break;
 	case 2:
-		Player = make_unique<SecondCharacter>();
+		Player = make_unique<SecondCharacter>(loadImages[13]);
 		break;
 	case 3:
-		Player = make_unique<ThirdCharacter>();
+		Player = make_unique<ThirdCharacter>(loadImages[12]);//zamienic na 14 jak bede mial texture
 		break;
 	default:
-		Player = make_unique<FirstCharacter>();
+		Player = make_unique<FirstCharacter>(loadImages[12]);
 		break;
 	}
 }
@@ -141,7 +149,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	if (waveNumber % 5 == 0)
 	{
 		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
-		enemiesy.push_back(make_shared<Monster5>(position));
+		enemiesy.push_back(make_shared<Monster5>(position, loadImages[4]));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
@@ -158,16 +166,16 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		int type = GetRandomValue(1, poolOfEnemiesTypes);
 		switch (type) {
 		case 1:
-			enemiesy.push_back(make_shared<Monster1>(position));
+			enemiesy.push_back(make_shared<Monster1>(position, loadImages[0]));
 			break;
 		case 2:
-			enemiesy.push_back(make_shared<Monster2>(position));
+			enemiesy.push_back(make_shared<Monster2>(position, loadImages[1]));
 			break;
 		case 3:
-			enemiesy.push_back(make_shared<Monster3>(position));
+			enemiesy.push_back(make_shared<Monster3>(position, loadImages[2]));
 			break;
 		case 4:
-			enemiesy.push_back(make_shared<Monster4>(position));
+			enemiesy.push_back(make_shared<Monster4>(position, loadImages[3]));
 			amountOfMiniBoss++;
 			break;
 		default:
@@ -340,19 +348,19 @@ void Game::createRandomLoot(Vector2 enemyPos)
 	switch (type)
 	{
 	case 1:
-		Loot = make_unique<DamageTrinket>(enemyPos);
+		Loot = make_unique<DamageTrinket>(loadImages[5], enemyPos);
 		break;
 	case 2:
-		Loot = make_unique<TearRateTrinket>(enemyPos);
+		Loot = make_unique<TearRateTrinket>(loadImages[6], enemyPos);
 		break;
 	case 3:
-		Loot = make_unique<SpeedTrinket>(enemyPos);
+		Loot = make_unique<SpeedTrinket>(loadImages[7], enemyPos);
 		break;
 	case 4:
-		Loot = make_unique<HealthTrinket>(enemyPos);
+		Loot = make_unique<HealthTrinket>(loadImages[8], enemyPos);
 		break;
 	case 5:
-		Loot = make_unique<TearSpeedTrinket>(enemyPos);
+		Loot = make_unique<TearSpeedTrinket>(loadImages[9], enemyPos);
 		break;
 	default:
 		break;
@@ -362,4 +370,10 @@ void Game::createRandomLoot(Vector2 enemyPos)
 void Game::setLastTimePlayerWasTouched()
 {
 	lastTimePlayerWasTouched = GetTime();
+}
+void Game::loadTexturesIntoVector()
+{
+	for (const auto& textureFile : textureNames) {
+		loadImages.push_back(LoadTexture(textureFile));
+	}
 }

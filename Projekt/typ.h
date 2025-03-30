@@ -6,8 +6,7 @@
 using namespace std;
 class Character {
 public:
-	Character();
-	~Character();
+	virtual ~Character();
 	virtual void Draw();
 	virtual void DrawPlayerHealthBar();
 	virtual void movePlayer(int x, int y);
@@ -24,6 +23,7 @@ public:
 	virtual void setPlayerTearSpeed(float amount);
 	virtual void setPlayerTearRate(float amount);
 	virtual void setPlayerMaxHealth(float amount);
+	virtual void setPlayerStartingPosition();
 protected:
 	Texture2D image;
 	Vector2 position;
@@ -38,7 +38,7 @@ protected:
 class FirstCharacter : public Character
 {
 public:
-	FirstCharacter();
+	FirstCharacter(Texture2D loadedImage);
 	~FirstCharacter();
 private:
 
@@ -46,7 +46,7 @@ private:
 class SecondCharacter : public Character
 {
 public:
-	SecondCharacter();
+	SecondCharacter(Texture2D loadedImage);
 	~SecondCharacter();
 private:
 
@@ -54,7 +54,7 @@ private:
 class ThirdCharacter : public Character
 {
 public:
-	ThirdCharacter();
+	ThirdCharacter(Texture2D loadedImage);
 	~ThirdCharacter();
 private:
 

@@ -2,45 +2,49 @@
 #include "raylib.h"
 #include "items.h"
 
-Items::Items(Vector2 enemyPos)
-{
-	image = LoadTexture("DamageTrinket.png");
-	position.x = enemyPos.x - 3 * (image.width / 4);
-	position.y = enemyPos.y - 3 * (image.height / 4);
-}
 Items::~Items()
 {
 
 }
-DamageTrinket::DamageTrinket(Vector2 enemyPos) : Items(enemyPos)
+DamageTrinket::DamageTrinket(Texture2D loadedImage, Vector2 enemyPos)
 {
-	image = LoadTexture("DamageTrinket.png");
+	image = loadedImage;
+	setPosition(enemyPos);
 }
-DamageTrinket::~DamageTrinket() { UnloadTexture(image); }
-TearRateTrinket::TearRateTrinket(Vector2 enemyPos) : Items(enemyPos)
+DamageTrinket::~DamageTrinket() {}
+TearRateTrinket::TearRateTrinket(Texture2D loadedImage, Vector2 enemyPos)
 {
-	image = LoadTexture("TearRateTrinket.png");
+	image = loadedImage;
+	setPosition(enemyPos);
 }
-TearRateTrinket::~TearRateTrinket() { UnloadTexture(image); }
-SpeedTrinket::SpeedTrinket(Vector2 enemyPos) : Items(enemyPos)
+TearRateTrinket::~TearRateTrinket() {}
+SpeedTrinket::SpeedTrinket(Texture2D loadedImage, Vector2 enemyPos)
 {
-	image = LoadTexture("SpeedTrinket.png");
+	image = loadedImage;
+	setPosition(enemyPos);
 }
-SpeedTrinket::~SpeedTrinket() { UnloadTexture(image); }
-HealthTrinket::HealthTrinket(Vector2 enemyPos) : Items(enemyPos)
+SpeedTrinket::~SpeedTrinket() {}
+HealthTrinket::HealthTrinket(Texture2D loadedImage, Vector2 enemyPos)
 {
-	image = LoadTexture("HealthTrinket.png");
+	image = loadedImage;
+	setPosition(enemyPos);
 }
-HealthTrinket::~HealthTrinket() { UnloadTexture(image); }
-TearSpeedTrinket::TearSpeedTrinket(Vector2 enemyPos) : Items(enemyPos)
+HealthTrinket::~HealthTrinket() {}
+TearSpeedTrinket::TearSpeedTrinket(Texture2D loadedImage, Vector2 enemyPos)
 {
-	image = LoadTexture("TearSpeedTrinket.png");
+	image = loadedImage;
+	setPosition(enemyPos);
 }
-TearSpeedTrinket::~TearSpeedTrinket() { UnloadTexture(image); }
+TearSpeedTrinket::~TearSpeedTrinket() {}
 
 void Items::DrawItems()
 {
 	DrawTextureV(image, position, WHITE);
+}
+void Items::setPosition(Vector2 enemyPos)
+{
+	position.x = enemyPos.x - 3 * (image.width / 4);
+	position.y = enemyPos.y - 3 * (image.height / 4);
 }
 Rectangle Items::getItemRect()
 {

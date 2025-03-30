@@ -202,15 +202,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), loadImages[11]));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), loadImages[11]));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
 			}
 			lastTearFired = GetTime();
 		}
@@ -239,7 +239,7 @@ void Game::CollisionCheck()
 						increasePlayerTotalScore((*it)->getEnemyScore());
 						if (waveNumber % 5 == 0)
 						{
-							createRandomLoot((*it)->getEnemyPosition());
+							createRandomLoot((*it)->getEnemyPosition(2.0));
 						}
 						it = enemies.erase(it);
 					}

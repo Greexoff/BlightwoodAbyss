@@ -10,6 +10,7 @@ class Menu
 {
 public:
 	Menu();
+	~Menu();
 	void setMenuActive(bool value);
 	bool getMenuActive();
 	void DrawMenu();

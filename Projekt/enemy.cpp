@@ -172,7 +172,7 @@ void Enemy::CheckOutofTheBorder()
 		position.x = GetScreenWidth() - image.width;
 	}
 }
-Vector2 Enemy::getEnemyPosition()
+Vector2 Enemy::getEnemyPosition(float divideBy)
 {
-	return { position.x+(image.width/2),position.y+(image.height/2) };
+	return { position.x+(image.width/divideBy),position.y+(image.height/divideBy) };
 }

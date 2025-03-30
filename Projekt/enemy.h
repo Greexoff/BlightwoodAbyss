@@ -13,8 +13,8 @@ public:
 	virtual void Draw();
 	virtual void DrawEnemyHealthBar();
 	virtual ~Enemy();
-	Texture2D image;
-	Vector2 position;
+	//Texture2D image;
+	//Vector2 position;
 	virtual Rectangle getEnemyRect();
 	virtual void UpdateColl(Vector2 Direction);
 	virtual Vector2 getCollisionSide(Rectangle enemy1, Rectangle enemy2);
@@ -24,9 +24,11 @@ public:
 	virtual int getEnemyAttackSpeed();
 	virtual int getEnemyScore();
 	virtual void CheckOutofTheBorder();
-	virtual Vector2 getEnemyPosition();
+	virtual Vector2 getEnemyPosition(float divideBy);
 protected:
 	vector<Texture2D> loadImages;
+	Texture2D image;
+	Vector2 position;
 	int enemyHealth;
 	float enemySpeed;
 	int enemyAttackSpeed;

@@ -19,7 +19,7 @@ int main()
 	InitWindow(Width, Height, "Survival Game");
 	Texture2D background = LoadTexture("backgroundOG.png");
 	SetTargetFPS(60);
-	Font font = LoadFontEx("arial.ttf", 64, 0, 0);
+	Font font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
 
 	Game game;
 	game.setPlayerCharacter(2);
@@ -58,7 +58,6 @@ int main()
 						Loginmenu.addPlayerToDataBase();
 						Loginmenu.setMenuActive(false);
 						menu.setMenuActive(true);
-						game.setLastTimePlayerWasTouched();//to trzeba bedzie przeniesc do ostatniej mozliwej funkcji z menu
 					}
 					else
 					{
@@ -66,7 +65,6 @@ int main()
 						{
 							Loginmenu.setMenuActive(false);
 							menu.setMenuActive(true);
-							game.setLastTimePlayerWasTouched();//to trzeba bedzie przeniesc do ostatniej mozliwej funkcji z menu
 						}
 					}
 					setAction = 0;
@@ -101,6 +99,7 @@ int main()
 					case 1:
 						menu.setMenuActive(false);
 						Charactermenu.setMenuActive(true);
+						game.setLastTimePlayerWasTouched();
 						break;
 					case 2:
 						//tutaj rzeczy dla unlocked
@@ -142,17 +141,16 @@ int main()
 		EndDrawing();
 	}
 	UnloadTexture(background);
+	UnloadFont(font);
 	CloseWindow();
 }
 /*
 * Do zrobienia:
 * !!!Poprawic dzialanie calego wpisywania hasla
-* !!!Po nowej grze znow nowe podmenu do wyboru klasy postaci wraz ze statystykami charactera
 * !!/Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !/Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
-* !Poprawic dzialanie image przy inicjacji obiektu - stworzyc metody set na ustawianie i je polimorfowac?
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali? PARTIALLY DONE
 * !Dodac klase UI obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, KONIECZNIE UI ZE STATSAMI
 * !Wykorzystac filesystem do obslugi plikow przy LoadTexture()

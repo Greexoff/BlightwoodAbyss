@@ -9,6 +9,11 @@ Menu::Menu()
 	Menu_HighestScoreButton = {384, 401, 822-384, 480-401};
 	Menu_Exit = {538, 543, 653-538, 598-543};
 }
+Menu::~Menu()
+{
+	UnloadTexture(Menu_background);
+	UnloadFont(font);
+}
 void Menu::setMenuActive(bool value)
 {
 	Menu_active = value;
@@ -251,7 +256,7 @@ StartingMenu::StartingMenu()
 StartingMenu::~StartingMenu()
 {
 	UnloadTexture(Menu_background);
-}
+}	 
 
 CharacterSelectMenu::CharacterSelectMenu()
 {

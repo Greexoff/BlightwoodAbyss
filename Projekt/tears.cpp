@@ -1,9 +1,9 @@
 #include "tears.h"
 #include <cmath>
 
-Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirection_Y)
+Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirection_Y, Texture2D loadedImage)
 {
-	image = LoadTexture("tear.png");
+	image = loadedImage;
 	this->position = position;
 	this->tearSpeed = tearSpeed;
 	this->tearDirection_X = tearDirection_X;
@@ -14,8 +14,8 @@ Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirec
 Tears::~Tears()
 {
 }
-enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos) : Tears(position, speed, directionX, directionY) {
-	image = LoadTexture("EnemyTears.png");
+enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos, Texture2D loadedImage) : Tears(position, speed, directionX, directionY, loadedImage) {
+	image = loadedImage;
 	this->position = position;
 	this->speed = speed;
 	active = true;

@@ -3,7 +3,7 @@
 
 class Tears {
 public:
-	Tears(Vector2 position, int speed, int tearDirection_X, int tearDirection_Y);
+	Tears(Vector2 position, int speed, int tearDirection_X, int tearDirection_Y, Texture2D loadedImage);
 	~Tears();
 	void UpdatePosition();
 	virtual void Draw();
@@ -19,7 +19,7 @@ protected:
 class enemyTears : public Tears
 {
 public:
-	enemyTears(Vector2 position, int speed, Vector2 Playerpos);
+	enemyTears(Vector2 position, int speed, Vector2 Playerpos, Texture2D loadedImage);
 	void UpdatePosition(Vector2 Playerpos);
 	void Draw() override;
 	bool active;

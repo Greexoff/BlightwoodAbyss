@@ -105,16 +105,16 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_S)){moveY = 1;}
 	Player->movePlayer(moveX, moveY);
 	if (IsKeyDown(KEY_UP)) {
-		Player->shootTears(0, -1);
+		Player->shootTears(0, -1, loadImages[10]);
 	}
 	if (IsKeyDown(KEY_DOWN)) {
-		Player->shootTears(0, 1);
+		Player->shootTears(0, 1, loadImages[10]);
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		Player->shootTears(-1, 0);
+		Player->shootTears(-1, 0, loadImages[10]);
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		Player->shootTears(1, 0);
+		Player->shootTears(1, 0, loadImages[10]);
 	}
 }
 void Game::DeleteInactiveTears()
@@ -202,15 +202,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint()));
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), loadImages[11]));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint()));
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint()));
+				EnemyTears.push_back(enemyTears({ monsterPtr->position.x + (monsterPtr->image.width / 4),monsterPtr->position.y + (monsterPtr->image.height / 4) }, enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
 			}
 			lastTearFired = GetTime();
 		}

@@ -77,9 +77,9 @@ void Character::movePlayer(int x, int y)
 		position.x = GetScreenWidth() - image.width;
 	}
 }
-void Character::shootTears(int tearD_X, int tearD_Y) {
+void Character::shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage) {
 	if (GetTime() - lastTearTime >= tearRate) {
-		tearsy.push_back(Tears({ position.x + (image.width / 4) + 5 * tearD_X, position.y + (image.height / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y));
+		tearsy.push_back(Tears({ position.x + (image.width / 4) + 5 * tearD_X, position.y + (image.height / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y, loadedImage));
 		lastTearTime = GetTime();
 	}
 }

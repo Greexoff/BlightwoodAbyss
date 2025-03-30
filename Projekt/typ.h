@@ -10,7 +10,7 @@ public:
 	virtual void Draw();
 	virtual void DrawPlayerHealthBar();
 	virtual void movePlayer(int x, int y);
-	virtual void shootTears(int tearD_X, int tearD_Y);
+	virtual void shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage);
 	vector<Tears> tearsy;
 	virtual Rectangle getPlayerRect();
 	virtual int getPlayerHealth();

@@ -22,7 +22,6 @@ int main()
 	Font font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
 
 	Game game;
-	game.setPlayerCharacter(2);
 	StartingMenu Startingmenu;
 	LoginMenu Loginmenu;
 	Menu menu;
@@ -117,11 +116,30 @@ int main()
 				}
 				else
 				{
-					if(Charactermenu.getMenuActive())
-					//{ 
-
-					//}
-					//else
+					if (Charactermenu.getMenuActive())
+					{ 
+						Charactermenu.DrawMenu();
+						game.DrawPlayerCharacterImage(Charactermenu.getPageNumber());
+						if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+							setAction = Charactermenu.isButtonClicked();
+						}
+						switch (setAction)
+						{
+						case 1:
+							game.setPlayerCharacter(Charactermenu.getPageNumber());
+							Charactermenu.setMenuActive(false);
+							game.setLastTimePlayerWasTouched();
+							break;
+						case 2:
+							break;
+						case 3:
+							break;
+						default:
+							break;
+							setAction = 0;
+						}
+					}
+					else
 					{
 						game.InputHandle();
 						game.Update();
@@ -146,6 +164,8 @@ int main()
 }
 /*
 * Do zrobienia:
+* !!!Przy wyborze postaci zrobic takie kolko, jezeli osiagniety limit po danej stronie to wracam do ostatniej postaci od drugiej strony (takie kolo jak w issacu)
+* !!!Dokonczyc reszte menu i rozbic logike na poszczegolne klasy czy cos tak zeby to lepiej chodzilo i nie bylo w tym while 15 ifow w ifie IMPORTANT
 * !!!Poprawic dzialanie calego wpisywania hasla
 * !!/Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt

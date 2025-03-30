@@ -20,6 +20,7 @@ public:
 	int playerTotalScore;
 	void setPlayerCharacter(int Character);
 	void setLastTimePlayerWasTouched();
+	void DrawPlayerCharacterImage(int Character);
 private:
 	unique_ptr<Character> Player;
 	vector<Texture2D> loadImages;

@@ -32,17 +32,35 @@ void Game::setPlayerCharacter(int Character)
 {
 	switch (Character)
 	{
-	case 1:
+	case 0:
 		Player = make_unique<FirstCharacter>(loadImages[12]);
 		break;
-	case 2:
+	case -1:
 		Player = make_unique<SecondCharacter>(loadImages[13]);
 		break;
-	case 3:
+	case 1:
 		Player = make_unique<ThirdCharacter>(loadImages[12]);//zamienic na 14 jak bede mial texture
 		break;
 	default:
 		Player = make_unique<FirstCharacter>(loadImages[12]);
+		break;
+	}
+}
+void Game::DrawPlayerCharacterImage(int Character)
+{
+	switch (Character)
+	{
+	case 0:
+		DrawTexture(loadImages[12],510 ,140 , WHITE);
+		break;
+	case -1:
+		DrawTexture(loadImages[13], 510,140 , WHITE);
+		break;
+	case 1:
+		DrawTexture(loadImages[12], 510, 140, WHITE);
+		break;
+	default:
+		DrawTexture(loadImages[12], 510, 140, WHITE);
 		break;
 	}
 }

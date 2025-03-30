@@ -6,6 +6,7 @@
 #include <fstream>
 
 using namespace std;
+
 class Menu
 {
 public:
@@ -55,6 +56,7 @@ private:
 	string password;
 	int fontsize;
 };
+
 class StartingMenu : public Menu
 {
 public:
@@ -67,4 +69,18 @@ class CharacterSelectMenu : public Menu
 public:
 	CharacterSelectMenu();
 	~CharacterSelectMenu();
+	int isButtonClicked();
+	int getPageNumber();
+
+private:
+	enum Pressed { NOTHING, CONFIRM_BUTTON, ARROW_LEFT, ARROW_RIGHT };
+	Vector2 ArrowLeft_p1;
+	Vector2 ArrowLeft_p2;
+	Vector2 ArrowLeft_p3;
+	Vector2 ArrowRight_p1; 
+	Vector2 ArrowRight_p2;
+	Vector2 ArrowRight_p3;
+	Rectangle ConfirmArea;
+	int pageNumber;
+
 };

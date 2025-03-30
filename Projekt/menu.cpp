@@ -1,4 +1,5 @@
 #include "menu.h"
+
 Menu::Menu()
 {
 	Menu_active = false;
@@ -260,10 +261,46 @@ StartingMenu::~StartingMenu()
 
 CharacterSelectMenu::CharacterSelectMenu()
 {
-	Menu_background = LoadTexture("backgroundCHARSELECT.png");
+	Menu_background = LoadTexture("backgroundCHAR.png");
 	Menu_active = false;
+	ArrowLeft_p1 = { 68, 232 };
+	ArrowLeft_p2= { 308, 58 };
+	ArrowLeft_p3= { 308, 405 };
+	ArrowRight_p1= { 1100, 237 };
+	ArrowRight_p2= { 859, 65 };
+	ArrowRight_p3= { 859, 412 };
+	ConfirmArea={ 480,548,226,103 };
+	pageNumber = 0;
 }
 CharacterSelectMenu::~CharacterSelectMenu()
 {
 	UnloadTexture(Menu_background);
+}
+
+int CharacterSelectMenu::isButtonClicked()
+{
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos,ConfirmArea))
+	{
+		cout << "Kliknieto przycisk" << endl;
+		return CONFIRM_BUTTON;
+	}
+	if (CheckCollisionPointTriangle(mousePos, ArrowLeft_p1, ArrowLeft_p2, ArrowLeft_p3))
+	{
+		cout << "Kilknieto LeftArrow" << endl;
+		pageNumber--;
+		return ARROW_LEFT;
+	}
+	if (CheckCollisionPointTriangle(mousePos, ArrowRight_p1, ArrowRight_p2, ArrowRight_p3))
+	{
+		cout << "Kliknieto RightArrow" << endl;
+		pageNumber++;
+		return ARROW_RIGHT;
+	}
+
+	return NOTHING;
+}
+int CharacterSelectMenu::getPageNumber()
+{
+	return pageNumber;
 }

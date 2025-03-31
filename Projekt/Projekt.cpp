@@ -95,6 +95,7 @@ int main()
 /*
 * Do zrobienia:
 * !!!Dokonczyc highestscores(wyswieltanie)
+* !!!Dodac jakies reguły gry i moze zrobic strony (znowu strzalki) i na pierwszej glowne zasady, na drugiej opis postaci, opis przeciwnikow, opis itemow
 * !!!Zrobic te unlocked
 * !!/Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt (np. dodac do highest scores funkcje getHighestScore(string username) i stad pobierac highest score gracza

@@ -61,6 +61,7 @@ private:
 	bool isSignupAreaActive;
 	string username;
 	string password;
+	bool userExist;
 	int fontsize;
 };
 

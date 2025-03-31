@@ -83,6 +83,7 @@ LoginMenu::LoginMenu()
 	LoginMenu_SingupArea = { 537,678,649-537, 705- 678 };
 	username = "";
 	password = "";
+	userExist = false;
 	fontsize = 55;
 	isSignupAreaActive = true;
 }
@@ -126,7 +127,7 @@ void LoginMenu::insertData(int setAction)
 			}
 			key = GetCharPressed();
 		}
-		if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE) && !username.empty()) {
+		if (IsKeyPressed(KEY_BACKSPACE) && !username.empty() || IsKeyPressedRepeat(KEY_BACKSPACE) && !username.empty()) {
 			username.pop_back();
 		}
 	}
@@ -138,12 +139,10 @@ void LoginMenu::insertData(int setAction)
 			}
 			key = GetCharPressed();
 		}
-		if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE) && !username.empty()) {
+		if ((IsKeyPressed(KEY_BACKSPACE) && !password.empty()) || (IsKeyPressedRepeat(KEY_BACKSPACE) && !password.empty())) {
 			password.pop_back();
 		}
 	}
-	DrawLogin(username, "upper");
-	DrawLogin(password,"lower");
 }
 void LoginMenu::DrawLogin(string name, string location)
 {
@@ -207,20 +206,27 @@ bool LoginMenu::isSignUpCardActive()
 }
 bool LoginMenu::checkIsPlayerInDataBase()
 {
-	regex checkInDataBase_regex(username + "," + password);
 	ifstream file("DataBase.txt");
-	string line;
 	if (!file.is_open())
 	{
 		cout << "Nie mozna otworzyc pliku" << endl;
 		return false;
 	}
+	regex userRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+)$)");
+	smatch match;
+	string line;
+	userExist = false;
+
 	while (getline(file, line))
 	{
-		if (regex_search(line, checkInDataBase_regex))
+		if (regex_match(line, match, userRegex) && username == match[1])
 		{
-			cout << "Jest taki gracz pozdro" << endl;
-			return true;
+			userExist = true;
+			if (password == match[2])
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 	return false;
@@ -250,18 +256,46 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 	{
 		setAction = isButtonClicked();
 	}
+	bool userValid;
 	switch (setAction)
 	{
 	case 1:
-		if (checkIsLoginCorrect() && checkIsPlayerInDataBase())//poprawic tak zeby to dzialalo chodzi o calego case
+		if (!checkIsLoginCorrect()) return;
+
+		userValid = checkIsPlayerInDataBase();
+
+		if (isSignUpCardActive()) // Logowanie
 		{
-			gameState = CurrentState::MAIN_MENU;
+			if (userValid)
+			{
+				cout << "Uzytkownik zalogowany pomyslnie" << endl;
+				gameState = CurrentState::MAIN_MENU;
+			}
+			else
+			{
+				if (userExist)
+				{
+					cout << "Bledne haslo" << endl;
+				}
+				else
+				{
+					cout << "Nie ma uzytkownika o podanej nazwie" << endl;
+				}
+			}
 		}
-		if (!isSignUpCardActive() && checkIsLoginCorrect() && !checkIsPlayerInDataBase())
+		else // Rejestracja
 		{
-			addPlayerToDataBase();
-			gameState = CurrentState::MAIN_MENU;
-		}	
+			if (userExist)
+			{
+				cout << "Juz istnieje uzytkownik o takiej nazwie" << endl;
+			}
+			else
+			{
+				addPlayerToDataBase();
+				cout << "Rejestracja zakonczona sukcesem" << endl;
+				gameState = CurrentState::MAIN_MENU;
+			}
+		}
 		setAction = 0;
 		break;
 	case 2:
@@ -277,6 +311,8 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 	default:
 		break;
 	}
+	DrawLogin(username, "upper");
+	DrawLogin(password, "lower");
 }
 
 StartingMenu::StartingMenu()

@@ -7,18 +7,26 @@
 
 using namespace std;
 
+enum class CurrentState
+{
+	STARTING_MENU,
+	LOGIN_MENU,
+	MAIN_MENU,
+	CHARACTER_SELECT_MENU,
+	UNLOCKED_ITEMS_MENU,
+	SCORE_MENU,
+	GAMEPLAY,
+};
 class Menu
 {
 public:
 	Menu();
 	~Menu();
-	void setMenuActive(bool value);
-	bool getMenuActive();
 	void DrawMenu();
 	void switchMenuBackground(const char* background_file_name);
 	int isButtonClicked();
+	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool shouldEnd);
 protected:
-	bool Menu_active;
 	Texture2D Menu_background;
 	Font font;
 private:
@@ -33,9 +41,10 @@ class LoginMenu : public Menu
 public:
 	LoginMenu();
 	~LoginMenu();
+	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);
+private:
 	void insertData(int setAction);
-	void DrawUsername();
-	void DrawPassword();
+	void DrawLogin(string name, string location);
 	bool checkIsLoginCorrect();
 	int isButtonClicked();
 	bool isSignUpCardActive();
@@ -43,8 +52,6 @@ public:
 	void addPlayerToDataBase();
 	void clearUsernameandPassword();
 	void changeSignBarLevel(bool value);
-
-private:
 	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };
 	Rectangle LoginMenu_ConfirmArea;
 	Rectangle LoginMenu_UsernameBarArea;
@@ -69,8 +76,8 @@ class CharacterSelectMenu : public Menu
 public:
 	CharacterSelectMenu();
 	~CharacterSelectMenu();
-	bool isButtonClicked();
 	int getPageNumber();
+	bool isButtonClicked();
 
 private:
 	enum Pressed { NOTHING, CONFIRM_BUTTON, ARROW_LEFT, ARROW_RIGHT };
@@ -84,5 +91,20 @@ private:
 	int pageNumber;
 	int leftSidePageLimit;
 	int rightSidePageLimit;
+
+};
+class UnlockedItemsMenu : public Menu
+{
+public:
+	UnlockedItemsMenu();
+	~UnlockedItemsMenu();
+private:
+};
+class HighestScoreMenu : public Menu
+{
+public:
+	HighestScoreMenu();
+	~HighestScoreMenu();
+private:
 
 };

@@ -2,7 +2,6 @@
 
 Menu::Menu()
 {
-	Menu_active = false;
 	Menu_background = LoadTexture("backgroundMENU.png");
 	font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
 	Menu_NewGameButton = {434, 123, 761-434, 198-123};
@@ -14,18 +13,6 @@ Menu::~Menu()
 {
 	UnloadTexture(Menu_background);
 	UnloadFont(font);
-}
-void Menu::setMenuActive(bool value)
-{
-	Menu_active = value;
-}
-bool Menu::getMenuActive()
-{
-	if (Menu_active)
-	{
-		return true;
-	}
-	return false;
 }
 void Menu::DrawMenu()
 {
@@ -60,9 +47,34 @@ int Menu::isButtonClicked()
 	}
 	return NOTHING;
 }
+void Menu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool shouldEnd)
+{
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		{
+			setAction = isButtonClicked();
+		}
+		switch (setAction)
+		{
+		case 1:
+			gameState = CurrentState::CHARACTER_SELECT_MENU;
+			break;
+		case 2:
+			gameState = CurrentState::UNLOCKED_ITEMS_MENU;
+			break;
+		case 3:
+			gameState = CurrentState::SCORE_MENU;
+			break;
+		case 4:
+			shouldEnd = true;
+			break;
+		default:
+			break;
+		}
+		setAction = 0;
+}
+
 LoginMenu::LoginMenu()
 {
-	Menu_active = false;
 	areBarAreasActive = true;
 	Menu_background=LoadTexture("backgroundLOGIN.png");
 	LoginMenu_ConfirmArea = { 480,548,226,103 };
@@ -130,58 +142,42 @@ void LoginMenu::insertData(int setAction)
 			password.pop_back();
 		}
 	}
+	DrawLogin(username, "upper");
+	DrawLogin(password,"lower");
 }
-void LoginMenu::DrawUsername()
+void LoginMenu::DrawLogin(string name, string location)
 {
 	int maxFontSize = 55;
 	int minFontSize = 10;
 	int spacing = 2;
-
-	Vector2 textSize = MeasureTextEx(font, username.c_str(), fontsize, spacing);
-	while (textSize.x > 545 && fontsize > minFontSize)
+	int position=0;
+	if (location == "upper")
 	{
-		fontsize -= 1;
-		textSize = MeasureTextEx(font, username.c_str(), fontsize, spacing);
+		position = 235;
 	}
-	while (textSize.x < 545 && fontsize < maxFontSize)
+	if (location == "lower")
 	{
-		fontsize += 1;
-		textSize = MeasureTextEx(font, username.c_str(), fontsize, spacing);
-		if (textSize.x > 545)
+		position = 465;
+	}
+		Vector2 textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
+		while (textSize.x > 545 && fontsize > minFontSize)
 		{
 			fontsize -= 1;
-			break;
+			textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
 		}
-	}
-	float y_position = 235 - (textSize.y / 2);
-
-	DrawTextEx(font, username.c_str(), { 320, y_position }, fontsize, spacing, WHITE);
-}
-void LoginMenu::DrawPassword()
-{
-	int maxFontSize = 55;
-	int minFontSize = 10;
-	int spacing = 2;
-
-	Vector2 textSize = MeasureTextEx(font, password.c_str(), fontsize, spacing);
-	while (textSize.x > 545 && fontsize > minFontSize)
-	{
-		fontsize -= 1;
-		textSize = MeasureTextEx(font, password.c_str(), fontsize, spacing);
-	}
-	while (textSize.x < 545 && fontsize < maxFontSize)
-	{
-		fontsize += 1;
-		textSize = MeasureTextEx(font, password.c_str(), fontsize, spacing);
-		if (textSize.x > 545)
+		while (textSize.x < 545 && fontsize < maxFontSize)
 		{
-			fontsize -= 1;
-			break;
+			fontsize += 1;
+			textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
+			if (textSize.x > 545)
+			{
+				fontsize -= 1;
+				break;
+			}
 		}
-	}
-	float y_position = 465 - (textSize.y / 2);
+		float y_position = position - (textSize.y / 2);
 
-	DrawTextEx(font, password.c_str(), { 320, y_position }, fontsize, spacing, WHITE);
+		DrawTextEx(font, name.c_str(), { 320, y_position }, fontsize, spacing, WHITE);
 }
 bool LoginMenu::checkIsLoginCorrect()
 {
@@ -205,9 +201,9 @@ bool LoginMenu::isSignUpCardActive()
 {
 	if (isSignupAreaActive)
 	{
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }
 bool LoginMenu::checkIsPlayerInDataBase()
 {
@@ -248,11 +244,44 @@ void LoginMenu::clearUsernameandPassword()
 	username = "";
 	password = "";
 }
+void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
+{
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	{
+		setAction = isButtonClicked();
+	}
+	switch (setAction)
+	{
+	case 1:
+		if (checkIsLoginCorrect() && checkIsPlayerInDataBase())//poprawic tak zeby to dzialalo chodzi o calego case
+		{
+			gameState = CurrentState::MAIN_MENU;
+		}
+		if (!isSignUpCardActive() && checkIsLoginCorrect() && !checkIsPlayerInDataBase())
+		{
+			addPlayerToDataBase();
+			gameState = CurrentState::MAIN_MENU;
+		}	
+		setAction = 0;
+		break;
+	case 2:
+	case 3:
+		insertData(setAction);
+		break;
+	case 4:
+		clearUsernameandPassword();
+		switchMenuBackground("backgroundSIGNUP.png");
+		changeSignBarLevel(false);
+		setAction = 0;
+		break;
+	default:
+		break;
+	}
+}
 
 StartingMenu::StartingMenu()
 {
-	Menu_background = LoadTexture("BackgroundSTARTING.png");
-	Menu_active = true;
+	Menu_background = LoadTexture("backgroundSTARTING.png");
 }
 StartingMenu::~StartingMenu()
 {
@@ -262,7 +291,6 @@ StartingMenu::~StartingMenu()
 CharacterSelectMenu::CharacterSelectMenu()
 {
 	Menu_background = LoadTexture("backgroundCHAR.png");
-	Menu_active = false;
 	ArrowLeft_p1 = { 68, 232 };
 	ArrowLeft_p2= { 308, 58 };
 	ArrowLeft_p3= { 308, 405 };
@@ -278,7 +306,6 @@ CharacterSelectMenu::~CharacterSelectMenu()
 {
 	UnloadTexture(Menu_background);
 }
-
 bool CharacterSelectMenu::isButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
@@ -311,4 +338,22 @@ bool CharacterSelectMenu::isButtonClicked()
 int CharacterSelectMenu::getPageNumber()
 {
 	return pageNumber;
+}
+
+UnlockedItemsMenu::UnlockedItemsMenu()
+{
+	Menu_background = LoadTexture("backgroundUNLOCKED.png");
+}
+UnlockedItemsMenu::~UnlockedItemsMenu()
+{
+	UnloadTexture(Menu_background);
+}
+
+HighestScoreMenu::HighestScoreMenu()
+{
+	Menu_background = LoadTexture("backgroundSCORE.png");
+}
+HighestScoreMenu::~HighestScoreMenu()
+{
+	UnloadTexture(Menu_background);
 }

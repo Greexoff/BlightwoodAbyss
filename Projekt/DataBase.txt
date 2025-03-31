@@ -1,3 +1,2 @@
 Greexoff,Beka3,Highest Score: 2137
-
 NowyGracz,NoweHaslo,Highest Score: 000000

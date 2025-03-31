@@ -26,122 +26,64 @@ int main()
 	LoginMenu Loginmenu;
 	Menu menu;
 	CharacterSelectMenu Charactermenu;
+	UnlockedItemsMenu unlockmenu;
+	HighestScoreMenu scoremenu;
 	int setAction=0;
 	bool shouldEnd = false;
+	string scoreText = "";
+	CurrentState gameState = CurrentState::STARTING_MENU;
 	while (!WindowShouldClose() && !shouldEnd)
 	{
 		BeginDrawing();
-		if (Startingmenu.getMenuActive())
+		switch (gameState)
 		{
+		case CurrentState::STARTING_MENU:
 			Startingmenu.DrawMenu();
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
-				Startingmenu.setMenuActive(false);
-				Loginmenu.setMenuActive(true);
+				gameState = CurrentState::LOGIN_MENU;
 			}
-		}
-		else
-		{
-			if (Loginmenu.getMenuActive())
+			break;
+		case CurrentState::LOGIN_MENU:
+			Loginmenu.DrawMenu();
+			Loginmenu.handleLoginMenuLogic(setAction, gameState);
+			break;
+		case CurrentState::MAIN_MENU:
+			menu.DrawMenu();
+			menu.handleMainMenuLogic(setAction, gameState, shouldEnd);
+			break;
+		case CurrentState::CHARACTER_SELECT_MENU:
+			Charactermenu.DrawMenu();
+			game.DrawPlayerCharacterImage(Charactermenu.getPageNumber());
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Charactermenu.isButtonClicked()) {
+				game.setPlayerCharacter(Charactermenu.getPageNumber());
+				gameState = CurrentState::GAMEPLAY;
+				game.setLastTimePlayerWasTouched();
+			}
+			break;
+		case CurrentState::UNLOCKED_ITEMS_MENU:
+			unlockmenu.DrawMenu();
+			//tutaj jeszcze jakas zabawa ze laduje tylko te tekstury ktore masz odblokowane
+			break;
+		case CurrentState::SCORE_MENU:
+			scoremenu.DrawMenu();
+			//tutaj algorytm sortowania po high score z pliku + jeszcze wypadaloby poprawic sytuacje ze typek sie wpisze o tym samym nicku ale to juz na poziomie add player
+			break;
+		case CurrentState::GAMEPLAY:
+			game.InputHandle();
+			game.Update();
+			DrawTexture(background, 0, 0, WHITE);
+			game.Draw();
+			DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
+			scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
+			DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
+			if (game.isGameOver())
 			{
-				Loginmenu.DrawMenu();
-				if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-				{
-					setAction = Loginmenu.isButtonClicked();
-				}
-				switch (setAction)
-				{
-				case 1:
-					if (Loginmenu.isSignUpCardActive() && Loginmenu.checkIsLoginCorrect())
-					{
-						Loginmenu.addPlayerToDataBase();
-						Loginmenu.setMenuActive(false);
-						menu.setMenuActive(true);
-					}
-					else
-					{
-						if (Loginmenu.checkIsLoginCorrect() && Loginmenu.checkIsPlayerInDataBase())
-						{
-							Loginmenu.setMenuActive(false);
-							menu.setMenuActive(true);
-						}
-					}
-					setAction = 0;
-					break;
-				case 2:
-				case 3:
-					Loginmenu.insertData(setAction);
-					break;
-				case 4:
-					Loginmenu.clearUsernameandPassword();
-					Loginmenu.switchMenuBackground("BackgroundSIGNUP.png");
-					Loginmenu.changeSignBarLevel(false);
-					setAction = 0;
-					break;
-				default:
-					break;
-				}
-				Loginmenu.DrawUsername();
-				Loginmenu.DrawPassword();
+				shouldEnd=true;
 			}
-			else
-			{
-				if (menu.getMenuActive())
-				{
-					menu.DrawMenu();
-					if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-					{
-						setAction =menu.isButtonClicked();
-					}
-					switch (setAction)
-					{
-					case 1:
-						menu.setMenuActive(false);
-						Charactermenu.setMenuActive(true);
-						game.setLastTimePlayerWasTouched();
-						break;
-					case 2:
-						//tutaj rzeczy dla unlocked
-						break;
-					case 3:
-						//tutaj dla highest score
-						break;
-					case 4:
-						shouldEnd = true;
-						break;
-					default:
-						break;
-					}
-					setAction = 0;
-				}
-				else
-				{
-					if (Charactermenu.getMenuActive())
-					{ 
-						Charactermenu.DrawMenu();
-						game.DrawPlayerCharacterImage(Charactermenu.getPageNumber());
-						if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Charactermenu.isButtonClicked()) {
-							game.setPlayerCharacter(Charactermenu.getPageNumber());
-							Charactermenu.setMenuActive(false);
-							game.setLastTimePlayerWasTouched();
-						}
-					}
-					else
-					{
-						game.InputHandle();
-						game.Update();
-						DrawTexture(background, 0, 0, WHITE);
-						game.Draw();
-						DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
-						string scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
-						DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
-						if (game.isGameOver())
-						{
-							break;
-						}
-					}
-				}
-			}
+			break;
+		default:
+			break;
 		}
 		EndDrawing();
 	}

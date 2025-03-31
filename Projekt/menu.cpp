@@ -116,33 +116,18 @@ int LoginMenu::isButtonClicked()
 	}
 	return NOTHING;
 }
-void LoginMenu::insertData(int setAction)
+void LoginMenu::insertData(string& name)
 {
 	int key = GetCharPressed();
-	if (setAction == 2)
-	{
 		while (key > 0) {
 			if (key >= 32 && key <= 125) {
-				username += (char)key;
+				name += (char)key;
 			}
 			key = GetCharPressed();
 		}
-		if (IsKeyPressed(KEY_BACKSPACE) && !username.empty() || IsKeyPressedRepeat(KEY_BACKSPACE) && !username.empty()) {
-			username.pop_back();
+		if (IsKeyPressed(KEY_BACKSPACE) && !name.empty() || IsKeyPressedRepeat(KEY_BACKSPACE) && !name.empty()) {
+			name.pop_back();
 		}
-	}
-	if (setAction == 3)
-	{
-		while (key > 0) {
-			if (key >= 32 && key <= 125) {
-				password += (char)key;
-			}
-			key = GetCharPressed();
-		}
-		if ((IsKeyPressed(KEY_BACKSPACE) && !password.empty()) || (IsKeyPressedRepeat(KEY_BACKSPACE) && !password.empty())) {
-			password.pop_back();
-		}
-	}
 }
 void LoginMenu::DrawLogin(string name, string location)
 {
@@ -299,8 +284,10 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 		setAction = 0;
 		break;
 	case 2:
+		insertData(username);
+		break;
 	case 3:
-		insertData(setAction);
+		insertData(password);
 		break;
 	case 4:
 		clearUsernameandPassword();

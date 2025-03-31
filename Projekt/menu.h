@@ -43,7 +43,7 @@ public:
 	~LoginMenu();
 	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);
 private:
-	void insertData(int setAction);
+	void insertData(string& name);
 	void DrawLogin(string name, string location);
 	bool checkIsLoginCorrect();
 	int isButtonClicked();

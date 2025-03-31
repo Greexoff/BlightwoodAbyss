@@ -120,23 +120,10 @@ int main()
 					{ 
 						Charactermenu.DrawMenu();
 						game.DrawPlayerCharacterImage(Charactermenu.getPageNumber());
-						if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-							setAction = Charactermenu.isButtonClicked();
-						}
-						switch (setAction)
-						{
-						case 1:
+						if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && Charactermenu.isButtonClicked()) {
 							game.setPlayerCharacter(Charactermenu.getPageNumber());
 							Charactermenu.setMenuActive(false);
 							game.setLastTimePlayerWasTouched();
-							break;
-						case 2:
-							break;
-						case 3:
-							break;
-						default:
-							break;
-							setAction = 0;
 						}
 					}
 					else

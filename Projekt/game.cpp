@@ -8,7 +8,7 @@ using namespace std;
 Game::Game() {
 	textureNames = {
 	"potwor1.png", "potwor2.png", "potwor3.png", "potwor4.png", "potwor5.png",
-	"DamageTrinket.png", "TearRateTrinket.png", "SpeedTrinket.png", "HealthTrinket.png", "TearSpeedTrinket.png", "tear.png", "EnemyTears.png", "FirstCharacter.png", "SecondCharacter.png"};
+	"DamageTrinket.png", "TearRateTrinket.png", "SpeedTrinket.png", "HealthTrinket.png", "TearSpeedTrinket.png", "tear.png", "EnemyTears.png", "FirstCharacter.png", "SecondCharacter.png", "ThirdCharacter.png"};
 	loadTexturesIntoVector();
 	amountofEnemies = 5;
 	waveNumber = 1;
@@ -39,7 +39,7 @@ void Game::setPlayerCharacter(int Character)
 		Player = make_unique<SecondCharacter>(loadImages[13]);
 		break;
 	case 1:
-		Player = make_unique<ThirdCharacter>(loadImages[12]);//zamienic na 14 jak bede mial texture
+		Player = make_unique<ThirdCharacter>(loadImages[14]);
 		break;
 	default:
 		Player = make_unique<FirstCharacter>(loadImages[12]);
@@ -57,7 +57,7 @@ void Game::DrawPlayerCharacterImage(int Character)
 		DrawTexture(loadImages[13], 510,140 , WHITE);
 		break;
 	case 1:
-		DrawTexture(loadImages[12], 510, 140, WHITE);
+		DrawTexture(loadImages[14], 510, 140, WHITE);
 		break;
 	default:
 		DrawTexture(loadImages[12], 510, 140, WHITE);

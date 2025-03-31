@@ -114,7 +114,7 @@ void LoginMenu::insertData(int setAction)
 			}
 			key = GetCharPressed();
 		}
-		if (IsKeyPressed(KEY_BACKSPACE) && !username.empty()) {
+		if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE) && !username.empty()) {
 			username.pop_back();
 		}
 	}
@@ -126,7 +126,7 @@ void LoginMenu::insertData(int setAction)
 			}
 			key = GetCharPressed();
 		}
-		if (IsKeyPressed(KEY_BACKSPACE) && !password.empty()) {
+		if (IsKeyPressed(KEY_BACKSPACE) || IsKeyPressedRepeat(KEY_BACKSPACE) && !username.empty()) {
 			password.pop_back();
 		}
 	}
@@ -271,34 +271,42 @@ CharacterSelectMenu::CharacterSelectMenu()
 	ArrowRight_p3= { 859, 412 };
 	ConfirmArea={ 480,548,226,103 };
 	pageNumber = 0;
+	leftSidePageLimit = -1;
+	rightSidePageLimit = 1;
 }
 CharacterSelectMenu::~CharacterSelectMenu()
 {
 	UnloadTexture(Menu_background);
 }
 
-int CharacterSelectMenu::isButtonClicked()
+bool CharacterSelectMenu::isButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos,ConfirmArea))
 	{
 		cout << "Kliknieto przycisk" << endl;
-		return CONFIRM_BUTTON;
+		return true;
 	}
 	if (CheckCollisionPointTriangle(mousePos, ArrowLeft_p1, ArrowLeft_p2, ArrowLeft_p3))
 	{
 		cout << "Kilknieto LeftArrow" << endl;
 		pageNumber--;
-		return ARROW_LEFT;
+		if (pageNumber < leftSidePageLimit)
+		{
+			pageNumber = rightSidePageLimit;
+		}
 	}
 	if (CheckCollisionPointTriangle(mousePos, ArrowRight_p1, ArrowRight_p2, ArrowRight_p3))
 	{
 		cout << "Kliknieto RightArrow" << endl;
 		pageNumber++;
-		return ARROW_RIGHT;
+		if (pageNumber > rightSidePageLimit)
+		{
+			pageNumber = leftSidePageLimit;
+		}
 	}
 
-	return NOTHING;
+	return false;
 }
 int CharacterSelectMenu::getPageNumber()
 {

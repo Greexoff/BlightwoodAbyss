@@ -69,7 +69,7 @@ class CharacterSelectMenu : public Menu
 public:
 	CharacterSelectMenu();
 	~CharacterSelectMenu();
-	int isButtonClicked();
+	bool isButtonClicked();
 	int getPageNumber();
 
 private:
@@ -82,5 +82,7 @@ private:
 	Vector2 ArrowRight_p3;
 	Rectangle ConfirmArea;
 	int pageNumber;
+	int leftSidePageLimit;
+	int rightSidePageLimit;
 
 };

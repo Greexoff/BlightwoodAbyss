@@ -67,6 +67,7 @@ int main()
 			break;
 		case CurrentState::SCORE_MENU:
 			scoremenu.DrawMenu();
+			scoremenu.handleScoreMenu();
 			//tutaj algorytm sortowania po high score z pliku + jeszcze wypadaloby poprawic sytuacje ze typek sie wpisze o tym samym nicku ale to juz na poziomie add player
 			break;
 		case CurrentState::GAMEPLAY:
@@ -93,11 +94,10 @@ int main()
 }
 /*
 * Do zrobienia:
-* !!!Przy wyborze postaci zrobic takie kolko, jezeli osiagniety limit po danej stronie to wracam do ostatniej postaci od drugiej strony (takie kolo jak w issacu)
-* !!!Dokonczyc reszte menu i rozbic logike na poszczegolne klasy czy cos tak zeby to lepiej chodzilo i nie bylo w tym while 15 ifow w ifie IMPORTANT
-* !!!Poprawic dzialanie calego wpisywania hasla
+* !!!Dokonczyc highestscores(wyswieltanie)
+* !!!Zrobic te unlocked
 * !!/Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
-* !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
+* !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt (np. dodac do highest scores funkcje getHighestScore(string username) i stad pobierac highest score gracza
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !/Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali? PARTIALLY DONE

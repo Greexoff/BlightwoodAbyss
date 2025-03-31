@@ -1,2 +1,5 @@
-Greexoff,Beka3,Highest Score: 2137
-NowyGracz,NoweHaslo,Highest Score: 000000
+Greexoff,Beka3,Highest Score: 213700
+Player1,Password1,Highest Score: 420123
+Player2,Password2,Highest Score: 123321
+Player3,Password3,Highest Score: 000100
+Player4,Password4,Highest Score: 004250

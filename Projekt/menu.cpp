@@ -47,7 +47,7 @@ int Menu::isButtonClicked()
 	}
 	return NOTHING;
 }
-void Menu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool shouldEnd)
+void Menu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd)
 {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 		{
@@ -375,8 +375,41 @@ UnlockedItemsMenu::~UnlockedItemsMenu()
 HighestScoreMenu::HighestScoreMenu()
 {
 	Menu_background = LoadTexture("backgroundSCORE.png");
+	playerScoresSaved = false;
 }
 HighestScoreMenu::~HighestScoreMenu()
 {
 	UnloadTexture(Menu_background);
 }
+void HighestScoreMenu::handleScoreMenu()
+{
+	if (!playerScoresSaved)
+	{
+		getPlayerScores();
+	}
+	DrawPlayerScores();
+}
+void HighestScoreMenu::getPlayerScores()
+{
+	ifstream file("DataBase.txt");
+	string line;
+	regex filePattern(R"(([^,]+),([^,]+),Highest Score: (\d+))");
+	smatch match;
+
+	if (!file) {
+		cout << "Nie mozna otworzyc pliku" << endl;
+	}
+
+	while (getline(file, line)) {
+		if (regex_match(line, match, filePattern)) {
+			string username = match[1];
+			int highestScore = stoi(match[3]);
+			playerScores.insert({ highestScore,username });
+		}
+	}
+	playerScoresSaved = true;
+}
+void HighestScoreMenu::DrawPlayerScores()
+{
+}
+

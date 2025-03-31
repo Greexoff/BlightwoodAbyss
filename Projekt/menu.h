@@ -4,7 +4,8 @@
 #include <regex>
 #include <string>
 #include <fstream>
-
+#include <sstream>
+#include <map>
 using namespace std;
 
 enum class CurrentState
@@ -25,7 +26,7 @@ public:
 	void DrawMenu();
 	void switchMenuBackground(const char* background_file_name);
 	int isButtonClicked();
-	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool shouldEnd);
+	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd);
 protected:
 	Texture2D Menu_background;
 	Font font;
@@ -106,6 +107,10 @@ class HighestScoreMenu : public Menu
 public:
 	HighestScoreMenu();
 	~HighestScoreMenu();
+	void handleScoreMenu();
 private:
-
+	bool playerScoresSaved;
+	void getPlayerScores();
+	void DrawPlayerScores();
+	multimap<int, string, greater<int>> playerScores;
 };

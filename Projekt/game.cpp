@@ -6,10 +6,8 @@
 using namespace std;
 
 Game::Game() {
-	textureNames = {
-	"potwor1.png", "potwor2.png", "potwor3.png", "potwor4.png", "potwor5.png",
-	"DamageTrinket.png", "TearRateTrinket.png", "SpeedTrinket.png", "HealthTrinket.png", "TearSpeedTrinket.png", "tear.png", "EnemyTears.png", "FirstCharacter.png", "SecondCharacter.png", "ThirdCharacter.png"};
-	loadTexturesIntoVector();
+	object_assets = fs::current_path() / "assets" / "object_assets";
+	loadTextures();
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
@@ -23,26 +21,27 @@ Game::Game() {
 }
 Game::~Game() {
 	enemies.clear();
-	for (int i = 0; i < loadImages.size(); i++)
+	for (auto& i : loadedTextures)
 	{
-		UnloadTexture(loadImages[i]);
+		UnloadTexture(i.second);
 	}
+	
 }
 void Game::setPlayerCharacter(int Character)
 {
 	switch (Character)
 	{
 	case 0:
-		Player = make_unique<FirstCharacter>(loadImages[12]);
+		Player = make_unique<FirstCharacter>(passCorrectTexture("FirstCharacter.png"));
 		break;
 	case -1:
-		Player = make_unique<SecondCharacter>(loadImages[13]);
+		Player = make_unique<SecondCharacter>(passCorrectTexture("SecondCharacter.png"));
 		break;
 	case 1:
-		Player = make_unique<ThirdCharacter>(loadImages[14]);
+		Player = make_unique<ThirdCharacter>(passCorrectTexture("ThirdCharacter.png"));
 		break;
 	default:
-		Player = make_unique<FirstCharacter>(loadImages[12]);
+		Player = make_unique<FirstCharacter>(passCorrectTexture("FirstCharacter.png"));
 		break;
 	}
 }
@@ -51,16 +50,16 @@ void Game::DrawPlayerCharacterImage(int Character)
 	switch (Character)
 	{
 	case 0:
-		DrawTexture(loadImages[12],510 ,140 , WHITE);
+		DrawTexture(passCorrectTexture("FirstCharacter.png"), 510, 140, WHITE);
 		break;
 	case -1:
-		DrawTexture(loadImages[13], 510,140 , WHITE);
+		DrawTexture(passCorrectTexture("SecondCharacter.png"), 510, 140, WHITE);
 		break;
 	case 1:
-		DrawTexture(loadImages[14], 510, 140, WHITE);
+		DrawTexture(passCorrectTexture("ThirdCharacter.png"), 510, 140, WHITE);
 		break;
 	default:
-		DrawTexture(loadImages[12], 510, 140, WHITE);
+		DrawTexture(passCorrectTexture("FirstCharacter.png"), 510, 140, WHITE);
 		break;
 	}
 }
@@ -123,16 +122,16 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_S)){moveY = 1;}
 	Player->movePlayer(moveX, moveY);
 	if (IsKeyDown(KEY_UP)) {
-		Player->shootTears(0, -1, loadImages[10]);
+		Player->shootTears(0, -1, passCorrectTexture("tear.png"));
 	}
 	if (IsKeyDown(KEY_DOWN)) {
-		Player->shootTears(0, 1, loadImages[10]);
+		Player->shootTears(0, 1, passCorrectTexture("tear.png"));
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		Player->shootTears(-1, 0, loadImages[10]);
+		Player->shootTears(-1, 0, passCorrectTexture("tear.png"));
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		Player->shootTears(1, 0, loadImages[10]);
+		Player->shootTears(1, 0, passCorrectTexture("tear.png"));
 	}
 }
 void Game::DeleteInactiveTears()
@@ -167,7 +166,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	if (waveNumber % 5 == 0)
 	{
 		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
-		enemiesy.push_back(make_shared<Monster5>(position, loadImages[4]));
+		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("potwor5.png")));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
@@ -184,16 +183,16 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		int type = GetRandomValue(1, poolOfEnemiesTypes);
 		switch (type) {
 		case 1:
-			enemiesy.push_back(make_shared<Monster1>(position, loadImages[0]));
+			enemiesy.push_back(make_shared<Monster1>(position, passCorrectTexture("potwor1.png")));
 			break;
 		case 2:
-			enemiesy.push_back(make_shared<Monster2>(position, loadImages[1]));
+			enemiesy.push_back(make_shared<Monster2>(position, passCorrectTexture("potwor2.png")));
 			break;
 		case 3:
-			enemiesy.push_back(make_shared<Monster3>(position, loadImages[2]));
+			enemiesy.push_back(make_shared<Monster3>(position, passCorrectTexture("potwor3.png")));
 			break;
 		case 4:
-			enemiesy.push_back(make_shared<Monster4>(position, loadImages[3]));
+			enemiesy.push_back(make_shared<Monster4>(position, passCorrectTexture("potwor4.png")));
 			amountOfMiniBoss++;
 			break;
 		default:
@@ -220,15 +219,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), loadImages[11]));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("potwor3.png")));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("potwor4.png")));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(),loadImages[11]));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("potwor5.png")));
 			}
 			lastTearFired = GetTime();
 		}
@@ -366,19 +365,19 @@ void Game::createRandomLoot(Vector2 enemyPos)
 	switch (type)
 	{
 	case 1:
-		Loot = make_unique<DamageTrinket>(loadImages[5], enemyPos);
+		Loot = make_unique<DamageTrinket>(passCorrectTexture("DamageTrinket.png"), enemyPos);
 		break;
 	case 2:
-		Loot = make_unique<TearRateTrinket>(loadImages[6], enemyPos);
+		Loot = make_unique<TearRateTrinket>(passCorrectTexture("SpeedTrinket.png"), enemyPos);
 		break;
 	case 3:
-		Loot = make_unique<SpeedTrinket>(loadImages[7], enemyPos);
+		Loot = make_unique<SpeedTrinket>(passCorrectTexture("HealthTrinket.png"), enemyPos);
 		break;
 	case 4:
-		Loot = make_unique<HealthTrinket>(loadImages[8], enemyPos);
+		Loot = make_unique<HealthTrinket>(passCorrectTexture("TearRateTrinket.png"), enemyPos);
 		break;
 	case 5:
-		Loot = make_unique<TearSpeedTrinket>(loadImages[9], enemyPos);
+		Loot = make_unique<TearSpeedTrinket>(passCorrectTexture("TearSpeedTrinket.png"), enemyPos);
 		break;
 	default:
 		break;
@@ -389,9 +388,20 @@ void Game::setLastTimePlayerWasTouched()
 {
 	lastTimePlayerWasTouched = GetTime();
 }
-void Game::loadTexturesIntoVector()
+void Game::loadTextures()
 {
-	for (const auto& textureFile : textureNames) {
-		loadImages.push_back(LoadTexture(textureFile));
+	for (const auto& textureName : fs::directory_iterator(object_assets))
+	{
+		loadedTextures.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
+	}
+}
+Texture2D Game::passCorrectTexture(string textureName)
+{
+	for (auto& checking : loadedTextures)
+	{
+		if (checking.first == textureName)
+		{
+			return checking.second;
+		}
 	}
 }

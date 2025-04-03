@@ -4,10 +4,13 @@
 #include "enemy.h"
 #include "items.h"
 #include <random>
+#include <map>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <thread>
 using namespace std;
+namespace fs = filesystem;
 
 class Game {
 public:
@@ -23,8 +26,9 @@ public:
 	void DrawPlayerCharacterImage(int Character);
 private:
 	unique_ptr<Character> Player;
-	vector<Texture2D> loadImages;
-	vector<const char*> textureNames;
+	fs::path object_assets;
+	map<string, Texture2D> loadedTextures;
+	Texture2D passCorrectTexture(string textureName);
 	unique_ptr<Items> Loot;
 	void createRandomLoot(Vector2 enemyPos);
 	vector <shared_ptr<Enemy>> CreateEnemy();
@@ -45,6 +49,6 @@ private:
 	atomic<bool> isCreatingNewWave;
 	atomic<bool> proceedCreatingEnemies;
 	int waveNumber;
-	void loadTexturesIntoVector();
+	void loadTextures();
 	void increasePlayerTotalScore(int amount);
 };

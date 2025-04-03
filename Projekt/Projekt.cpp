@@ -20,10 +20,10 @@ int main()
 	Texture2D background = LoadTexture("backgroundOG.png");
 	SetTargetFPS(60);
 	Font font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
-
 	Game game;
 	StartingMenu Startingmenu;
 	LoginMenu Loginmenu;
+
 	Menu menu;
 	CharacterSelectMenu Charactermenu;
 	UnlockedItemsMenu unlockmenu;

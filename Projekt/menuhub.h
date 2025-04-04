@@ -5,37 +5,42 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
 #include <map>
 using namespace std;
+namespace fs = filesystem;
 
-/*enum class CurrentState
+enum class CurrentState
 {
 	STARTING_MENU,
 	LOGIN_MENU,
 	MAIN_MENU,
 	CHARACTER_SELECT_MENU,
+	RULES_MENU,
 	UNLOCKED_ITEMS_MENU,
 	SCORE_MENU,
 	GAMEPLAY,
 };
+
+
 class Menu
 {
 public:
-	Menu();
-	~Menu();
-	void DrawMenu();
-	void switchMenuBackground(const char* background_file_name);
-	int isButtonClicked();
-	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd);
+	virtual void Draw();
+	virtual void LoadTextures(fs::path filePath);
+	virtual ~Menu();
 protected:
-	Texture2D Menu_background;
-	Font font;
+	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";
+	Font font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
+	Texture2D BackgroundTexture;
+	Rectangle ReturnToPrieviousMenuButton;
+};
+class StartingMenu : public Menu
+{
+public:
+	StartingMenu();
+	~StartingMenu();
 private:
-	enum Pressed { NOTHING, NEWGAME_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON};
-	Rectangle Menu_NewGameButton;
-	Rectangle Menu_UnlockedItemsButton;
-	Rectangle Menu_HighestScoreButton;
-	Rectangle Menu_Exit;
 };
 class LoginMenu : public Menu
 {
@@ -58,42 +63,54 @@ private:
 	Rectangle LoginMenu_UsernameBarArea;
 	Rectangle LoginMenu_PasswordBarArea;
 	Rectangle LoginMenu_SingupArea;
-	bool areBarAreasActive;
+	fs::path data_basePath = fs::current_path() / "DataBase.txt";
 	bool isSignupAreaActive;
 	string username;
 	string password;
 	bool userExist;
 	int fontsize;
 };
-
-class StartingMenu : public Menu
+class MainMenu : public Menu
 {
 public:
-	StartingMenu();
-	~StartingMenu();
+	MainMenu();
+	~MainMenu();
+	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd);
 private:
+	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };
+	Rectangle Menu_NewGameButton;
+//	Rectangle Menu_RulesButton;//to jeszcze trzeba zrobic ale to jak przywroce wszystko
+	Rectangle Menu_UnlockedItemsButton;
+	Rectangle Menu_HighestScoreButton;
+	Rectangle Menu_Exit;
+	int isButtonClicked();
 };
-class CharacterSelectMenu : public Menu
+class CharacterSelectionMenu : public Menu
 {
 public:
-	CharacterSelectMenu();
-	~CharacterSelectMenu();
+	CharacterSelectionMenu();
+	~CharacterSelectionMenu();
 	int getPageNumber();
 	bool isButtonClicked();
-
 private:
 	enum Pressed { NOTHING, CONFIRM_BUTTON, ARROW_LEFT, ARROW_RIGHT };
 	Vector2 ArrowLeft_p1;
 	Vector2 ArrowLeft_p2;
 	Vector2 ArrowLeft_p3;
-	Vector2 ArrowRight_p1; 
+	Vector2 ArrowRight_p1;
 	Vector2 ArrowRight_p2;
 	Vector2 ArrowRight_p3;
 	Rectangle ConfirmArea;
 	int pageNumber;
 	int leftSidePageLimit;
 	int rightSidePageLimit;
-
+};
+class RulesMenu : public Menu
+{
+public:
+	RulesMenu();
+	~RulesMenu();
+private:
 };
 class UnlockedItemsMenu : public Menu
 {
@@ -107,10 +124,5 @@ class HighestScoreMenu : public Menu
 public:
 	HighestScoreMenu();
 	~HighestScoreMenu();
-	void handleScoreMenu();
 private:
-	bool playerScoresSaved;
-	void getPlayerScores();
-	void DrawPlayerScores();
-	multimap<int, string, greater<int>> playerScores;
-};*/
+};

@@ -132,6 +132,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="items.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="menuhub.cpp" />
     <ClCompile Include="Projekt.cpp" />
     <ClCompile Include="tears.cpp" />
     <ClCompile Include="typ.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="items.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="menuhub.h" />
     <ClInclude Include="tears.h" />
     <ClInclude Include="typ.h" />
   </ItemGroup>

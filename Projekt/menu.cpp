@@ -1,5 +1,5 @@
 #include "menu.h"
-
+/*
 Menu::Menu()
 {
 	Menu_background = LoadTexture("backgroundMENU.png");
@@ -413,3 +413,4 @@ void HighestScoreMenu::DrawPlayerScores()
 {
 }
 
+*/

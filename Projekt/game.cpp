@@ -219,15 +219,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("potwor3.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("EnemyTears.png")));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("potwor4.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("EnemyTears.png")));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("potwor5.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("EnemyTears.png")));
 			}
 			lastTearFired = GetTime();
 		}

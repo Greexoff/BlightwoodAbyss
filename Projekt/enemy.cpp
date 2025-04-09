@@ -82,21 +82,21 @@ void Enemy::UpdateColl(Vector2 Direction)
 {
 	position.x += enemySpeed*Direction.x;
 	position.y += enemySpeed*Direction.y;
-	if (position.y > GetScreenHeight() - image.height)
+	if (position.y > GetScreenHeight()-170 - image.height)
 	{
-		position.y = GetScreenHeight() - image.height;
+		position.y = GetScreenHeight() -170- image.height;
 	}
-	if (position.y < 0)
+	if (position.y < 170)
 	{
-		position.y = 0;
+		position.y = 170;
 	}
-	if (position.x < 0)
+	if (position.x < 170)
 	{
-		position.x = 0;
+		position.x = 170;
 	}
-	if (position.x > GetScreenWidth() - image.width)
+	if (position.x > GetScreenWidth()- 170 - image.width)
 	{
-		position.x = GetScreenWidth() - image.width;
+		position.x = GetScreenWidth()- 170 - image.width;
 	}
 }
 Rectangle Enemy::getEnemyRect()

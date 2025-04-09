@@ -22,7 +22,6 @@ enum class CurrentState
 	GAMEPLAY,
 };
 
-
 class Menu
 {
 public:
@@ -31,7 +30,6 @@ public:
 	virtual ~Menu();
 protected:
 	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";
-	Font font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
 	Texture2D BackgroundTexture;
 	Rectangle ReturnToPrieviousMenuButton;
 };
@@ -49,6 +47,7 @@ public:
 	~LoginMenu();
 	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);
 private:
+	Font font;
 	void insertData(string& name);
 	void DrawLogin(string name, string location);
 	bool checkIsLoginCorrect();
@@ -79,7 +78,7 @@ public:
 private:
 	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };
 	Rectangle Menu_NewGameButton;
-//	Rectangle Menu_RulesButton;//to jeszcze trzeba zrobic ale to jak przywroce wszystko
+	Rectangle Menu_RulesButton;
 	Rectangle Menu_UnlockedItemsButton;
 	Rectangle Menu_HighestScoreButton;
 	Rectangle Menu_Exit;
@@ -94,12 +93,7 @@ public:
 	bool isButtonClicked();
 private:
 	enum Pressed { NOTHING, CONFIRM_BUTTON, ARROW_LEFT, ARROW_RIGHT };
-	Vector2 ArrowLeft_p1;
-	Vector2 ArrowLeft_p2;
-	Vector2 ArrowLeft_p3;
-	Vector2 ArrowRight_p1;
-	Vector2 ArrowRight_p2;
-	Vector2 ArrowRight_p3;
+	Rectangle ArrowArea;
 	Rectangle ConfirmArea;
 	int pageNumber;
 	int leftSidePageLimit;

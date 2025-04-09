@@ -11,10 +11,11 @@ FirstCharacter::FirstCharacter(Texture2D loadedImage)
 	setPlayerStartingPosition();
 	playerHealth = 3;
 	maxPlayerHealth = 3;
-	playerSpeed = 4.5;
+	playerSpeed = 6;
 	playerDamage = 1;
 	tearSpeed = 3;
 	tearRate = 0.4;
+	imageScale = 1.65;
 }
 FirstCharacter::~FirstCharacter()
 {
@@ -25,10 +26,11 @@ SecondCharacter::SecondCharacter(Texture2D loadedImage)
 	setPlayerStartingPosition();
 	playerHealth = 2;
 	maxPlayerHealth = 2;
-	playerSpeed = 5;
+	playerSpeed = 6.5;
 	playerDamage = 3;
 	tearSpeed = 5;
 	tearRate = 0.2;
+	imageScale = 1.65;
 }
 SecondCharacter::~SecondCharacter()
 {
@@ -39,10 +41,11 @@ ThirdCharacter::ThirdCharacter(Texture2D loadedImage)
 	setPlayerStartingPosition();
 	playerHealth = 6;
 	maxPlayerHealth = 6;
-	playerSpeed = 2;
+	playerSpeed = 3.5;
 	playerDamage = 4;
 	tearSpeed = 3;
 	tearRate = 0.8;
+	imageScale = 1.65;
 }
 ThirdCharacter::~ThirdCharacter()
 {
@@ -50,42 +53,42 @@ ThirdCharacter::~ThirdCharacter()
 
 void Character::setPlayerStartingPosition()
 {
-	position.x = (GetScreenWidth() - image.width) / 2;
-	position.y = (GetScreenHeight() - image.height) / 2;
+	position.x = (GetScreenWidth() - image.width* imageScale) / 2;
+	position.y = (GetScreenHeight() - image.height* imageScale) / 2;
 }
 void Character::Draw() {
-	DrawTextureV(image, position, WHITE);
+	DrawTextureEx(image, position,0,imageScale, WHITE);
 }
 void Character::movePlayer(int x, int y)
 {
 	position.x += x * playerSpeed;
 	position.y += y * playerSpeed;
-	if (position.y > GetScreenHeight() - image.height)
+	if (position.y > GetScreenHeight()-170 - image.height* imageScale)
 	{
-		position.y = GetScreenHeight() - image.height;
+		position.y = GetScreenHeight()-170 - image.height* imageScale;
 	}
-	if (position.y < 0)
+	if (position.y < 170)
 	{
-		position.y = 0;
+		position.y = 170;
 	}
-	if (position.x < 0)
+	if (position.x < 170)
 	{
-		position.x = 0;
+		position.x = 170;
 	}
-	if (position.x > GetScreenWidth() - image.width)
+	if (position.x > GetScreenWidth()-170 - image.width* imageScale)
 	{
-		position.x = GetScreenWidth() - image.width;
+		position.x = GetScreenWidth()-170 - image.width* imageScale;
 	}
 }
 void Character::shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage) {
 	if (GetTime() - lastTearTime >= tearRate) {
-		tearsy.push_back(Tears({ position.x + (image.width / 4) + 5 * tearD_X, position.y + (image.height / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y, loadedImage));
+		tearsy.push_back(Tears({ position.x + (image.width* imageScale / 4) + 5 * tearD_X, position.y + (image.height* imageScale / 4) + 5 * tearD_Y }, tearSpeed, tearD_X, tearD_Y, loadedImage));
 		lastTearTime = GetTime();
 	}
 }
 Rectangle Character::getPlayerRect()
 {
-	return { position.x,position.y,(float)image.width,(float)image.height };
+	return { position.x,position.y,(float)image.width* imageScale,(float)image.height* imageScale };
 }
 int Character::getPlayerHealth()
 {
@@ -108,7 +111,7 @@ int Character::increasePlayersHealth()
 }
 void Character::DrawPlayerHealthBar()
 {
-	float healthBarWidth = image.width;
+	float healthBarWidth = image.width* imageScale;
 	float healthBarHeight = 10;
 
 	Vector2 healthBarPos = {position.x,position.y - 10 };
@@ -119,7 +122,7 @@ void Character::DrawPlayerHealthBar()
 }
 Vector2 Character::GetXYPlayerPoint()
 {
-	return { (position.x + (image.width / 4)),(position.y + (image.width / 4)) };
+	return { (position.x + (image.width* imageScale / 4)),(position.y + (image.width* imageScale / 4)) };
 }
 float Character::getPlayerDamage()
 {

@@ -16,13 +16,11 @@ using namespace std;
 namespace fs = filesystem;
 int main()
 {
-	fs::path tmpPathToBackgroundOG = fs::current_path() / "assets" / "background_assets" / "backgroundOG.png";
-	int Width = 1186;
-	int Height = 738;
+	int Width = 1536;
+	int Height = 1024;
 	InitWindow(Width, Height, "Survival Game");
-	Texture2D background = LoadTexture(tmpPathToBackgroundOG.string().c_str());
 	SetTargetFPS(60);
-	Font font = LoadFontEx("bahnschrift.ttf", 55, 0, 0);
+	Font font = LoadFontEx("bahnschrift.ttf", 80, 0, 0);
 	Game game;
 	string scoreText = "";
 	bool shouldEnd = false;
@@ -75,7 +73,7 @@ int main()
 		case CurrentState::GAMEPLAY:
 			game.InputHandle();
 			game.Update();
-			DrawTexture(background, 0, 0, WHITE);
+			game.DrawBackground();
 			game.Draw();
 			DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
 			scoreText = ScoreWithLeadingZeros(game.playerTotalScore, 6);
@@ -90,7 +88,6 @@ int main()
 		}
 		EndDrawing();
 	}
-	UnloadTexture(background);
 	UnloadFont(font);
 	CloseWindow();
 }/*int main()

@@ -34,6 +34,7 @@ protected:
 	float tearSpeed;
 	float playerDamage;
 	float tearRate;
+	float imageScale;
 };
 class FirstCharacter : public Character
 {

@@ -7,6 +7,7 @@ using namespace std;
 
 Game::Game() {
 	object_assets = fs::current_path() / "assets" / "object_assets";
+	backgroundPath = fs::current_path() / "assets" / "background_assets"/ "backgroundOG.png";
 	loadTextures();
 	amountofEnemies = 5;
 	waveNumber = 1;
@@ -26,6 +27,10 @@ Game::~Game() {
 		UnloadTexture(i.second);
 	}
 	
+}
+void Game::DrawBackground()
+{
+	DrawTexture(passCorrectTexture("backgroundOG.png"), 0, 0, WHITE);
 }
 void Game::setPlayerCharacter(int Character)
 {
@@ -47,21 +52,23 @@ void Game::setPlayerCharacter(int Character)
 }
 void Game::DrawPlayerCharacterImage(int Character)
 {
+	string file_name = "";
 	switch (Character)
 	{
 	case 0:
-		DrawTexture(passCorrectTexture("FirstCharacter.png"), 510, 140, WHITE);
+		file_name = "FirstCharacter.png";
 		break;
 	case -1:
-		DrawTexture(passCorrectTexture("SecondCharacter.png"), 510, 140, WHITE);
+		file_name = "SecondCharacter.png";
 		break;
 	case 1:
-		DrawTexture(passCorrectTexture("ThirdCharacter.png"), 510, 140, WHITE);
+		file_name = "ThirdCharacter.png";
 		break;
 	default:
-		DrawTexture(passCorrectTexture("FirstCharacter.png"), 510, 140, WHITE);
+		file_name = "FirstCharacter.png";
 		break;
 	}
+	DrawTextureEx(passCorrectTexture(file_name), { 605,375 }, 0, 4, WHITE);
 }
 void Game::Update() {
 	if (proceedCreatingEnemies)
@@ -165,13 +172,13 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	int poolOfEnemiesTypes = 3;
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
+		Vector2 position = { GetRandomValue(170,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
 		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("potwor5.png")));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(100,GetScreenWidth() - 100), GetRandomValue(100,GetScreenHeight() - 100) };
+		Vector2 position = { GetRandomValue(170,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
 		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;
@@ -390,6 +397,7 @@ void Game::setLastTimePlayerWasTouched()
 }
 void Game::loadTextures()
 {
+	loadedTextures.insert({ backgroundPath.filename().string(),LoadTexture(backgroundPath.string().c_str())});
 	for (const auto& textureName : fs::directory_iterator(object_assets))
 	{
 		loadedTextures.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });

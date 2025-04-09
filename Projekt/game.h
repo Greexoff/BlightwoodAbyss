@@ -18,6 +18,7 @@ public:
 	~Game();
 	void Draw();
 	void Update();
+	void DrawBackground();
 	void InputHandle();
 	bool isGameOver();
 	int playerTotalScore;
@@ -25,6 +26,7 @@ public:
 	void setLastTimePlayerWasTouched();
 	void DrawPlayerCharacterImage(int Character);
 private:
+	fs::path backgroundPath;
 	unique_ptr<Character> Player;
 	fs::path object_assets;
 	map<string, Texture2D> loadedTextures;

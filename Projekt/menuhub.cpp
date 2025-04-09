@@ -3,6 +3,7 @@
 
 Menu::~Menu()
 {
+	UnloadFont(font);
 }
 void Menu::Draw()
 {
@@ -12,6 +13,16 @@ void Menu::LoadTextures(fs::path filePath)
 {
 	fs::path wholePath = background_assets_path / filePath;
 	BackgroundTexture=LoadTexture(wholePath.string().c_str());
+}
+bool Menu::isReturnButtonClicked()
+{
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
+	{
+		cout << "Kliknieto powrot" << endl;
+		return true;
+	}
+	return false;
 }
 
 StartingMenu::StartingMenu()
@@ -26,7 +37,6 @@ StartingMenu::~StartingMenu()
 LoginMenu::LoginMenu()
 {
 	LoadTextures("backgroundLOGIN.png");
-	font = LoadFontEx("bahnschrift.ttf", 80, 0, 0);
 	LoginMenu_ConfirmArea = { 541,795,852-541,985-795 };
 	LoginMenu_UsernameBarArea = { 382, 216, 1032-382, 354-216 };
 	LoginMenu_PasswordBarArea = { 382, 495, 1032-382, 633-495 };
@@ -40,7 +50,6 @@ LoginMenu::LoginMenu()
 LoginMenu::~LoginMenu()
 {
 	UnloadTexture(BackgroundTexture);
-	UnloadFont(font);
 }
 int LoginMenu::isButtonClicked()
 {
@@ -275,7 +284,6 @@ MainMenu::~MainMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
-
 int MainMenu::isButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
@@ -284,12 +292,12 @@ int MainMenu::isButtonClicked()
 		cout << "Kliknieto nowa giera" << endl;
 		return NEWGAME_BUTTON;
 	}
-	/*
+	
 	if(CheckCollisionPointRec(mousePos, Menu_RulesButton))
 	{
+		cout << "Kliknieto rules" << endl;
 		return RULES_BUTTON;
 	}
-	*/
 	if (CheckCollisionPointRec(mousePos, Menu_UnlockedItemsButton))
 	{
 		cout << "Kilnieto unlocked items" << endl;

@@ -27,11 +27,13 @@ class Menu
 public:
 	virtual void Draw();
 	virtual void LoadTextures(fs::path filePath);
+	virtual bool isReturnButtonClicked();
 	virtual ~Menu();
 protected:
 	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";
-	Texture2D BackgroundTexture;
-	Rectangle ReturnToPrieviousMenuButton;
+	Font font = LoadFontEx("bahnschrift.ttf", 80, 0, 0);
+	Texture2D BackgroundTexture; 
+	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
 };
 class StartingMenu : public Menu
 {
@@ -47,7 +49,6 @@ public:
 	~LoginMenu();
 	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);
 private:
-	Font font;
 	void insertData(string& name);
 	void DrawLogin(string name, string location);
 	bool checkIsLoginCorrect();

@@ -63,12 +63,23 @@ int main()
 			break;
 		case CurrentState::RULES_MENU:
 			rulesTab.Draw();
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && rulesTab.isReturnButtonClicked())
+			{
+				gameState = CurrentState::MAIN_MENU;
+			}
 			break;
 		case CurrentState::UNLOCKED_ITEMS_MENU:
 			unlockedTab.Draw();
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && unlockedTab.isReturnButtonClicked())
+			{
+				gameState = CurrentState::MAIN_MENU;
+			}
 			break;
 		case CurrentState::SCORE_MENU:
 			scoresTab.Draw();
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && scoresTab.isReturnButtonClicked()) {
+				gameState = CurrentState::MAIN_MENU;
+			}
 			break;
 		case CurrentState::GAMEPLAY:
 			game.InputHandle();

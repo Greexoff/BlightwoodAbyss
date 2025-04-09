@@ -105,7 +105,7 @@ int main()
 /*
 * Do zrobienia:
 * !!!Modele dla itemkow i PRZECIWNIKOW!!!
-* !!!Return w character menu!!!
+* !!!Return w character menu!!! i statsy dla postaci!!!
 * !!!Pousuwac te couty przy menu
 * !!!Zrobic od nowa te grafiki dla menu, moze jakas ladnie zrobiona czcionka?
 * !!!Dokonczyc highestscores(wyswieltanie), rules, collectibles

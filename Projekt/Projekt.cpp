@@ -105,6 +105,7 @@ int main()
 /*
 * Do zrobienia:
 * !!!Modele dla itemkow i PRZECIWNIKOW!!!
+* !!!Return w character menu!!!
 * !!!Dokonczyc highestscores(wyswieltanie), rules, collectibles
 * !!/Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt (np. dodac do highest scores funkcje getHighestScore(string username) i stad pobierac highest score gracza

@@ -5,3 +5,4 @@ Player3,Password3,Highest Score: 000100
 Player4,Password4,Highest Score: 004250
 
 Greexo,asdas,Highest Score: 000000
+Nowy,Typiarz,Highest Score: 000000

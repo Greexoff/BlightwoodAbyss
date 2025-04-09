@@ -68,7 +68,7 @@ void Game::DrawPlayerCharacterImage(int Character)
 		file_name = "FirstCharacter.png";
 		break;
 	}
-	DrawTextureEx(passCorrectTexture(file_name), { 605,375 }, 0, 4, WHITE);
+	DrawTextureEx(passCorrectTexture(file_name), { 628,535 }, 0, 2, WHITE);
 }
 void Game::Update() {
 	if (proceedCreatingEnemies)
@@ -172,13 +172,13 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	int poolOfEnemiesTypes = 3;
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue(170,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
+		Vector2 position = { GetRandomValue(200,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
 		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("potwor5.png")));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(170,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
+		Vector2 position = { GetRandomValue(200,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
 		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;

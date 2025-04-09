@@ -15,7 +15,7 @@ FirstCharacter::FirstCharacter(Texture2D loadedImage)
 	playerDamage = 1;
 	tearSpeed = 3;
 	tearRate = 0.4;
-	imageScale = 1.65;
+	imageScale = 1;
 }
 FirstCharacter::~FirstCharacter()
 {
@@ -24,13 +24,13 @@ SecondCharacter::SecondCharacter(Texture2D loadedImage)
 {
 	image = loadedImage;
 	setPlayerStartingPosition();
-	playerHealth = 2;
-	maxPlayerHealth = 2;
+	playerHealth = 1;
+	maxPlayerHealth = 1;
 	playerSpeed = 6.5;
-	playerDamage = 3;
+	playerDamage = 5;
 	tearSpeed = 5;
-	tearRate = 0.2;
-	imageScale = 1.65;
+	tearRate = 0.3;
+	imageScale = 1;
 }
 SecondCharacter::~SecondCharacter()
 {
@@ -39,13 +39,13 @@ ThirdCharacter::ThirdCharacter(Texture2D loadedImage)
 {
 	image = loadedImage;
 	setPlayerStartingPosition();
-	playerHealth = 6;
-	maxPlayerHealth = 6;
-	playerSpeed = 3.5;
+	playerHealth = 4;
+	maxPlayerHealth = 4;
+	playerSpeed = 4;
 	playerDamage = 4;
-	tearSpeed = 3;
-	tearRate = 0.8;
-	imageScale = 1.65;
+	tearSpeed = 4;
+	tearRate = 0.6;
+	imageScale = 1;
 }
 ThirdCharacter::~ThirdCharacter()
 {

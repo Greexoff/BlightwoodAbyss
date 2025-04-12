@@ -173,7 +173,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	if (waveNumber % 5 == 0)
 	{
 		Vector2 position = { GetRandomValue(200,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
-		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("potwor5.png")));
+		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("Enemy5.png")));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
@@ -190,16 +190,16 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		int type = GetRandomValue(1, poolOfEnemiesTypes);
 		switch (type) {
 		case 1:
-			enemiesy.push_back(make_shared<Monster1>(position, passCorrectTexture("potwor1.png")));
+			enemiesy.push_back(make_shared<Monster1>(position, passCorrectTexture("Enemy1.png")));
 			break;
 		case 2:
-			enemiesy.push_back(make_shared<Monster2>(position, passCorrectTexture("potwor2.png")));
+			enemiesy.push_back(make_shared<Monster2>(position, passCorrectTexture("Enemy2.png")));
 			break;
 		case 3:
-			enemiesy.push_back(make_shared<Monster3>(position, passCorrectTexture("potwor3.png")));
+			enemiesy.push_back(make_shared<Monster3>(position, passCorrectTexture("Enemy3.png")));
 			break;
 		case 4:
-			enemiesy.push_back(make_shared<Monster4>(position, passCorrectTexture("potwor4.png")));
+			enemiesy.push_back(make_shared<Monster4>(position, passCorrectTexture("Enemy4.png")));
 			amountOfMiniBoss++;
 			break;
 		default:

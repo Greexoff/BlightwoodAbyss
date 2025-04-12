@@ -101,7 +101,7 @@ void Enemy::UpdateColl(Vector2 Direction)
 }
 Rectangle Enemy::getEnemyRect()
 {
-	return { position.x,position.y,(float)image.width,(float)image.height};
+	return { position.x,position.y,(float)image.width-10,(float)image.height-10};
 }
 Vector2 Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 {
@@ -136,7 +136,7 @@ float Enemy::getEnemySpeed()
 }
 void Enemy::DrawEnemyHealthBar()
 {
-	float healthBarWidth = 60;
+	float healthBarWidth = image.width;
 	float healthBarHeight = 10;
 
 	Vector2 healthBarPos = { position.x ,position.y - 15 };

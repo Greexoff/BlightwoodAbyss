@@ -104,7 +104,7 @@ int main()
 }
 /*
 * Do zrobienia:
-* !!!Modele dla itemkow i PRZECIWNIKOW!!!
+* !!!Modele dla itemkow i PRZECIWNIKOW (e1, e4)!!!
 * !!!Return w character menu!!! i statsy dla postaci (przy najezdzaniu na ta ksiazke moze zrobic popup liste ze statystykami aktualnego bohatera?!!!
 * !!!Pousuwac te couty przy menu
 * !!!Zrobic od nowa te grafiki dla menu, moze jakas ladnie zrobiona czcionka?

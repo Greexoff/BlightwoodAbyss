@@ -38,15 +38,19 @@ void Game::setPlayerCharacter(int Character)
 	{
 	case 0:
 		Player = make_unique<FirstCharacter>(passCorrectTexture("FirstCharacter.png"));
+		playerTearType = "PlayerRedTear.png";
 		break;
 	case -1:
 		Player = make_unique<SecondCharacter>(passCorrectTexture("SecondCharacter.png"));
+		playerTearType = "PlayerGreenTear.png";
 		break;
 	case 1:
 		Player = make_unique<ThirdCharacter>(passCorrectTexture("ThirdCharacter.png"));
+		playerTearType = "PlayerBlueTear.png";
 		break;
 	default:
 		Player = make_unique<FirstCharacter>(passCorrectTexture("FirstCharacter.png"));
+		playerTearType = "PlayerRedTear.png";
 		break;
 	}
 }
@@ -129,16 +133,16 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_S)){moveY = 1;}
 	Player->movePlayer(moveX, moveY);
 	if (IsKeyDown(KEY_UP)) {
-		Player->shootTears(0, -1, passCorrectTexture("tear.png"));
+		Player->shootTears(0, -1, passCorrectTexture(playerTearType));
 	}
 	if (IsKeyDown(KEY_DOWN)) {
-		Player->shootTears(0, 1, passCorrectTexture("tear.png"));
+		Player->shootTears(0, 1, passCorrectTexture(playerTearType));
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		Player->shootTears(-1, 0, passCorrectTexture("tear.png"));
+		Player->shootTears(-1, 0, passCorrectTexture(playerTearType));
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		Player->shootTears(1, 0, passCorrectTexture("tear.png"));
+		Player->shootTears(1, 0, passCorrectTexture(playerTearType));
 	}
 }
 void Game::DeleteInactiveTears()
@@ -172,13 +176,13 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	int poolOfEnemiesTypes = 3;
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue(200,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
+		Vector2 position = { GetRandomValue(250,GetScreenWidth() - 250), GetRandomValue(250,GetScreenHeight() - 250) };
 		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("Enemy5.png")));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(200,GetScreenWidth() - 200), GetRandomValue(200,GetScreenHeight() - 200) };
+		Vector2 position = { GetRandomValue(250,GetScreenWidth() - 250), GetRandomValue(250,GetScreenHeight() - 250) };
 		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;
@@ -217,7 +221,7 @@ void Game::MoveEnemies()
 		}
 	}
 }
-void Game::EnemyShootTears()
+void Game::EnemyShootTears()//Tutaj jeszcze zrobic jakas metode fabrykujaca i w tym getEnemyPosition zmienic dzialanie tego, tak zeby te strzaly lecialy fajnie ze srodka
 {
 	if (!enemies.empty()) {
 		if (GetTime() - lastTearFired >= enemyShootingGap)
@@ -226,15 +230,15 @@ void Game::EnemyShootTears()
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("EnemyTears.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("Enemy3Tear.png")));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("EnemyTears.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("Enemy4Tear.png")));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("EnemyTears.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(2.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("Enemy5Tear.png")));
 			}
 			lastTearFired = GetTime();
 		}

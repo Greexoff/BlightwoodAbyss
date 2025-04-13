@@ -104,7 +104,8 @@ int main()
 }
 /*
 * Do zrobienia:
-* !!!Modele dla itemkow i PRZECIWNIKOW (e1, e4)!!!
+* !!!Modele dla itemkow
+* !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
 * !!!Return w character menu!!! i statsy dla postaci (przy najezdzaniu na ta ksiazke moze zrobic popup liste ze statystykami aktualnego bohatera?!!!
 * !!!Pousuwac te couty przy menu
 * !!!Zrobic od nowa te grafiki dla menu, moze jakas ladnie zrobiona czcionka?

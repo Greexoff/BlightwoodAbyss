@@ -28,6 +28,7 @@ public:
 private:
 	fs::path backgroundPath;
 	unique_ptr<Character> Player;
+	string playerTearType;
 	fs::path object_assets;
 	map<string, Texture2D> loadedTextures;
 	Texture2D passCorrectTexture(string textureName);

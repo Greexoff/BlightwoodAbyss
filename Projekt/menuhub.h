@@ -95,7 +95,11 @@ public:
 	void showExplanations();
 	void isButtonClicked(CurrentState& gameState);
 private:
-	enum Pressed { NOTHING, CONFIRM_BUTTON, ARROW_LEFT, ARROW_RIGHT };
+	fs::path commsAssetsPath;
+	void LoadCommsTextures();
+	map<string, Texture2D> loadedComms;
+	Texture2D passCorrectTexture(string textureName);
+	void DrawComments(Texture2D texture);
 	Rectangle ArrowArea;
 	Rectangle ConfirmArea;
 	Rectangle CharacterInformationArea;

@@ -347,6 +347,8 @@ void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool
 CharacterSelectionMenu::CharacterSelectionMenu()
 {
 	LoadTextures("backgroundCHAR.png");
+	commsAssetsPath= fs::current_path() / "assets" / "comments_assets";
+	LoadCommsTextures();
 	ArrowArea = {66,593,219-66,701-593};
 	ConfirmArea = { 628,541,796-628,778-541 };
 	CharacterInformationArea = {620,294,790-620,473-294};
@@ -358,8 +360,32 @@ CharacterSelectionMenu::CharacterSelectionMenu()
 CharacterSelectionMenu::~CharacterSelectionMenu()
 {
 	UnloadTexture(BackgroundTexture);
+	for (auto& i : loadedComms)
+	{
+		UnloadTexture(i.second);
+	}
 }
-
+void CharacterSelectionMenu::LoadCommsTextures()
+{
+	for (const auto& textureName : fs::directory_iterator(commsAssetsPath))
+	{
+		loadedComms.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
+	}
+}
+Texture2D CharacterSelectionMenu::passCorrectTexture(string textureName)
+{
+	for (auto& checking : loadedComms)
+	{
+		if (checking.first == textureName)
+		{
+			return checking.second;
+		}
+	}
+}
+void CharacterSelectionMenu::DrawComments(Texture2D texture)
+{
+	DrawTextureEx(texture, { 1035, 100 }, 0, 1, WHITE);
+}
 void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 {
 	Vector2 mousePos = GetMousePosition();
@@ -388,30 +414,22 @@ void CharacterSelectionMenu::showExplanations()
 	if (CheckCollisionPointRec(mousePos, ConfirmArea))
 	{
 		cout << "Kliknieto przycisk" << endl;
-		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "NewGameInfo.png";//TO JEST TMP USUNAC
-		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
-		DrawTextureEx(image, { 1035, 100 }, 0, 1, WHITE);//TO JEST TMP USUNAC
+		DrawComments(passCorrectTexture("NewGameInfo.png"));
 	}
 	if (CheckCollisionPointRec(mousePos, ArrowArea))
 	{
 		cout<<"Tutaj wybor postaci"<<endl;
-		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "SwitchInfo.png";//TO JEST TMP USUNAC
-		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
-		DrawTextureEx(image, { 1035, 100 }, 0, 1, WHITE);//TO JEST TMP USUNAC
+		DrawComments(passCorrectTexture("SwitchInfo.png"));
 	}
 	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
 	{
 		cout << "Tu statsy postaci" << endl;
-		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "CharacterInfo.png";//TO JEST TMP USUNAC
-		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
-		DrawTextureEx(image, { 1035, 100 }, 0, 1, WHITE);//TO JEST TMP USUNAC
+		DrawComments(passCorrectTexture("CharacterInfo.png"));
 	}
 	if (CheckCollisionPointRec(mousePos, ReturnArea))
 	{
 		cout << "Tu jest powrot" << endl;
-		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "ReturnInfo.png";//TO JEST TMP USUNAC
-		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
-		DrawTextureEx(image, { 1035, 100 },0,1, WHITE);//TO JEST TMP USUNAC
+		DrawComments(passCorrectTexture("ReturnInfo.png"));
 	}
 }
 int CharacterSelectionMenu::getPageNumber()

@@ -31,7 +31,8 @@ public:
 	virtual ~Menu();
 protected:
 	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";
-	Font font = LoadFontEx("bahnschrift.ttf", 80, 0, 0);
+	fs::path fontPath = fs::current_path() / "assets" / "font_assets"/ "VT323.ttf";
+	Font font = LoadFontEx(fontPath.string().c_str(), 80, 0, 0);
 	Texture2D BackgroundTexture; 
 	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
 };
@@ -91,11 +92,14 @@ public:
 	CharacterSelectionMenu();
 	~CharacterSelectionMenu();
 	int getPageNumber();
-	bool isButtonClicked();
+	void showExplanations();
+	void isButtonClicked(CurrentState& gameState);
 private:
 	enum Pressed { NOTHING, CONFIRM_BUTTON, ARROW_LEFT, ARROW_RIGHT };
 	Rectangle ArrowArea;
 	Rectangle ConfirmArea;
+	Rectangle CharacterInformationArea;
+	Rectangle ReturnArea;
 	int pageNumber;
 	int leftSidePageLimit;
 	int rightSidePageLimit;

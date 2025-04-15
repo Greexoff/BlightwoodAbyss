@@ -37,10 +37,10 @@ StartingMenu::~StartingMenu()
 LoginMenu::LoginMenu()
 {
 	LoadTextures("backgroundLOGIN.png");
-	LoginMenu_ConfirmArea = { 541,795,852-541,985-795 };
+	LoginMenu_ConfirmArea = { 520,796,883-520,975-796 };
 	LoginMenu_UsernameBarArea = { 382, 216, 1032-382, 354-216 };
 	LoginMenu_PasswordBarArea = { 382, 495, 1032-382, 633-495 };
-	LoginMenu_SingupArea = {1065,810,1307-1065,944 -810 };
+	LoginMenu_SingupArea = {1050,807,1318-1050,975 -807 };
 	username = "";
 	password = "";
 	userExist = false;
@@ -92,7 +92,7 @@ void LoginMenu::insertData(string& name)
 void LoginMenu::DrawLogin(string name, string location)
 {
 	int maxFontSize = 80;
-	int minFontSize = 10;
+	int minFontSize = 20;
 	int spacing = 2;
 	int position = 0;
 	if (location == "upper")
@@ -273,11 +273,11 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 MainMenu::MainMenu()
 {
 	LoadTextures("backgroundMENU.png");
-	Menu_NewGameButton = { 464, 143, 934 - 464, 226 - 143 };
-	Menu_RulesButton = { 441,272,958 - 441,356 - 272 };
-	Menu_UnlockedItemsButton = { 477, 406, 919 - 477, 492 - 406 };
-	Menu_HighestScoreButton = { 376, 538, 1024-376, 635-538 };
-	Menu_Exit = { 617, 667, 782-617, 748-667 };
+	Menu_NewGameButton = { 470, 120, 952 - 470, 216 - 120 };
+	Menu_RulesButton = { 410,276,1017 - 410,372 - 276 };
+	Menu_UnlockedItemsButton = { 410, 429, 1017 - 410, 525 - 429 };
+	Menu_HighestScoreButton = { 260,582, 1167-260, 678-582 };
+	Menu_Exit = { 598, 735, 840-598, 831-735 };
 
 }
 MainMenu::~MainMenu()
@@ -348,7 +348,9 @@ CharacterSelectionMenu::CharacterSelectionMenu()
 {
 	LoadTextures("backgroundCHAR.png");
 	ArrowArea = {66,593,219-66,701-593};
-	ConfirmArea = { 605,375,810-605,770-375 };
+	ConfirmArea = { 628,541,796-628,778-541 };
+	CharacterInformationArea = {620,294,790-620,473-294};
+	ReturnArea = {0,0,100,100};
 	pageNumber = 0;
 	leftSidePageLimit = -1;
 	rightSidePageLimit = 1;
@@ -357,13 +359,14 @@ CharacterSelectionMenu::~CharacterSelectionMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
-bool CharacterSelectionMenu::isButtonClicked()
+
+void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 {
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ConfirmArea))
 	{
 		cout << "Kliknieto przycisk" << endl;
-		return true;
+		gameState = CurrentState::GAMEPLAY;
 	}
 	if (CheckCollisionPointRec(mousePos, ArrowArea))
 	{
@@ -374,8 +377,42 @@ bool CharacterSelectionMenu::isButtonClicked()
 			pageNumber = leftSidePageLimit;
 		}
 	}
-
-	return false;
+	if (CheckCollisionPointRec(mousePos, ReturnArea))
+	{
+		gameState = CurrentState::MAIN_MENU;
+	}
+}
+void CharacterSelectionMenu::showExplanations()
+{
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos, ConfirmArea))
+	{
+		cout << "Kliknieto przycisk" << endl;
+		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "NewGameInfo.png";//TO JEST TMP USUNAC
+		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
+		DrawTextureEx(image, { 1035, 100 }, 0, 1, WHITE);//TO JEST TMP USUNAC
+	}
+	if (CheckCollisionPointRec(mousePos, ArrowArea))
+	{
+		cout<<"Tutaj wybor postaci"<<endl;
+		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "SwitchInfo.png";//TO JEST TMP USUNAC
+		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
+		DrawTextureEx(image, { 1035, 100 }, 0, 1, WHITE);//TO JEST TMP USUNAC
+	}
+	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
+	{
+		cout << "Tu statsy postaci" << endl;
+		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "CharacterInfo.png";//TO JEST TMP USUNAC
+		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
+		DrawTextureEx(image, { 1035, 100 }, 0, 1, WHITE);//TO JEST TMP USUNAC
+	}
+	if (CheckCollisionPointRec(mousePos, ReturnArea))
+	{
+		cout << "Tu jest powrot" << endl;
+		fs::path tmpPath = fs::current_path() / "assets" / "comments_assets" / "ReturnInfo.png";//TO JEST TMP USUNAC
+		Texture2D image = LoadTexture(tmpPath.string().c_str());//TO JEST TMP USUNAC
+		DrawTextureEx(image, { 1035, 100 },0,1, WHITE);//TO JEST TMP USUNAC
+	}
 }
 int CharacterSelectionMenu::getPageNumber()
 {

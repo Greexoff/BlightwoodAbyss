@@ -379,13 +379,13 @@ void Game::createRandomLoot(Vector2 enemyPos)
 		Loot = make_unique<DamageTrinket>(passCorrectTexture("DamageTrinket.png"), enemyPos);
 		break;
 	case 2:
-		Loot = make_unique<TearRateTrinket>(passCorrectTexture("SpeedTrinket.png"), enemyPos);
+		Loot = make_unique<TearRateTrinket>(passCorrectTexture("TearRateTrinket.png"), enemyPos);
 		break;
 	case 3:
-		Loot = make_unique<SpeedTrinket>(passCorrectTexture("HealthTrinket.png"), enemyPos);
+		Loot = make_unique<SpeedTrinket>(passCorrectTexture("SpeedTrinket.png"), enemyPos);
 		break;
 	case 4:
-		Loot = make_unique<HealthTrinket>(passCorrectTexture("TearRateTrinket.png"), enemyPos);
+		Loot = make_unique<HealthTrinket>(passCorrectTexture("HealthTrinket.png"), enemyPos);
 		break;
 	case 5:
 		Loot = make_unique<TearSpeedTrinket>(passCorrectTexture("TearSpeedTrinket.png"), enemyPos);

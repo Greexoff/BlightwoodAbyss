@@ -20,7 +20,8 @@ int main()
 	int Height = 1024;
 	InitWindow(Width, Height, "Survival Game");
 	SetTargetFPS(60);
-	Font font = LoadFontEx("bahnschrift.ttf", 80, 0, 0);
+	fs::path fontPath = fs::current_path() / "assets" / "font_assets" / "VT323.ttf";
+	Font font = LoadFontEx(fontPath.string().c_str(), 80, 0, 0);
 	Game game;
 	string scoreText = "";
 	bool shouldEnd = false;
@@ -55,10 +56,14 @@ int main()
 		case CurrentState::CHARACTER_SELECT_MENU:
 			charTab.Draw();
 			game.DrawPlayerCharacterImage(charTab.getPageNumber());
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && charTab.isButtonClicked()) {
-				game.setPlayerCharacter(charTab.getPageNumber());
-				gameState = CurrentState::GAMEPLAY;
-				game.setLastTimePlayerWasTouched();
+			charTab.showExplanations();
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				charTab.isButtonClicked(gameState);
+				if (gameState == CurrentState::GAMEPLAY) {
+					game.setPlayerCharacter(charTab.getPageNumber());
+					game.setLastTimePlayerWasTouched();
+				}
 			}
 			break;
 		case CurrentState::RULES_MENU:

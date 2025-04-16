@@ -14,6 +14,7 @@ namespace fs = filesystem;
 
 enum class CurrentState
 {
+	LOADING,
 	STARTING_MENU,
 	LOGIN_MENU,
 	MAIN_MENU,

@@ -140,6 +140,7 @@
     <ClCompile Include="Projekt.cpp" />
     <ClCompile Include="tears.cpp" />
     <ClCompile Include="typ.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enemy.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="menuhub.h" />
     <ClInclude Include="tears.h" />
     <ClInclude Include="typ.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

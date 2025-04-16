@@ -36,6 +36,7 @@ StartingMenu::~StartingMenu()
 
 LoginMenu::LoginMenu()
 {
+	data_basePath = fs::current_path() / "database"/"DataBase.txt";
 	LoadTextures("backgroundLOGIN.png");
 	LoginMenu_ConfirmArea = { 520,796,883-520,975-796 };
 	LoginMenu_UsernameBarArea = { 382, 216, 1032-382, 354-216 };
@@ -347,7 +348,9 @@ void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool
 CharacterSelectionMenu::CharacterSelectionMenu()
 {
 	LoadTextures("backgroundCHAR.png");
+	characterStatsPath = fs::current_path() / "database" / "CharacterStats.txt";
 	commsAssetsPath= fs::current_path() / "assets" / "comments_assets";
+	LoadCharactersStats();
 	LoadCommsTextures();
 	ArrowArea = {66,593,219-66,701-593};
 	ConfirmArea = { 628,541,796-628,778-541 };
@@ -408,6 +411,62 @@ void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 		gameState = CurrentState::MAIN_MENU;
 	}
 }
+void CharacterSelectionMenu::LoadCharactersStats()
+{
+	ifstream file(characterStatsPath);
+	if (!file.is_open())
+	{
+		return;
+	}
+	regex r(R"((\w+):\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+))");
+	string line;
+	smatch match;
+
+	while (getline(file, line)) {
+		if (regex_match(line, match, r)) {
+			characterStats Stats;
+			string name = match[1];
+			Stats.playerHealth = match[2];
+			Stats.maxPlayerHealth = match[3];
+			Stats.playerSpeed = match[4];
+			Stats.playerDamage = match[5];
+			Stats.tearSpeed = match[6];
+			Stats.tearRate = match[7];
+			Stats.imageScale = match[8];
+
+			allCharacterStats[name] = Stats;
+		}
+	}
+}
+void CharacterSelectionMenu::DrawCharacterStats(string characterName)//tutaj jakos lepiej te pos zrobic
+{
+	auto it = allCharacterStats.find(characterName);
+	if (it != allCharacterStats.end()) {
+		DrawTextEx(font, it->second.playerDamage.c_str(), {1263,378}, 35, 1, WHITE);
+		DrawTextEx(font, it->second.playerSpeed.c_str(), { 1263,378+1*42.5 }, 35, 1, WHITE);
+		DrawTextEx(font, it->second.tearRate.c_str(), { 1263,378 + 2 * 42.5 }, 35, 1, WHITE);
+		DrawTextEx(font, it->second.tearSpeed.c_str(), { 1263,378 + 3 * 42.5 }, 35, 1, WHITE);
+		DrawTextEx(font, it->second.maxPlayerHealth.c_str(), { 1263,378 + 4 * 42.5 }, 35, 1, WHITE);
+
+	}
+}
+void CharacterSelectionMenu::GetCharacterStats(int CurrentPage)
+{
+	switch (CurrentPage)
+	{
+	case 0:
+		DrawCharacterStats("FirstCharacter");
+		break;
+	case -1:
+		DrawCharacterStats("SecondCharacter");
+		break;
+	case 1:
+		DrawCharacterStats("ThirdCharacter");
+		break;
+	default:
+		break;
+	}
+}
 void CharacterSelectionMenu::showExplanations()
 {
 	Vector2 mousePos = GetMousePosition();
@@ -420,11 +479,14 @@ void CharacterSelectionMenu::showExplanations()
 	{
 		cout<<"Tutaj wybor postaci"<<endl;
 		DrawComments(passCorrectTexture("SwitchInfo.png"));
+
 	}
 	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
 	{
 		cout << "Tu statsy postaci" << endl;
 		DrawComments(passCorrectTexture("CharacterInfo.png"));
+		GetCharacterStats(pageNumber);
+
 	}
 	if (CheckCollisionPointRec(mousePos, ReturnArea))
 	{

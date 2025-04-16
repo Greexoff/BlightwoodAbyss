@@ -7,6 +7,7 @@
 #include <sstream>
 #include <filesystem>
 #include <map>
+import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
 
@@ -21,6 +22,7 @@ enum class CurrentState
 	SCORE_MENU,
 	GAMEPLAY,
 };
+
 
 class Menu
 {
@@ -64,7 +66,7 @@ private:
 	Rectangle LoginMenu_UsernameBarArea;
 	Rectangle LoginMenu_PasswordBarArea;
 	Rectangle LoginMenu_SingupArea;
-	fs::path data_basePath = fs::current_path() / "DataBase.txt";
+	fs::path data_basePath;
 	bool isSignupAreaActive;
 	string username;
 	string password;
@@ -96,17 +98,23 @@ public:
 	void isButtonClicked(CurrentState& gameState);
 private:
 	fs::path commsAssetsPath;
+	fs::path characterStatsPath;
+	map<string, characterStats> allCharacterStats;
 	void LoadCommsTextures();
 	map<string, Texture2D> loadedComms;
 	Texture2D passCorrectTexture(string textureName);
 	void DrawComments(Texture2D texture);
+	void GetCharacterStats(int currentPage);
+	void DrawCharacterStats(string characterName);
+	void LoadCharactersStats();
 	Rectangle ArrowArea;
-	Rectangle ConfirmArea;
+	Rectangle ConfirmArea; 
 	Rectangle CharacterInformationArea;
 	Rectangle ReturnArea;
 	int pageNumber;
 	int leftSidePageLimit;
 	int rightSidePageLimit;
+
 };
 class RulesMenu : public Menu
 {

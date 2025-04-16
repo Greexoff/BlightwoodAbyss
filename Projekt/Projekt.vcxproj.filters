@@ -36,6 +36,9 @@
     <ClCompile Include="menuhub.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="CharacterStats.ixx">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="typ.h">

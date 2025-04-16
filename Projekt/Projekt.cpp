@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "game.h"
 #include "menuhub.h"
+
 string ScoreWithLeadingZeros(int number, int width)
 {
 	string scoreText = to_string(number);
@@ -109,14 +110,10 @@ int main()
 }
 /*
 * Do zrobienia:
-* !!!Modele dla itemkow
-* !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
+* !!!Pousuwac te couty przy menu i zrobic drawText dla poszczegolnych informacji (tutaj chyba znow threads zeby to zostalo przez pare sekund na ekranie)
 * !!!Pasek ladowania?
-* !!!Return w character menu!!! i statsy dla postaci (przy najezdzaniu na ta ksiazke moze zrobic popup liste ze statystykami aktualnego bohatera?!!!
-* !!!Pousuwac te couty przy menu
-* !!!Zrobic od nowa te grafiki dla menu, moze jakas ladnie zrobiona czcionka?
+* !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
 * !!!Dokonczyc highestscores(wyswieltanie), rules, collectibles
-* !!/Dodac achievementy/unlockables(to chyba bedzie lepiej zrobic jako modul)
 * !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt (np. dodac do highest scores funkcje getHighestScore(string username) i stad pobierac highest score gracza
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !/Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?

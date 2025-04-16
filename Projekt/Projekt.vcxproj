@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CharacterStats.cpp" />
     <ClCompile Include="CharacterStats.ixx" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="game.cpp" />

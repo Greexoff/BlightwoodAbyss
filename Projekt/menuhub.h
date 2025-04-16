@@ -106,7 +106,6 @@ private:
 	void DrawComments(Texture2D texture);
 	void GetCharacterStats(int currentPage);
 	void DrawCharacterStats(string characterName);
-	void LoadCharactersStats();
 	Rectangle ArrowArea;
 	Rectangle ConfirmArea; 
 	Rectangle CharacterInformationArea;

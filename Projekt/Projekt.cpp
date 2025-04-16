@@ -120,7 +120,7 @@ int main()
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali? PARTIALLY DONE
 * !Dodac klase UI obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, KONIECZNIE UI ZE STATSAMI
 * 
-* Raczej nie zrobie - animacje do wszystkiego
+* 
 */
 
 /*
@@ -128,7 +128,7 @@ int main()
 * <thread> wątek do zastopowania nowej fali. Mozna jeszcze cos przekminic ewentualnie
 * <regex> logowanie sie do gierki
 * <filesystem> ladowanie tekstur
-* TBD <module>
+* <module> strukutra CharacterStats
 * 
 * 
 */

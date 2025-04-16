@@ -348,9 +348,7 @@ void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool
 CharacterSelectionMenu::CharacterSelectionMenu()
 {
 	LoadTextures("backgroundCHAR.png");
-	characterStatsPath = fs::current_path() / "database" / "CharacterStats.txt";
 	commsAssetsPath= fs::current_path() / "assets" / "comments_assets";
-	LoadCharactersStats();
 	LoadCommsTextures();
 	ArrowArea = {66,593,219-66,701-593};
 	ConfirmArea = { 628,541,796-628,778-541 };
@@ -411,44 +409,25 @@ void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 		gameState = CurrentState::MAIN_MENU;
 	}
 }
-void CharacterSelectionMenu::LoadCharactersStats()
+void CharacterSelectionMenu::DrawCharacterStats(string characterName)
 {
-	ifstream file(characterStatsPath);
-	if (!file.is_open())
-	{
-		return;
-	}
-	regex r(R"((\w+):\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+))");
-	string line;
-	smatch match;
+	CharacterData::LoadStatsOnce();
+	const auto& statsMap = CharacterData::GetAllStats();
 
-	while (getline(file, line)) {
-		if (regex_match(line, match, r)) {
-			characterStats Stats;
-			string name = match[1];
-			Stats.playerHealth = match[2];
-			Stats.maxPlayerHealth = match[3];
-			Stats.playerSpeed = match[4];
-			Stats.playerDamage = match[5];
-			Stats.tearSpeed = match[6];
-			Stats.tearRate = match[7];
-			Stats.imageScale = match[8];
+	auto it = statsMap.find(characterName);
+	if (it == statsMap.end()) return;
 
-			allCharacterStats[name] = Stats;
-		}
-	}
-}
-void CharacterSelectionMenu::DrawCharacterStats(string characterName)//tutaj jakos lepiej te pos zrobic
-{
-	auto it = allCharacterStats.find(characterName);
-	if (it != allCharacterStats.end()) {
-		DrawTextEx(font, it->second.playerDamage.c_str(), {1263,378}, 35, 1, WHITE);
-		DrawTextEx(font, it->second.playerSpeed.c_str(), { 1263,378+1*42.5 }, 35, 1, WHITE);
-		DrawTextEx(font, it->second.tearRate.c_str(), { 1263,378 + 2 * 42.5 }, 35, 1, WHITE);
-		DrawTextEx(font, it->second.tearSpeed.c_str(), { 1263,378 + 3 * 42.5 }, 35, 1, WHITE);
-		DrawTextEx(font, it->second.maxPlayerHealth.c_str(), { 1263,378 + 4 * 42.5 }, 35, 1, WHITE);
+	const characterStats& stats = it->second;
 
-	}
+	Vector2 basePos = { 1263, 378 };
+	float spacing = 42.5f;
+	float fontSize = 35.0f;
+
+	DrawTextEx(font, stats.playerDamage.c_str(), { basePos.x, basePos.y + 0 * spacing }, fontSize, 1, WHITE);
+	DrawTextEx(font, stats.playerSpeed.c_str(), { basePos.x, basePos.y + 1 * spacing }, fontSize, 1, WHITE);
+	DrawTextEx(font, stats.tearRate.c_str(), { basePos.x, basePos.y + 2 * spacing }, fontSize, 1, WHITE);
+	DrawTextEx(font, stats.tearSpeed.c_str(), { basePos.x, basePos.y + 3 * spacing }, fontSize, 1, WHITE);
+	DrawTextEx(font, stats.maxPlayerHealth.c_str(), { basePos.x, basePos.y + 4 * spacing }, fontSize, 1, WHITE);
 }
 void CharacterSelectionMenu::GetCharacterStats(int CurrentPage)
 {

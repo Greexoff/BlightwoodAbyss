@@ -19,7 +19,6 @@ bool Menu::isReturnButtonClicked()
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
 	{
-		cout << "Kliknieto powrot" << endl;
 		return true;
 	}
 	return false;
@@ -47,6 +46,7 @@ LoginMenu::LoginMenu()
 	userExist = false;
 	fontsize = 80;
 	isSignupAreaActive = true;
+	errorType = 0;
 }
 LoginMenu::~LoginMenu()
 {
@@ -57,22 +57,18 @@ int LoginMenu::isButtonClicked()
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, LoginMenu_ConfirmArea))
 	{
-		cout << "Kliknieto przycisk" << endl;
 		return CONFIRM_BUTTON;
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_UsernameBarArea))
 	{
-		cout << "Kilknieto username" << endl;
 		return USERNAME_BAR;
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_PasswordBarArea))
-	{
-		cout << "Kliknieto password" << endl;
+	{;
 		return PASSWORD_BAR;
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_SingupArea) && isSignupAreaActive)
 	{
-		cout << "Kliknieto Sign-up" << endl;
 		return SIGNUP_BAR;
 	}
 	return NOTHING;
@@ -131,15 +127,16 @@ void LoginMenu::DrawLogin(string name, string location)
 }
 bool LoginMenu::checkIsLoginCorrect()
 {
-	regex username_regex("^[a-zA-Z0-9]{3,15}$");
-	regex password_regex("^[a-zA-Z0-9]{4,20}$");
-	if (regex_match(username, username_regex) && regex_match(password, password_regex))
+	regex DataRegex("^[a-zA-Z0-9]{4,20}$");
+	if (regex_match(username, DataRegex) && regex_match(password, DataRegex))
 	{
 		return true;
 	}
 	else
 	{
-		cout << "Niepoprawne dane" << endl;
+		thread displayErrorThread(&LoginMenu::showLoginError, this);
+		displayErrorThread.detach();
+		errorType = 1;
 		return false;
 	}
 }
@@ -147,20 +144,11 @@ void LoginMenu::changeSignBarLevel(bool value)
 {
 	isSignupAreaActive = value;
 }
-bool LoginMenu::isSignUpCardActive()
-{
-	if (isSignupAreaActive)
-	{
-		return true;
-	}
-	return false;
-}
 bool LoginMenu::checkIsPlayerInDataBase()
 {
 	ifstream file(data_basePath.string());
 	if (!file.is_open())
 	{
-		cout << "Nie mozna otworzyc pliku" << endl;
 		return false;
 	}
 	regex userRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+)$)");
@@ -188,7 +176,6 @@ void LoginMenu::addPlayerToDataBase()
 	string line;
 	if (!file.is_open())
 	{
-		cout << "Nie mozna otworzyc pliku" << endl;
 	}
 	else
 	{
@@ -214,39 +201,44 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 		if (!checkIsLoginCorrect())
 		{
 			setAction = 0;
+			break;
 		}
 
 		userValid = checkIsPlayerInDataBase();
 
-		if (isSignUpCardActive()) // Logowanie
+		if (isSignupAreaActive)
 		{
 			if (userValid)
 			{
-				cout << "Uzytkownik zalogowany pomyslnie" << endl;
 				gameState = CurrentState::MAIN_MENU;
 			}
 			else
 			{
 				if (userExist)
 				{
-					cout << "Bledne haslo" << endl;
+					thread displayErrorThread(&LoginMenu::showLoginError, this);
+					displayErrorThread.detach();
+					errorType = 2;
 				}
 				else
 				{
-					cout << "Nie ma uzytkownika o podanej nazwie" << endl;
+					thread displayErrorThread(&LoginMenu::showLoginError, this);
+					displayErrorThread.detach();
+					errorType = 3;
 				}
 			}
 		}
-		else // Rejestracja
+		else 
 		{
 			if (userExist)
 			{
-				cout << "Juz istnieje uzytkownik o takiej nazwie" << endl;
+				thread displayErrorThread(&LoginMenu::showLoginError, this);
+				displayErrorThread.detach();
+				errorType = 4;
 			}
 			else
 			{
 				addPlayerToDataBase();
-				cout << "Rejestracja zakonczona sukcesem" << endl;
 				gameState = CurrentState::MAIN_MENU;
 			}
 		}
@@ -267,8 +259,51 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 	default:
 		break;
 	}
+	if (showError)
+	{
+		DrawError();
+	}
 	DrawLogin(username, "upper");
 	DrawLogin(password, "lower");
+}
+void LoginMenu::showLoginError()
+{
+	errorStartTime = GetTime();
+	showError = true;
+	std::this_thread::sleep_for(std::chrono::seconds(3));
+	showError = false;
+}
+void LoginMenu::DrawingErrorSettingUp(string information)
+{
+	float fontSize = 50;
+	float spacing = 2;
+	Vector2 textSize = MeasureTextEx(font, information.c_str(), fontSize, spacing);
+	float barStartX = 382;
+	float barWidth = 651;
+	float barCenterX = barStartX + barWidth / 2.0;
+	float textX = barCenterX - textSize.x / 2.0;
+	DrawTextEx(font, information.c_str(),{ textX, 665 }, fontSize, spacing, WHITE);
+
+}
+void LoginMenu::DrawError()
+{
+	switch (errorType)
+	{
+	case 1://Nie pasuje do regexa
+		DrawingErrorSettingUp("Error: Data does not meet criteria");
+		break;
+	case 2://Bledne Haslo
+		DrawingErrorSettingUp("Error: Password is invalid");
+		break;
+	case 3://Nie ma uzytkownika o podanej nazwie
+		DrawingErrorSettingUp("Error: Username is invalid");
+		break;
+	case 4://Juz istnieje taki uzytkownik
+		DrawingErrorSettingUp("Error: Username is already in use");
+		break;
+	default:
+		break;
+	}
 }
 
 MainMenu::MainMenu()
@@ -290,28 +325,23 @@ int MainMenu::isButtonClicked()
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, Menu_NewGameButton))
 	{
-		cout << "Kliknieto nowa giera" << endl;
 		return NEWGAME_BUTTON;
 	}
 	
 	if(CheckCollisionPointRec(mousePos, Menu_RulesButton))
 	{
-		cout << "Kliknieto rules" << endl;
 		return RULES_BUTTON;
 	}
 	if (CheckCollisionPointRec(mousePos, Menu_UnlockedItemsButton))
 	{
-		cout << "Kilnieto unlocked items" << endl;
 		return UNLOCKED_BUTTON;
 	}
 	if (CheckCollisionPointRec(mousePos, Menu_HighestScoreButton))
 	{
-		cout << "Kliknieto Highest Score" << endl;
 		return SCORE_BUTTON;
 	}
 	if (CheckCollisionPointRec(mousePos, Menu_Exit))
 	{
-		cout << "Kliknieto Exit" << endl;
 		return EXIT_BUTTON;
 	}
 	return NOTHING;
@@ -392,12 +422,10 @@ void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ConfirmArea))
 	{
-		cout << "Kliknieto przycisk" << endl;
 		gameState = CurrentState::GAMEPLAY;
 	}
 	if (CheckCollisionPointRec(mousePos, ArrowArea))
 	{
-		cout << "Kliknieto RightArrow" << endl;
 		pageNumber++;
 		if (pageNumber > rightSidePageLimit)
 		{
@@ -451,25 +479,21 @@ void CharacterSelectionMenu::showExplanations()
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ConfirmArea))
 	{
-		cout << "Kliknieto przycisk" << endl;
 		DrawComments(passCorrectTexture("NewGameInfo.png"));
 	}
 	if (CheckCollisionPointRec(mousePos, ArrowArea))
 	{
-		cout<<"Tutaj wybor postaci"<<endl;
 		DrawComments(passCorrectTexture("SwitchInfo.png"));
 
 	}
 	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
 	{
-		cout << "Tu statsy postaci" << endl;
 		DrawComments(passCorrectTexture("CharacterInfo.png"));
 		GetCharacterStats(pageNumber);
 
 	}
 	if (CheckCollisionPointRec(mousePos, ReturnArea))
 	{
-		cout << "Tu jest powrot" << endl;
 		DrawComments(passCorrectTexture("ReturnInfo.png"));
 	}
 }

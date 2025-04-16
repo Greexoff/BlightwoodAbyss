@@ -7,6 +7,7 @@
 #include <sstream>
 #include <filesystem>
 #include <map>
+#include <thread>
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
@@ -52,11 +53,16 @@ public:
 	~LoginMenu();
 	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);
 private:
+	void showLoginError();
+	int errorType;
+	atomic<bool> showError = false;
+	atomic<double> errorStartTime = 0.0;
+	void DrawingErrorSettingUp(string information);
 	void insertData(string& name);
+	void DrawError();
 	void DrawLogin(string name, string location);
 	bool checkIsLoginCorrect();
 	int isButtonClicked();
-	bool isSignUpCardActive();
 	bool checkIsPlayerInDataBase();
 	void addPlayerToDataBase();
 	void clearUsernameandPassword();

@@ -176,13 +176,13 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	int poolOfEnemiesTypes = 3;
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue(250,GetScreenWidth() - 250), GetRandomValue(250,GetScreenHeight() - 250) };
+		Vector2 position = { GetRandomValue(300,GetScreenWidth() - 300), GetRandomValue(300,GetScreenHeight() - 300) };
 		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("Enemy5.png")));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(250,GetScreenWidth() - 250), GetRandomValue(250,GetScreenHeight() - 250) };
+		Vector2 position = { GetRandomValue(300,GetScreenWidth() - 300), GetRandomValue(300,GetScreenHeight() - 300) };
 		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;

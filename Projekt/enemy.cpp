@@ -106,7 +106,7 @@ void Enemy::UpdateColl(Vector2 Direction)
 }
 Rectangle Enemy::getEnemyRect()
 {
-	return { position.x,position.y,((float)image.width*imageScale)-10,((float)image.height*imageScale)-10};
+	return { position.x,position.y,(((float)image.width - 5 )*imageScale),(((float)image.height - 5)*imageScale)};
 }
 Vector2 Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 {

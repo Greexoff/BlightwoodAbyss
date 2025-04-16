@@ -110,7 +110,6 @@ int main()
 }
 /*
 * Do zrobienia:
-* !!!Pousuwac te couty przy menu i zrobic drawText dla poszczegolnych informacji (tutaj chyba znow threads zeby to zostalo przez pare sekund na ekranie)
 * !!!Pasek ladowania?
 * !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
 * !!!Dokonczyc highestscores(wyswieltanie), rules, collectibles

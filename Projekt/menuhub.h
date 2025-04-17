@@ -40,8 +40,6 @@ public:
 	virtual ~Menu();
 protected:
 	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";
-	fs::path fontPath = fs::current_path() / "assets" / "font_assets"/ "VT323.ttf";
-	Font font = LoadFontEx(fontPath.string().c_str(), 80, 0, 0);
 	Texture2D BackgroundTexture; 
 	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
 };
@@ -90,7 +88,7 @@ private:
 	string username;
 	string password;
 	bool userExist;
-	int fontsize;
+	float fontsize;
 };
 class MainMenu : public Menu
 {

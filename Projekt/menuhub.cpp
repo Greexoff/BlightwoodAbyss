@@ -3,7 +3,6 @@
 
 Menu::~Menu()
 {
-	UnloadFont(font);
 }
 void Menu::LoadTextures(fs::path filePath)
 {
@@ -34,7 +33,7 @@ StartingMenu::~StartingMenu()
 
 void StartingMenu::setTitlePosition()
 {
-	Vector2 measurements = GameUI::GetInstance().MeasureText(titleFontSize, titleName.c_str());
+	Vector2 measurements = GameUI::GetInstance().MeasureTextBar(titleFontSize, titleName.c_str());
 	titleNamePosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 4) - (measurements.y / 2) };
 
 }
@@ -153,22 +152,21 @@ void LoginMenu::DrawLogin(string& name, int type)
 	float textStartX = Area.x + 30;
 	float maxTextEndX = Area.x + Area.width - 60;
 	Area.x = textStartX;
-	Vector2 textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
+	Vector2 textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
 	while ((textStartX + textSize.x > maxTextEndX) && fontsize > minFontSize)
 	{
-		cout << "asda" << endl;
 		fontsize -= 1;
-		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
+		textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
 	}
 	while (fontsize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
 	{
 		name.pop_back();
-		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
+		textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
 	}
 	while ((textStartX + textSize.x < maxTextEndX) && fontsize < maxFontSize)
 	{
 		fontsize += 1;
-		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
+		textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
 		if (textStartX + textSize.x > maxTextEndX)
 		{
 			fontsize -= 1;
@@ -329,7 +327,7 @@ void LoginMenu::DrawingErrorSettingUp(string information)
 {
 	float fontSize = 50;
 	float spacing = 2;
-	Vector2 textSize = MeasureTextEx(font, information.c_str(), fontSize, spacing);
+	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, information.c_str());
 	float barCenterX= LoginMenu_PasswordBarArea.x + LoginMenu_PasswordBarArea.width / 2.0;
 	float textX = barCenterX - textSize.x / 2.0;
 	GameUI::GetInstance().DrawTextWithOutline(information.c_str(), { textX, (LoginMenu_PasswordBarArea.y + LoginMenu_PasswordBarArea.height+30) }, fontSize);
@@ -358,13 +356,8 @@ void LoginMenu::DrawError()
 MainMenu::MainMenu()
 {
 	LoadTextures("backgroundSTARTING.png");
-	buttonsFontSize = 80;
+	buttonsFontSize = 120;
 	setButtonsPosition();
-/*	Menu_NewGameButton = {470, 120, 952 - 470, 216 - 120};
-	Menu_RulesButton = { 410,276,1017 - 410,372 - 276 };
-	Menu_UnlockedItemsButton = { 410, 429, 1017 - 410, 525 - 429 };
-	Menu_HighestScoreButton = { 260,582, 1167-260, 678-582 };
-	Menu_Exit = { 598, 735, 840-598, 831-735 };*/
 
 }
 MainMenu::~MainMenu()
@@ -381,11 +374,11 @@ void MainMenu::Draw()
 }
 void MainMenu::setButtonsPosition()
 {
-	float spacing = GetScreenHeight() / 10;
+	float spacing = GetScreenHeight() / 8;
 	for (size_t i=0;i<ButtonNames.size();i++)
 	{
 		const string& name = ButtonNames[i];
-		Vector2 measurements = GameUI::GetInstance().MeasureText(buttonsFontSize, ButtonNames[i].c_str());
+		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
 		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1);
 		Buttons[name] = {rect, buttonPosition};

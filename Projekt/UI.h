@@ -23,7 +23,8 @@ public:
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);
 	void DrawBlackBar(Rectangle border, unsigned char opacity);
 	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type);
-	Vector2 MeasureText(float& fontSize, string text);
+	Vector2 MeasureTextBar(float& fontSize, string text);
+	Vector2 MeasureText(float fontSize, string text);
 private:
 	GameUI();
 	GameUI(const GameUI&) = delete;

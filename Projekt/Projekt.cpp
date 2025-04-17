@@ -152,21 +152,19 @@ int main()
 }
 /*
 * Do zrobienia:
+* !!!!GameUI todo: rysowanie commentsow w CharSelect, odliczanie do nastepnej fali, licznik fali, Statsy w grze, Dobrze dzialajacy loadingScreen
+* !!!/Dokonczyc highestscores(wyswieltanie), rules, collectibles. Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
+* !!!ladowanie statystyk postaci (i idealnie potworow) z plikow tekstowych za pomoca modulu 
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
 * !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
-* !!!Dokonczyc highestscores(wyswieltanie), rules, collectibles
-* !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt (np. dodac do highest scores funkcje getHighestScore(string username) i stad pobierac highest score gracza
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
-* !/Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
-* !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali? PARTIALLY DONE
-* !Dodac klase UI obslugujaca tworzenie tekstur potrzebny - score (prawie done), odliczanie do nastepnej fali, licznik fali, KONIECZNIE UI ZE STATSAMI
-* 
-* 
+* !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
+* !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
 */
 
 /*
 * Wykorzystane rzeczy z labów:
-* <thread> wątek do zastopowania nowej fali. Mozna jeszcze cos przekminic ewentualnie
+* <thread> wątek do zastopowania nowej fali i obslugi bledow w LoginMenu
 * <regex> logowanie sie do gierki
 * <filesystem> ladowanie tekstur
 * <module> strukutra CharacterStats

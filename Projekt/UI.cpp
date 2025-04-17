@@ -56,7 +56,7 @@ void GameUI::DrawCurrentScore(int currentPlayerScore, float fontSize)
 Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type)
 {
 	float additionalSpace = 20;
-	Vector2 measurements = MeasureText(fontSize, text);
+	Vector2 measurements = MeasureTextBar(fontSize, text);
 	switch (type)
 	{
 	case 1:
@@ -70,7 +70,7 @@ Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, 
 		break;
 	}
 }
-Vector2 GameUI::MeasureText(float& fontSize, string text)
+Vector2 GameUI::MeasureTextBar(float& fontSize, string text)
 {
 	Vector2 measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 	while (measurements.x+30 > GetScreenWidth() || measurements.y+30 > GetScreenHeight())
@@ -79,6 +79,10 @@ Vector2 GameUI::MeasureText(float& fontSize, string text)
 		measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 	}
 	return measurements;
+}
+Vector2 GameUI::MeasureText(float fontSize, string text)
+{
+	return MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 }
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {

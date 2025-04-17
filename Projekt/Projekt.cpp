@@ -8,12 +8,6 @@
 #include "menuhub.h"
 #include "UI.h"
 
-string ScoreWithLeadingZeros(int number, int width)
-{
-	string scoreText = to_string(number);
-	int leadingZeros = width - scoreText.length();
-	return string(leadingZeros, '0') + scoreText;
-}
 void DrawLoadingStartBackground()
 {
 	fs::path tmpPath = fs::current_path() / "assets" / "background_loading_screen_assets" / "backgroundLOADINGSTART.png";
@@ -30,7 +24,6 @@ int main()
 	InitWindow(Width, Height, "Survival Game");
 	SetTargetFPS(60);
 	DrawLoadingStartBackground();
-	GameUI ui;
 	StartingMenu* startingTab = nullptr;
 	LoginMenu* loginTab = nullptr;
 	MainMenu* mainTab = nullptr;
@@ -39,8 +32,6 @@ int main()
 	HighestScoreMenu* scoresTab = nullptr;
 	CharacterSelectionMenu* charTab = nullptr;
 	Game* game = nullptr;
-	fs::path fontPath = fs::current_path() / "assets" / "font_assets" / "VT323.ttf";
-	Font font = LoadFontEx(fontPath.string().c_str(), 80, 0, 0);
 	string scoreText = "";
 	bool shouldEnd = false;
 	int setAction=0;
@@ -53,36 +44,36 @@ int main()
 		case CurrentState::LOADING:
 			switch (loadingStage) {
 			case 0:
-				ui.setLoadingProgress("backgroundLOADINGSTART.png");
+				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGSTART.png");
 				break;
 			case 1:
 				startingTab = new StartingMenu();
-				ui.setLoadingProgress("backgroundLOADINGLOGIN.png");
+				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGLOGIN.png");
 				break;
 			case 2:
 				loginTab = new LoginMenu();
-				ui.setLoadingProgress("backgroundLOADINGMENU.png");
+				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGMENU.png");
 				break;
 			case 3:
 				mainTab = new MainMenu();
 				rulesTab = new RulesMenu();
 				unlockedTab = new UnlockedItemsMenu();
 				scoresTab = new HighestScoreMenu();
-				ui.setLoadingProgress("backgroundLOADINGTABS.png");
+				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGTABS.png");
 				break;
 			case 4:
 				charTab = new CharacterSelectionMenu();
-				ui.setLoadingProgress("backgroundLOADINGCHAR.png");
+				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGCHAR.png");
 				break;
 			case 5:
 				game = new Game();
-				ui.setLoadingProgress("backgroundLOADINGFULL.png");
+				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGFULL.png");
 				break;
 			case 6:
 				gameState = CurrentState::STARTING_MENU;
 				break;
 			}
-			ui.DrawBackground();
+			GameUI::GetInstance().DrawBackground();
 			loadingStage++;
 			break;
 		case CurrentState::STARTING_MENU:
@@ -138,9 +129,7 @@ int main()
 			game->Update();
 			game->DrawBackground();
 			game->Draw();
-			DrawTextEx(font, "SCORE:", { 60,30 }, 34, 2, GREEN);
-			scoreText = ScoreWithLeadingZeros(game->playerTotalScore, 6);
-			DrawTextEx(font, scoreText.c_str(), { 60,55 }, 34, 2, GREEN);
+			GameUI::GetInstance().DrawCurrentScore(game->playerTotalScore, 60);
 			if (game->isGameOver())
 			{
 				shouldEnd = true;
@@ -151,7 +140,6 @@ int main()
 		}
 		EndDrawing();
 	}
-	UnloadFont(font);
 	CloseWindow();
 	delete startingTab;
 	delete loginTab;
@@ -164,6 +152,7 @@ int main()
 }
 /*
 * Do zrobienia:
+* !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
 * !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
 * !!!Dokonczyc highestscores(wyswieltanie), rules, collectibles
 * !!/Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt (np. dodac do highest scores funkcje getHighestScore(string username) i stad pobierac highest score gracza

@@ -315,13 +315,16 @@ void Game::CollisionCheck()
 		for (size_t j = i + 1; j < enemies.size(); j++)
 		{
 			if ((CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))) {
-				if (!dynamic_pointer_cast<Monster3>(enemies[i]))
+				if (!dynamic_pointer_cast<Monster3>(enemies[i]) || !dynamic_pointer_cast<Monster3>(enemies[j]))
 				{
 					enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+				//	continue;
+				//	enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
 				}
-				if(!dynamic_pointer_cast<Monster3>(enemies[j])){ 
+				/*if (!dynamic_pointer_cast<Monster3>(enemies[j])) {
 						enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
-				}
+				}*/
+				//enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
 			}
 		}
 	}

@@ -5,10 +5,6 @@ Menu::~Menu()
 {
 	UnloadFont(font);
 }
-void Menu::Draw()
-{
-	DrawTexture(BackgroundTexture, 0, 0, WHITE);
-}
 void Menu::LoadTextures(fs::path filePath)
 {
 	fs::path wholePath = background_assets_path / filePath;
@@ -32,17 +28,23 @@ StartingMenu::~StartingMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
+void StartingMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+}
 
 LoginMenu::LoginMenu()
 {
 	data_basePath = fs::current_path() / "database"/"DataBase.txt";
-	LoadTextures("backgroundLOGIN.png");
-	LoginMenu_ConfirmArea = { 520,796,883-520,975-796 };
-	LoginMenu_UsernameBarArea = { 382, 216, 1032-382, 354-216 };
-	LoginMenu_PasswordBarArea = { 382, 495, 1032-382, 633-495 };
-	LoginMenu_SingupArea = {1050,807,1318-1050,975 -807 };
+	LoadTextures("backgroundSTARTING.png");
 	username = "";
 	password = "";
+	UsernameTextFontSize = 150;
+	PasswordTextFontSize = 150;
+	ConfirmTextFontSize = 75;
+	SignupTextFontSize=70;
+	setXYofTexts();
+	setBarAreas();
 	userExist = false;
 	fontsize = 80;
 	isSignupAreaActive = true;
@@ -51,6 +53,35 @@ LoginMenu::LoginMenu()
 LoginMenu::~LoginMenu()
 {
 	UnloadTexture(BackgroundTexture);
+}
+void LoginMenu::setXYofTexts()
+{
+	ConfirmPosition = { 575,850 };
+	UsernamePosition = { 450,76 };
+	PasswordPosition = { 450,420 };
+	SignupPosition = { 1095,855 };
+}
+void LoginMenu::setBarAreas()
+{
+	GameUI::GetInstance().setBarArea(LoginMenu_UsernameBarArea, UsernameTextFontSize, "USERNAME", UsernamePosition, 2);
+	GameUI::GetInstance().setBarArea(LoginMenu_PasswordBarArea, PasswordTextFontSize, "PASSWORD", PasswordPosition, 2);
+	GameUI::GetInstance().setBarArea(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1);
+	GameUI::GetInstance().setBarArea(LoginMenu_SingupArea, SignupTextFontSize, "SIGNUP", SignupPosition, 1);
+}
+void LoginMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawBlackBar(LoginMenu_UsernameBarArea, 160);
+	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
+	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
+	GameUI::GetInstance().DrawTextWithOutline("USERNAME", UsernamePosition, UsernameTextFontSize);
+	GameUI::GetInstance().DrawTextWithOutline("PASSWORD", PasswordPosition, PasswordTextFontSize);
+	GameUI::GetInstance().DrawTextWithOutline("CONFIRM", ConfirmPosition, ConfirmTextFontSize);
+	if (isSignupAreaActive)
+	{
+		GameUI::GetInstance().DrawBlackBar(LoginMenu_SingupArea, 160);
+		GameUI::GetInstance().DrawTextWithOutline("SIGNUP", SignupPosition, SignupTextFontSize);
+	}
 }
 int LoginMenu::isButtonClicked()
 {
@@ -86,44 +117,54 @@ void LoginMenu::insertData(string& name)
 		name.pop_back();
 	}
 }
-void LoginMenu::DrawLogin(string name, string location)
+void LoginMenu::DrawLogin(string name, int type)
 {
 	int maxFontSize = 80;
-	int minFontSize = 20;
+	int minFontSize = 40;
 	int spacing = 2;
 	int position = 0;
-	if (location == "upper")
+	Rectangle Area;
+
+	switch (type)
 	{
-		position = 290;
+	case 1:
+		Area = LoginMenu_UsernameBarArea;
+		break;
+	case 2:
+		Area = LoginMenu_PasswordBarArea;
+		break;
+	default:
+		break;
 	}
-	if (location == "lower")
-	{
-		position = 570;
-	}
+
+	position = Area.y + (Area.height / 2);
+
+	float textStartX = Area.x + 30;
+	float maxTextEndX = Area.x + Area.width - 30;
+	Area.x = textStartX;
 	Vector2 textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
-	while (textSize.x > LoginMenu_UsernameBarArea.width-40 && fontsize > minFontSize)
+	while ((textStartX + textSize.x > maxTextEndX) && fontsize > minFontSize)
 	{
 		fontsize -= 1;
 		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
 	}
-	while (fontsize == minFontSize && textSize.x > LoginMenu_UsernameBarArea.width - 40 && !name.empty())
+	while (fontsize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
 	{
 		name.pop_back();
 		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
 	}
-	while (textSize.x < LoginMenu_UsernameBarArea.width-40 && fontsize < maxFontSize)
+	while ((textStartX + textSize.x < maxTextEndX) && fontsize < maxFontSize)
 	{
 		fontsize += 1;
 		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
-		if (textSize.x > LoginMenu_UsernameBarArea.width - 40)
+		if (textStartX + textSize.x > maxTextEndX)
 		{
 			fontsize -= 1;
 			break;
 		}
 	}
 	float y_position = position - (textSize.y / 2);
-
-	DrawTextEx(font, name.c_str(), { LoginMenu_UsernameBarArea.x+30, y_position }, fontsize, spacing, WHITE);
+	GameUI::GetInstance().DrawTextWithOutline(name.c_str(), { textStartX, y_position }, fontsize);
 }
 bool LoginMenu::checkIsLoginCorrect()
 {
@@ -252,7 +293,6 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 		break;
 	case 4:
 		clearUsernameandPassword();
-		LoadTextures("backgroundSIGNUP.png");
 		changeSignBarLevel(false);
 		setAction = 0;
 		break;
@@ -263,8 +303,8 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 	{
 		DrawError();
 	}
-	DrawLogin(username, "upper");
-	DrawLogin(password, "lower");
+	DrawLogin(username, 1);
+	DrawLogin(password, 2);
 }
 void LoginMenu::showLoginError()
 {
@@ -278,12 +318,9 @@ void LoginMenu::DrawingErrorSettingUp(string information)
 	float fontSize = 50;
 	float spacing = 2;
 	Vector2 textSize = MeasureTextEx(font, information.c_str(), fontSize, spacing);
-	float barStartX = 382;
-	float barWidth = 651;
-	float barCenterX = barStartX + barWidth / 2.0;
+	float barCenterX= LoginMenu_PasswordBarArea.x + LoginMenu_PasswordBarArea.width / 2.0;
 	float textX = barCenterX - textSize.x / 2.0;
-	DrawTextEx(font, information.c_str(),{ textX, 665 }, fontSize, spacing, WHITE);
-
+	GameUI::GetInstance().DrawTextWithOutline(information.c_str(), { textX, (LoginMenu_PasswordBarArea.y + LoginMenu_PasswordBarArea.height+30) }, fontSize);
 }
 void LoginMenu::DrawError()
 {
@@ -308,7 +345,7 @@ void LoginMenu::DrawError()
 
 MainMenu::MainMenu()
 {
-	LoadTextures("backgroundMENU.png");
+	LoadTextures("backgroundSTARTING.png");
 	Menu_NewGameButton = { 470, 120, 952 - 470, 216 - 120 };
 	Menu_RulesButton = { 410,276,1017 - 410,372 - 276 };
 	Menu_UnlockedItemsButton = { 410, 429, 1017 - 410, 525 - 429 };
@@ -319,6 +356,10 @@ MainMenu::MainMenu()
 MainMenu::~MainMenu()
 {
 	UnloadTexture(BackgroundTexture);
+}
+void MainMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
 }
 int MainMenu::isButtonClicked()
 {
@@ -396,6 +437,10 @@ CharacterSelectionMenu::~CharacterSelectionMenu()
 		UnloadTexture(i.second);
 	}
 }
+void CharacterSelectionMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+}
 void CharacterSelectionMenu::LoadCommsTextures()
 {
 	for (const auto& textureName : fs::directory_iterator(commsAssetsPath))
@@ -447,15 +492,14 @@ void CharacterSelectionMenu::DrawCharacterStats(string characterName)
 
 	const characterStats& stats = it->second;
 
-	Vector2 basePos = { 1263, 378 };
-	float spacing = 42.5f;
-	float fontSize = 35.0f;
-
-	DrawTextEx(font, stats.playerDamage.c_str(), { basePos.x, basePos.y + 0 * spacing }, fontSize, 1, WHITE);
-	DrawTextEx(font, stats.playerSpeed.c_str(), { basePos.x, basePos.y + 1 * spacing }, fontSize, 1, WHITE);
-	DrawTextEx(font, stats.tearRate.c_str(), { basePos.x, basePos.y + 2 * spacing }, fontSize, 1, WHITE);
-	DrawTextEx(font, stats.tearSpeed.c_str(), { basePos.x, basePos.y + 3 * spacing }, fontSize, 1, WHITE);
-	DrawTextEx(font, stats.maxPlayerHealth.c_str(), { basePos.x, basePos.y + 4 * spacing }, fontSize, 1, WHITE);
+	Vector2 basePos = { 1263, 383 };
+	float spacing = 42.5;
+	float fontSize = 30.0;
+	GameUI::GetInstance().DrawTextWithOutline(stats.playerDamage.c_str(), { basePos.x, basePos.y + 0 * spacing }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline(stats.playerSpeed.c_str(), { basePos.x, basePos.y + 1 * spacing }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline(stats.tearRate.c_str(), { basePos.x, basePos.y + 2 * spacing }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline(stats.tearSpeed.c_str(), { basePos.x, basePos.y + 3 * spacing }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline(stats.maxPlayerHealth.c_str(), { basePos.x, basePos.y + 4 * spacing }, fontSize);
 }
 void CharacterSelectionMenu::GetCharacterStats(int CurrentPage)
 {
@@ -510,6 +554,10 @@ RulesMenu::~RulesMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
+void RulesMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+}
 
 UnlockedItemsMenu::UnlockedItemsMenu()
 {
@@ -519,6 +567,10 @@ UnlockedItemsMenu::~UnlockedItemsMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
+void UnlockedItemsMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+}
 
 HighestScoreMenu::HighestScoreMenu()
 {
@@ -527,4 +579,8 @@ HighestScoreMenu::HighestScoreMenu()
 HighestScoreMenu::~HighestScoreMenu()
 {
 	UnloadTexture(BackgroundTexture);
+}
+void HighestScoreMenu::Draw()
+{
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
 }

@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <map>
 #include <thread>
+#include "UI.h"
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
@@ -29,7 +30,7 @@ enum class CurrentState
 class Menu
 {
 public:
-	virtual void Draw();
+	virtual void Draw()=0;
 	virtual void LoadTextures(fs::path filePath);
 	virtual bool isReturnButtonClicked();
 	virtual ~Menu();
@@ -43,6 +44,7 @@ protected:
 class StartingMenu : public Menu
 {
 public:
+	void Draw() override;
 	StartingMenu();
 	~StartingMenu();
 private:
@@ -53,7 +55,10 @@ public:
 	LoginMenu();
 	~LoginMenu();
 	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);
+	void Draw() override;
 private:
+	void setBarAreas();
+	void setXYofTexts();
 	void showLoginError();
 	int errorType;
 	atomic<bool> showError = false;
@@ -61,7 +66,7 @@ private:
 	void DrawingErrorSettingUp(string information);
 	void insertData(string& name);
 	void DrawError();
-	void DrawLogin(string name, string location);
+	void DrawLogin(string name, int type);
 	bool checkIsLoginCorrect();
 	int isButtonClicked();
 	bool checkIsPlayerInDataBase();
@@ -69,10 +74,9 @@ private:
 	void clearUsernameandPassword();
 	void changeSignBarLevel(bool value);
 	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };
-	Rectangle LoginMenu_ConfirmArea;
-	Rectangle LoginMenu_UsernameBarArea;
-	Rectangle LoginMenu_PasswordBarArea;
-	Rectangle LoginMenu_SingupArea;
+	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea;
+	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition;
+	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize;
 	fs::path data_basePath;
 	bool isSignupAreaActive;
 	string username;
@@ -86,6 +90,7 @@ public:
 	MainMenu();
 	~MainMenu();
 	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd);
+	void Draw() override;
 private:
 	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };
 	Rectangle Menu_NewGameButton;
@@ -103,6 +108,7 @@ public:
 	int getPageNumber();
 	void showExplanations();
 	void isButtonClicked(CurrentState& gameState);
+	void Draw() override;
 private:
 	fs::path commsAssetsPath;
 	fs::path characterStatsPath;
@@ -127,6 +133,7 @@ class RulesMenu : public Menu
 public:
 	RulesMenu();
 	~RulesMenu();
+	void Draw() override;
 private:
 };
 class UnlockedItemsMenu : public Menu
@@ -134,6 +141,7 @@ class UnlockedItemsMenu : public Menu
 public:
 	UnlockedItemsMenu();
 	~UnlockedItemsMenu();
+	void Draw() override;
 private:
 };
 class HighestScoreMenu : public Menu
@@ -141,5 +149,6 @@ class HighestScoreMenu : public Menu
 public:
 	HighestScoreMenu();
 	~HighestScoreMenu();
+	void Draw() override;
 private:
 };

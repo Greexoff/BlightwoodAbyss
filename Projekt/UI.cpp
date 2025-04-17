@@ -25,8 +25,8 @@ GameUI::~GameUI()
 	UnloadFont(font);
 }
 void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fontSize) {
-	int spacing = (int)(fontSize / 25.0 + 0.5);
-	int outlineSize = (int)(fontSize / 25.0 + 0.5);
+	int spacing = (int)(fontSize / 20.0 + 0.5);
+	int outlineSize = (int)(fontSize / 20.0 + 0.5);
 	for (float dx = -outlineSize; dx <= outlineSize; dx++) {
 		for (float dy = -outlineSize; dy <= outlineSize; dy++) {
 			if (dx != 0 || dy != 0) {
@@ -53,21 +53,32 @@ void GameUI::DrawCurrentScore(int currentPlayerScore, float fontSize)
 	DrawTextWithOutline("SCORE:", labelPos, fontSize);
 	DrawTextWithOutline(scoreWithZeros, scorePos, fontSize);
 }
-void GameUI::setBarArea(Rectangle& barName, float fontSize, string text, Vector2 textPosition, int type)
+Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type)
 {
 	float additionalSpace = 20;
-	Vector2 measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 25.0) + 0.5));
+	Vector2 measurements = MeasureText(fontSize, text);
 	switch (type)
 	{
 	case 1:
-		barName = { textPosition.x - additionalSpace,textPosition.y - additionalSpace, measurements.x + additionalSpace * 2,measurements.y + additionalSpace * 2 };
+		return { textPosition.x - additionalSpace,textPosition.y - additionalSpace, measurements.x + additionalSpace * 2,measurements.y + additionalSpace * 2 };
 		break;
 	case 2:
-		barName = { textPosition.x-additionalSpace,textPosition.y + measurements.y, measurements.x + additionalSpace * 2,measurements.y};
+		return { textPosition.x-additionalSpace,textPosition.y + measurements.y, measurements.x + additionalSpace * 2,measurements.y};
 		break;
 	default:
+		return{ 0,0,0,0 };
 		break;
 	}
+}
+Vector2 GameUI::MeasureText(float& fontSize, string text)
+{
+	Vector2 measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+	while (measurements.x+30 > GetScreenWidth() || measurements.y+30 > GetScreenHeight())
+	{
+		fontSize -= 1;
+		measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+	}
+	return measurements;
 }
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {

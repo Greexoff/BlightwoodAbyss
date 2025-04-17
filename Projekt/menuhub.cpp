@@ -23,14 +23,25 @@ bool Menu::isReturnButtonClicked()
 StartingMenu::StartingMenu()
 {
 	LoadTextures("backgroundSTARTING.png");
+	titleFontSize = 200;
+	titleName = "BLIGHTWOOD ABBYS";
+	setTitlePosition();
 }
 StartingMenu::~StartingMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
+
+void StartingMenu::setTitlePosition()
+{
+	Vector2 measurements = GameUI::GetInstance().MeasureText(titleFontSize, titleName.c_str());
+	titleNamePosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 4) - (measurements.y / 2) };
+
+}
 void StartingMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawTextWithOutline(titleName, titleNamePosition, titleFontSize);
 }
 
 LoginMenu::LoginMenu()
@@ -63,10 +74,10 @@ void LoginMenu::setXYofTexts()
 }
 void LoginMenu::setBarAreas()
 {
-	GameUI::GetInstance().setBarArea(LoginMenu_UsernameBarArea, UsernameTextFontSize, "USERNAME", UsernamePosition, 2);
-	GameUI::GetInstance().setBarArea(LoginMenu_PasswordBarArea, PasswordTextFontSize, "PASSWORD", PasswordPosition, 2);
-	GameUI::GetInstance().setBarArea(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1);
-	GameUI::GetInstance().setBarArea(LoginMenu_SingupArea, SignupTextFontSize, "SIGNUP", SignupPosition, 1);
+	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2);
+	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2);
+	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1);
+	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1);
 }
 void LoginMenu::Draw()
 {
@@ -117,7 +128,7 @@ void LoginMenu::insertData(string& name)
 		name.pop_back();
 	}
 }
-void LoginMenu::DrawLogin(string name, int type)
+void LoginMenu::DrawLogin(string& name, int type)
 {
 	int maxFontSize = 80;
 	int minFontSize = 40;
@@ -140,11 +151,12 @@ void LoginMenu::DrawLogin(string name, int type)
 	position = Area.y + (Area.height / 2);
 
 	float textStartX = Area.x + 30;
-	float maxTextEndX = Area.x + Area.width - 30;
+	float maxTextEndX = Area.x + Area.width - 60;
 	Area.x = textStartX;
 	Vector2 textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
 	while ((textStartX + textSize.x > maxTextEndX) && fontsize > minFontSize)
 	{
+		cout << "asda" << endl;
 		fontsize -= 1;
 		textSize = MeasureTextEx(font, name.c_str(), fontsize, spacing);
 	}
@@ -346,11 +358,13 @@ void LoginMenu::DrawError()
 MainMenu::MainMenu()
 {
 	LoadTextures("backgroundSTARTING.png");
-	Menu_NewGameButton = { 470, 120, 952 - 470, 216 - 120 };
+	buttonsFontSize = 80;
+	setButtonsPosition();
+/*	Menu_NewGameButton = {470, 120, 952 - 470, 216 - 120};
 	Menu_RulesButton = { 410,276,1017 - 410,372 - 276 };
 	Menu_UnlockedItemsButton = { 410, 429, 1017 - 410, 525 - 429 };
 	Menu_HighestScoreButton = { 260,582, 1167-260, 678-582 };
-	Menu_Exit = { 598, 735, 840-598, 831-735 };
+	Menu_Exit = { 598, 735, 840-598, 831-735 };*/
 
 }
 MainMenu::~MainMenu()
@@ -360,28 +374,43 @@ MainMenu::~MainMenu()
 void MainMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	for (const auto& it : Buttons)
+	{
+		GameUI::GetInstance().DrawTextWithOutline(it.first, it.second.position, buttonsFontSize);
+	}
+}
+void MainMenu::setButtonsPosition()
+{
+	float spacing = GetScreenHeight() / 10;
+	for (size_t i=0;i<ButtonNames.size();i++)
+	{
+		const string& name = ButtonNames[i];
+		Vector2 measurements = GameUI::GetInstance().MeasureText(buttonsFontSize, ButtonNames[i].c_str());
+		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
+		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1);
+		Buttons[name] = {rect, buttonPosition};
+	}
 }
 int MainMenu::isButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, Menu_NewGameButton))
+	if (CheckCollisionPointRec(mousePos, Buttons["New Game"].rectangle))
 	{
 		return NEWGAME_BUTTON;
 	}
-	
-	if(CheckCollisionPointRec(mousePos, Menu_RulesButton))
+	if(CheckCollisionPointRec(mousePos, Buttons["Game Rules"].rectangle))
 	{
 		return RULES_BUTTON;
 	}
-	if (CheckCollisionPointRec(mousePos, Menu_UnlockedItemsButton))
+	if (CheckCollisionPointRec(mousePos, Buttons["Collection"].rectangle))
 	{
 		return UNLOCKED_BUTTON;
 	}
-	if (CheckCollisionPointRec(mousePos, Menu_HighestScoreButton))
+	if (CheckCollisionPointRec(mousePos, Buttons["Highest Scores"].rectangle))
 	{
 		return SCORE_BUTTON;
 	}
-	if (CheckCollisionPointRec(mousePos, Menu_Exit))
+	if (CheckCollisionPointRec(mousePos, Buttons["Exit"].rectangle))
 	{
 		return EXIT_BUTTON;
 	}

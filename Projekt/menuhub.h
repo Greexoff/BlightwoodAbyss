@@ -25,7 +25,11 @@ enum class CurrentState
 	SCORE_MENU,
 	GAMEPLAY,
 };
-
+struct ButtonData
+{
+	Rectangle rectangle;
+	Vector2 position;
+};
 
 class Menu
 {
@@ -48,6 +52,10 @@ public:
 	StartingMenu();
 	~StartingMenu();
 private:
+	string titleName;
+	float titleFontSize;
+	Vector2 titleNamePosition;
+	void setTitlePosition();
 };
 class LoginMenu : public Menu
 {
@@ -66,7 +74,7 @@ private:
 	void DrawingErrorSettingUp(string information);
 	void insertData(string& name);
 	void DrawError();
-	void DrawLogin(string name, int type);
+	void DrawLogin(string& name, int type);
 	bool checkIsLoginCorrect();
 	int isButtonClicked();
 	bool checkIsPlayerInDataBase();
@@ -92,12 +100,11 @@ public:
 	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd);
 	void Draw() override;
 private:
+	void setButtonsPosition();
 	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };
-	Rectangle Menu_NewGameButton;
-	Rectangle Menu_RulesButton;
-	Rectangle Menu_UnlockedItemsButton;
-	Rectangle Menu_HighestScoreButton;
-	Rectangle Menu_Exit;
+	float buttonsFontSize;
+	map<string, ButtonData>Buttons;
+	vector<string> ButtonNames = { "New Game", "Game Rules", "Collection","Highest Scores","Exit" };
 	int isButtonClicked();
 };
 class CharacterSelectionMenu : public Menu

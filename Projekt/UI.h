@@ -23,10 +23,11 @@ public:
 	void DrawCurrentScore(int currentPlayerScore, float fontSize);
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);
 	void DrawBlackBar(Rectangle border, unsigned char opacity);
-	void DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate);
-	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type);
+	void DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate, int playerMaxHealth, float x_pos, float starting_y_pos, float gap, float fontSize);
+	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space);
 	Vector2 MeasureTextBar(float& fontSize, string text);
 	Vector2 MeasureText(float fontSize, string text);
+	void DrawWaveNumber(int waveNumber, float fontSize);
 private:
 	GameUI();
 	GameUI(const GameUI&) = delete;

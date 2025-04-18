@@ -73,10 +73,10 @@ void LoginMenu::setXYofTexts()
 }
 void LoginMenu::setBarAreas()
 {
-	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2);
-	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2);
-	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1);
-	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1);
+	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 30, 30);
+	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 30, 30);
+	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
+	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
 }
 void LoginMenu::Draw()
 {
@@ -381,7 +381,7 @@ void MainMenu::setButtonsPosition()
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
-		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1);
+		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,30, 30);
 		Buttons[name] = {rect, buttonPosition};
 	}
 }
@@ -448,10 +448,12 @@ CharacterSelectionMenu::CharacterSelectionMenu()
 	ConfirmArea = { 628,541,796-628,778-541 };
 	CharacterInformationArea = {620,294,790-620,473-294};
 	ReturnArea = {0,0,100,100};
+	SmallerCommentsBar = {1035,100,300,300};
+	BiggerCommentsBar = { 1035,100,300,500 };
 	pageNumber = 0;
 	leftSidePageLimit = -1;
 	rightSidePageLimit = 1;
-}
+}//ZROBIC OD NOWA TE COMMENTSY TAK ZEBY DZIALALY
 CharacterSelectionMenu::~CharacterSelectionMenu()
 {
 	UnloadTexture(BackgroundTexture);
@@ -481,9 +483,29 @@ Texture2D CharacterSelectionMenu::passCorrectTexture(string textureName)
 		}
 	}
 }
-void CharacterSelectionMenu::DrawComments(Texture2D texture)
+void CharacterSelectionMenu::DrawComments(CommentType type)
 {
-	DrawTextureEx(texture, { 1035, 100 }, 0, 1, WHITE);
+	switch (type)
+	{
+	case SWITCH_CHARACTER:
+		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
+		GameUI::GetInstance().DrawTextWithOutline("SWITCH CHARACTER", { SmallerCommentsBar.x,SmallerCommentsBar.y+(SmallerCommentsBar.height / 4) }, 35);
+		break;
+	case SELECT_CHARACTER:
+		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
+		GameUI::GetInstance().DrawTextWithOutline("SELECT CHARACTER", { SmallerCommentsBar.x,SmallerCommentsBar.y + (SmallerCommentsBar.height / 4) }, 35);
+		break;
+	case STATS_CHARACTER:
+		GameUI::GetInstance().DrawBlackBar(BiggerCommentsBar, 180);
+		GameUI::GetInstance().DrawTextWithOutline("CHARACTERS STATS", { SmallerCommentsBar.x ,SmallerCommentsBar.y + (SmallerCommentsBar.height / 4) }, 35);
+		break;
+	case RETURN_BUTTON:
+		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
+		GameUI::GetInstance().DrawTextWithOutline("RETURN TO MENU", { SmallerCommentsBar.x,SmallerCommentsBar.y + (SmallerCommentsBar.height / 4) },35);
+		break;
+	default:
+		break;
+	}
 }
 void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 {
@@ -546,22 +568,20 @@ void CharacterSelectionMenu::showExplanations()
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ConfirmArea))
 	{
-		DrawComments(passCorrectTexture("NewGameInfo.png"));
+		DrawComments(CommentType::SELECT_CHARACTER);
 	}
 	if (CheckCollisionPointRec(mousePos, ArrowArea))
 	{
-		DrawComments(passCorrectTexture("SwitchInfo.png"));
-
+		DrawComments(CommentType::SWITCH_CHARACTER);
 	}
 	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
 	{
-		DrawComments(passCorrectTexture("CharacterInfo.png"));
-		//GetCharacterStats(pageNumber);
+		DrawComments(CommentType::STATS_CHARACTER);
 
 	}
 	if (CheckCollisionPointRec(mousePos, ReturnArea))
 	{
-		DrawComments(passCorrectTexture("ReturnInfo.png"));
+		DrawComments(CommentType::RETURN_BUTTON);
 	}
 }
 int CharacterSelectionMenu::getPageNumber()

@@ -25,6 +25,7 @@ int main()
 	InitWindow(Width, Height, "Survival Game");
 	SetTargetFPS(60);
 	DrawLoadingStartBackground();
+	CharacterData::LoadStatsOnce();
 	StartingMenu* startingTab = nullptr;
 	LoginMenu* loginTab = nullptr;
 	MainMenu* mainTab = nullptr;
@@ -67,7 +68,6 @@ int main()
 				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGCHAR.png");
 				break;
 			case 5:
-				CharacterData::LoadStatsOnce();
 				game = new Game();
 				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGFULL.png");
 				break;
@@ -132,6 +132,7 @@ int main()
 			game->DrawBackground();
 			game->Draw();
 			GameUI::GetInstance().DrawCurrentScore(game->playerTotalScore, 60);
+			GameUI::GetInstance().DrawWaveNumber(game->getWaveNumber(), 60);
 			if (game->isGameOver())
 			{
 				shouldEnd = true;
@@ -154,7 +155,8 @@ int main()
 }
 /*
 * Do zrobienia:
-* !!!!GameUI todo: rysowanie commentsow w CharSelect, odliczanie do nastepnej fali, licznik fali, Statsy w grze, Dobrze dzialajacy loadingScreen
+* !!!!GameUI todoIMP: poprawic mechanizmy tworzenia, wyswietlania tla, tesktu itp
+* !!!!GameUI todo: rysowanie commentsow w CharSelect, odliczanie do nastepnej fali,Dobrze dzialajacy loadingScreen
 * !!!/Dokonczyc highestscores(wyswieltanie), rules, collectibles. Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
 * !!!ladowanie statystyk postaci (i idealnie potworow) z plikow tekstowych za pomoca modulu 
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo

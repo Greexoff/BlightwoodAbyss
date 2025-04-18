@@ -14,6 +14,7 @@ Game::Game() {
 	enemyShootingGap = 1.5;
 	enemyHittingGap = 2;
 	lastTearFired = 0.0;
+	breakTime = 3;
 	lastTimePlayerWasTouched = 0.0;	
 	isCreatingNewWave = false;
 	proceedCreatingEnemies = false;
@@ -123,7 +124,7 @@ void Game::Draw() {
 	{
 		enemTears.Draw();
 	}
-	GameUI::GetInstance().DisplayCharacterStats(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate());
+	GameUI::GetInstance().DisplayCharacterStats(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50, 160, 30, 30);
 }
 void Game::InputHandle() {
 	int moveX = 0;
@@ -347,8 +348,8 @@ void Game::beginNewWave()
 	Player->setPlayerHealth(1);
 	disableEnemyTears();
 	increasePlayerTotalScore(200 * waveNumber);
-	this_thread::sleep_for(chrono::seconds(3));
 	waveNumber++;
+	this_thread::sleep_for(chrono::seconds(breakTime));
 	if (waveNumber < 11)
 	{
 		amountofEnemies++;
@@ -420,4 +421,8 @@ Texture2D Game::passCorrectTexture(string textureName)
 			return checking.second;
 		}
 	}
+}
+int Game::getWaveNumber()
+{
+	return waveNumber;
 }

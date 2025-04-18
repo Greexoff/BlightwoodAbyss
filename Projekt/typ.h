@@ -24,6 +24,7 @@ public:
 	virtual void setPlayerMaxHealth(float amount);
 	virtual void setPlayerHealth(float amount);
 	virtual void setPlayerStartingPosition();
+	virtual int getPlayerMaxHealth();
 	virtual int getPlayerHealth();
 	virtual float getPlayerSpeed();
 	virtual float getTearSpeed();

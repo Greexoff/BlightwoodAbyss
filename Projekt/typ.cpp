@@ -103,6 +103,10 @@ void Character::loadOwnStats()
 	}
 }
 
+int Character::getPlayerMaxHealth()
+{
+	return stats.maxPlayerHealth;
+}
 int Character::getPlayerHealth()
 {
 	return stats.playerHealth;

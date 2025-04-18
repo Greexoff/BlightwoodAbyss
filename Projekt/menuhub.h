@@ -116,17 +116,20 @@ public:
 private:
 	fs::path commsAssetsPath;
 	fs::path characterStatsPath;
+	enum CommentType{SWITCH_CHARACTER, SELECT_CHARACTER, STATS_CHARACTER, RETURN_BUTTON};
 	//map<string, characterStats> allCharacterStats;
 	void LoadCommsTextures();
 	map<string, Texture2D> loadedComms;
 	Texture2D passCorrectTexture(string textureName);
-	void DrawComments(Texture2D texture);
+	void DrawComments(CommentType type);
 	//void GetCharacterStats(int currentPage);
 	//void DrawCharacterStats(string characterName);
 	Rectangle ArrowArea;
 	Rectangle ConfirmArea; 
 	Rectangle CharacterInformationArea;
 	Rectangle ReturnArea;
+	Rectangle SmallerCommentsBar;
+	Rectangle BiggerCommentsBar;
 	int pageNumber;
 	int leftSidePageLimit;
 	int rightSidePageLimit;

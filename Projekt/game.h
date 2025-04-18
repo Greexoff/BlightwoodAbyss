@@ -26,6 +26,7 @@ public:
 	void setPlayerCharacter(int Character);
 	void setLastTimePlayerWasTouched();
 	void DrawPlayerCharacterImage(int Character);
+	int getWaveNumber();
 private:
 	fs::path backgroundPath;
 	unique_ptr<Character> Player;
@@ -53,6 +54,7 @@ private:
 	atomic<bool> isCreatingNewWave;
 	atomic<bool> proceedCreatingEnemies;
 	int waveNumber;
+	long long breakTime;
 	void loadTextures();
 	void increasePlayerTotalScore(int amount);
 };

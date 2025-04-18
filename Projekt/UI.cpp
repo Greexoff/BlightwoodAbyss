@@ -53,17 +53,17 @@ void GameUI::DrawCurrentScore(int currentPlayerScore, float fontSize)
 	DrawTextWithOutline("SCORE:", labelPos, fontSize);
 	DrawTextWithOutline(scoreWithZeros, scorePos, fontSize);
 }
-Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type)
+Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type,float additional_x_space, float additional_y_space)
 {
 	float additionalSpace = 20;
 	Vector2 measurements = MeasureTextBar(fontSize, text);
 	switch (type)
 	{
-	case 1:
-		return { textPosition.x - additionalSpace,textPosition.y - additionalSpace, measurements.x + additionalSpace * 2,measurements.y + additionalSpace * 2 };
+	case 1://Napis wewnatrz
+		return { textPosition.x - additional_x_space,textPosition.y - additional_y_space, measurements.x + additional_x_space * 2,measurements.y + additional_y_space * 2 };
 		break;
-	case 2:
-		return { textPosition.x-additionalSpace,textPosition.y + measurements.y, measurements.x + additionalSpace * 2,measurements.y};
+	case 2://Napis nad paskiem
+		return { textPosition.x- additional_x_space,textPosition.y + measurements.y, measurements.x + additional_x_space * 2,measurements.y};
 		break;
 	default:
 		return{ 0,0,0,0 };
@@ -87,7 +87,7 @@ Vector2 GameUI::MeasureText(float fontSize, string text)
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
 	DrawRectangleRec(borders, { 0,0,0,opacity });
-	DrawRectangleLinesEx(borders, 10, {0,0,0,opacity});
+	DrawRectangleLinesEx(borders, 10, BLACK);
 }
 void GameUI::loadTexturesIntoMap()
 {
@@ -117,16 +117,20 @@ void GameUI::DrawBackground()
 string GameUI::ConvertToString(float number, int prec)
 {
 	ostringstream text;
-	text<<setprecision(prec) << number;
+	text<<fixed<<setprecision(prec) << number;
 	return text.str();
 }
-void GameUI::DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate)
+void GameUI::DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate, int playerMaxHealth, float x_pos, float starting_y_pos, float gap, float fontSize)//to jakos lepiej zrobic
 {
-	float starting_y_pos = 160;
-	float y_position = 30;
-	GameUI::GetInstance().DrawTextWithOutline("CHARACTER STATS:",{ 50,starting_y_pos }, 30);
-	GameUI::GetInstance().DrawTextWithOutline("DAMAGE: " + ConvertToString(PlayerDamage,2), {50,starting_y_pos + y_position}, 30);
-	GameUI::GetInstance().DrawTextWithOutline("SPEED: " + ConvertToString(PlayerSpeed, 2), { 50,starting_y_pos + (y_position*2) }, 30);
-	GameUI::GetInstance().DrawTextWithOutline("TEAR RATE: " + ConvertToString(TearRate, 2), { 50,starting_y_pos + (y_position*3) }, 30);
-	GameUI::GetInstance().DrawTextWithOutline("TEAR SPEED: " + ConvertToString(TearSpeed, 2), { 50,starting_y_pos + (y_position*4) }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("CHARACTER STATS:",{ x_pos,starting_y_pos }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("MAX HEALTH: " + ConvertToString(playerMaxHealth, 2), { x_pos,starting_y_pos + (gap) }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("DAMAGE: " + ConvertToString(PlayerDamage,2), { x_pos,starting_y_pos + gap*2}, 30);
+	GameUI::GetInstance().DrawTextWithOutline("SPEED: " + ConvertToString(PlayerSpeed, 2), { x_pos,starting_y_pos + (gap *3) }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("TEAR RATE: " + ConvertToString(TearRate, 2), { x_pos,starting_y_pos + (gap *4) }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("TEAR SPEED: " + ConvertToString(TearSpeed, 2), { x_pos,starting_y_pos + (gap *5) }, 30);
 }
+void GameUI::DrawWaveNumber(int waveNumber, float fontSize)
+{
+	GameUI::GetInstance().DrawTextWithOutline("WAVE: " + ConvertToString((float)waveNumber, 0), {(float)GetScreenWidth()-325,42.5,},fontSize);
+}
+//tutaj zmienic to -325 na measureText?

@@ -1,3 +1,4 @@
+Character: playerHealth maxPlayerHealth playerSpeed playerDamage tearSpeed tearRate imageScale
 FirstCharacter: 3 3 6 1 3 0.4 1
-SecondCharacter: 1 1 6.5 5 5 0.35 1
+SecondCharacter: 2 2 7 3 5 0.3 0.95
 ThirdCharacter: 4 4 4 4 4 0.6 1

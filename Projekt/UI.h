@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <iomanip>
 #include <raylib.h>
 #include <regex>
 #include <string>
@@ -40,4 +41,5 @@ private:
 	Texture2D passCorrectTexture(string textureName);
 	fs::path loadingScreenAssetsPath;
 	map<string, Texture2D> loadedScreenTextures;
+	string ConvertToString(float number, int prec);
 };

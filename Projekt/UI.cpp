@@ -43,8 +43,8 @@ void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fon
 void GameUI::DrawCurrentScore(int currentPlayerScore, float fontSize)
 {
 	int width = 6;
-	Vector2 labelPos = { 145, 42.5 };
-	Vector2 scorePos = { 145, 92.5 };
+	Vector2 labelPos = { 50, 42.5 };
+	Vector2 scorePos = { 50, 92.5 };
 
 	scoreText = to_string(currentPlayerScore);
 	int leadingZeros = width - scoreText.length();
@@ -114,7 +114,19 @@ void GameUI::DrawBackground()
 {
 	DrawTextureV(currentBackground, { 0,0 }, WHITE);
 }
+string GameUI::ConvertToString(float number, int prec)
+{
+	ostringstream text;
+	text<<setprecision(prec) << number;
+	return text.str();
+}
 void GameUI::DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate)
 {
-
+	float starting_y_pos = 160;
+	float y_position = 30;
+	GameUI::GetInstance().DrawTextWithOutline("CHARACTER STATS:",{ 50,starting_y_pos }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("DAMAGE: " + ConvertToString(PlayerDamage,2), {50,starting_y_pos + y_position}, 30);
+	GameUI::GetInstance().DrawTextWithOutline("SPEED: " + ConvertToString(PlayerSpeed, 2), { 50,starting_y_pos + (y_position*2) }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("TEAR RATE: " + ConvertToString(TearRate, 2), { 50,starting_y_pos + (y_position*3) }, 30);
+	GameUI::GetInstance().DrawTextWithOutline("TEAR SPEED: " + ConvertToString(TearSpeed, 2), { 50,starting_y_pos + (y_position*4) }, 30);
 }

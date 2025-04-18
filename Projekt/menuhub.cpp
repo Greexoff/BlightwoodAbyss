@@ -356,6 +356,7 @@ void LoginMenu::DrawError()
 MainMenu::MainMenu()
 {
 	LoadTextures("backgroundSTARTING.png");
+	ButtonNames = { "New Game", "Game Rules", "Collection","Highest Scores","Exit" };
 	buttonsFontSize = 120;
 	setButtonsPosition();
 
@@ -504,7 +505,7 @@ void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 		gameState = CurrentState::MAIN_MENU;
 	}
 }
-void CharacterSelectionMenu::DrawCharacterStats(string characterName)
+/*void CharacterSelectionMenu::DrawCharacterStats(string characterName)
 {
 	CharacterData::LoadStatsOnce();
 	const auto& statsMap = CharacterData::GetAllStats();
@@ -539,7 +540,7 @@ void CharacterSelectionMenu::GetCharacterStats(int CurrentPage)
 	default:
 		break;
 	}
-}
+}*/
 void CharacterSelectionMenu::showExplanations()
 {
 	Vector2 mousePos = GetMousePosition();
@@ -555,7 +556,7 @@ void CharacterSelectionMenu::showExplanations()
 	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
 	{
 		DrawComments(passCorrectTexture("CharacterInfo.png"));
-		GetCharacterStats(pageNumber);
+		//GetCharacterStats(pageNumber);
 
 	}
 	if (CheckCollisionPointRec(mousePos, ReturnArea))

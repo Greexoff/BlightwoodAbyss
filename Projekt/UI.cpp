@@ -114,3 +114,7 @@ void GameUI::DrawBackground()
 {
 	DrawTextureV(currentBackground, { 0,0 }, WHITE);
 }
+void GameUI::DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate)
+{
+
+}

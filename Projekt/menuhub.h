@@ -9,7 +9,6 @@
 #include <map>
 #include <thread>
 #include "UI.h"
-import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
 
@@ -102,7 +101,7 @@ private:
 	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };
 	float buttonsFontSize;
 	map<string, ButtonData>Buttons;
-	vector<string> ButtonNames = { "New Game", "Game Rules", "Collection","Highest Scores","Exit" };
+	vector<string> ButtonNames;
 	int isButtonClicked();
 };
 class CharacterSelectionMenu : public Menu
@@ -117,13 +116,13 @@ public:
 private:
 	fs::path commsAssetsPath;
 	fs::path characterStatsPath;
-	map<string, characterStats> allCharacterStats;
+	//map<string, characterStats> allCharacterStats;
 	void LoadCommsTextures();
 	map<string, Texture2D> loadedComms;
 	Texture2D passCorrectTexture(string textureName);
 	void DrawComments(Texture2D texture);
-	void GetCharacterStats(int currentPage);
-	void DrawCharacterStats(string characterName);
+	//void GetCharacterStats(int currentPage);
+	//void DrawCharacterStats(string characterName);
 	Rectangle ArrowArea;
 	Rectangle ConfirmArea; 
 	Rectangle CharacterInformationArea;

@@ -3,6 +3,9 @@
 #include <raylib.h>
 #include "tears.h"
 #include <vector>
+#include <string>
+#include <map>
+import CharacterStats;
 using namespace std;
 class Character {
 public:
@@ -13,27 +16,26 @@ public:
 	virtual void shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage);
 	vector<Tears> tearsy;
 	virtual Rectangle getPlayerRect();
-	virtual int getPlayerHealth();
-	virtual int reducePlayersHealth();
-	virtual int increasePlayersHealth();
 	virtual	Vector2 GetXYPlayerPoint();
-	virtual float getPlayerDamage();
 	virtual void setPlayerDamage(float amount);
 	virtual void setPlayerSpeed(float amount);
 	virtual void setPlayerTearSpeed(float amount);
 	virtual void setPlayerTearRate(float amount);
 	virtual void setPlayerMaxHealth(float amount);
+	virtual void setPlayerHealth(float amount);
 	virtual void setPlayerStartingPosition();
+	virtual int getPlayerHealth();
+	virtual float getPlayerSpeed();
+	virtual float getTearSpeed();
+	virtual float getPlayerDamage();
+	virtual float getTearRate();
+	virtual void loadOwnStats();
 protected:
+	characterStats stats;
+	string characterName;
 	Texture2D image;
 	Vector2 position;
 	double lastTearTime;
-	int playerHealth;
-	int maxPlayerHealth;
-	float playerSpeed;
-	float tearSpeed;
-	float playerDamage;
-	float tearRate;
 	float imageScale;
 };
 class FirstCharacter : public Character
@@ -42,7 +44,6 @@ public:
 	FirstCharacter(Texture2D loadedImage);
 	~FirstCharacter();
 private:
-
 };
 class SecondCharacter : public Character
 {
@@ -50,7 +51,6 @@ public:
 	SecondCharacter(Texture2D loadedImage);
 	~SecondCharacter();
 private:
-
 };
 class ThirdCharacter : public Character
 {
@@ -58,5 +58,4 @@ public:
 	ThirdCharacter(Texture2D loadedImage);
 	~ThirdCharacter();
 private:
-
 };

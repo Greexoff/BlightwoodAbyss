@@ -289,7 +289,7 @@ void Game::CollisionCheck()
 		{
 			if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap && CheckCollisionRecs((*it)->getEnemyRect(), Player->getPlayerRect()))
 			{
-				Player->reducePlayersHealth();
+				Player->setPlayerHealth(-1);
 
 				lastTimePlayerWasTouched = GetTime();
 			}
@@ -304,7 +304,7 @@ void Game::CollisionCheck()
 		if (CheckCollisionRecs(enemTear.getTearRect(), Player->getPlayerRect()))
 		{
 			if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
-				Player->reducePlayersHealth();
+				Player->setPlayerHealth(-1);
 				lastTimePlayerWasTouched = GetTime();
 			}
 			enemTear.active = false;
@@ -343,7 +343,7 @@ bool Game::isGameOver()
 }
 void Game::beginNewWave()
 {
-	Player->increasePlayersHealth();
+	Player->setPlayerHealth(1);
 	disableEnemyTears();
 	increasePlayerTotalScore(200 * waveNumber);
 	this_thread::sleep_for(chrono::seconds(3));

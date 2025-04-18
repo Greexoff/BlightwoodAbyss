@@ -8,13 +8,13 @@ import <filesystem>;
 using namespace std;
 
 export struct characterStats {
-    string playerHealth;
-    string maxPlayerHealth;
-    string playerSpeed;
-    string playerDamage;
-    string tearSpeed;
-    string tearRate;
-    string imageScale;
+    int playerHealth;
+    int maxPlayerHealth;
+    float playerSpeed;
+    float playerDamage;
+    float tearSpeed;
+    float tearRate;
+    float imageScale;
 };
 
 export namespace CharacterData {

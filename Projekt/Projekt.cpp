@@ -7,6 +7,7 @@
 #include "game.h"
 #include "menuhub.h"
 #include "UI.h"
+import CharacterStats;
 
 void DrawLoadingStartBackground()
 {
@@ -66,6 +67,7 @@ int main()
 				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGCHAR.png");
 				break;
 			case 5:
+				CharacterData::LoadStatsOnce();
 				game = new Game();
 				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGFULL.png");
 				break;

@@ -22,6 +22,7 @@ public:
 	void DrawCurrentScore(int currentPlayerScore, float fontSize);
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);
 	void DrawBlackBar(Rectangle border, unsigned char opacity);
+	void DisplayCharacterStats(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate);
 	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type);
 	Vector2 MeasureTextBar(float& fontSize, string text);
 	Vector2 MeasureText(float fontSize, string text);

@@ -96,7 +96,6 @@ int main()
 		case CurrentState::CHARACTER_SELECT_MENU:
 			charTab->Draw();
 			game->DrawPlayerCharacterImage(charTab->getPageNumber());
-			charTab->showExplanations();
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				charTab->isButtonClicked(gameState);

@@ -124,7 +124,7 @@ void Game::Draw() {
 	{
 		enemTears.Draw();
 	}
-	GameUI::GetInstance().DisplayCharacterStats(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50, 160, 30, 30);
+	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50, 160, 30, 30);
 }
 void Game::InputHandle() {
 	int moveX = 0;

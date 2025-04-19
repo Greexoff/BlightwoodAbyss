@@ -24,23 +24,16 @@ StartingMenu::StartingMenu()
 	LoadTextures("backgroundSTARTING.png");
 	titleFontSize = 200;
 	titleName = "BLIGHTWOOD ABBYS";
-	setTitlePosition();
+	ScreenBar={ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 };
 }
 StartingMenu::~StartingMenu()
 {
 	UnloadTexture(BackgroundTexture);
 }
-
-void StartingMenu::setTitlePosition()
-{
-	Vector2 measurements = GameUI::GetInstance().MeasureTextBar(titleFontSize, titleName.c_str());
-	titleNamePosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 4) - (measurements.y / 2) };
-
-}
 void StartingMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
-	GameUI::GetInstance().DrawTextWithOutline(titleName, titleNamePosition, titleFontSize);
+	GameUI::GetInstance().DrawTextOnBar(ScreenBar, titleFontSize, titleName, ScreenBar.y+200);
 }
 
 LoginMenu::LoginMenu()
@@ -49,20 +42,26 @@ LoginMenu::LoginMenu()
 	LoadTextures("backgroundSTARTING.png");
 	username = "";
 	password = "";
-	UsernameTextFontSize = 150;
-	PasswordTextFontSize = 150;
-	ConfirmTextFontSize = 75;
-	SignupTextFontSize=70;
+	setFontSizes();
 	setXYofTexts();
 	setBarAreas();
 	userExist = false;
-	fontsize = 80;
 	isSignupAreaActive = true;
-	errorType = 0;
+	error = errorType::NO_ERROR;
+	showError = false;
+	errorDurationTime = 3;
 }
 LoginMenu::~LoginMenu()
 {
 	UnloadTexture(BackgroundTexture);
+}
+void LoginMenu::setFontSizes()
+{
+	UsernameTextFontSize = 150;
+	PasswordTextFontSize = 150;
+	ConfirmTextFontSize = 75;
+	SignupTextFontSize = 70;
+	InsertedDataFontSize = 80;
 }
 void LoginMenu::setXYofTexts()
 {
@@ -73,10 +72,10 @@ void LoginMenu::setXYofTexts()
 }
 void LoginMenu::setBarAreas()
 {
-	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 30, 30);
-	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 30, 30);
-	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
-	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
+	LoginMenu_UsernameBarArea=GameUI::GetInstance().LOGINMENU_setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 30, 30);
+	LoginMenu_PasswordBarArea=	GameUI::GetInstance().LOGINMENU_setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 30, 30);
+	LoginMenu_ConfirmArea=GameUI::GetInstance().LOGINMENU_setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
+	LoginMenu_SingupArea=GameUI::GetInstance().LOGINMENU_setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
 }
 void LoginMenu::Draw()
 {
@@ -152,29 +151,29 @@ void LoginMenu::DrawLogin(string& name, int type)
 	float textStartX = Area.x + 30;
 	float maxTextEndX = Area.x + Area.width - 60;
 	Area.x = textStartX;
-	Vector2 textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
-	while ((textStartX + textSize.x > maxTextEndX) && fontsize > minFontSize)
+	Vector2 textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
+	while ((textStartX + textSize.x > maxTextEndX) && InsertedDataFontSize > minFontSize)
 	{
-		fontsize -= 1;
-		textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
+		InsertedDataFontSize -= 1;
+		textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
 	}
-	while (fontsize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
+	while (InsertedDataFontSize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
 	{
 		name.pop_back();
-		textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
+		textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
 	}
-	while ((textStartX + textSize.x < maxTextEndX) && fontsize < maxFontSize)
+	while ((textStartX + textSize.x < maxTextEndX) && InsertedDataFontSize < maxFontSize)
 	{
-		fontsize += 1;
-		textSize = GameUI::GetInstance().MeasureText(fontsize, name.c_str());
+		InsertedDataFontSize += 1;
+		textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
 		if (textStartX + textSize.x > maxTextEndX)
 		{
-			fontsize -= 1;
+			InsertedDataFontSize -= 1;
 			break;
 		}
 	}
 	float y_position = position - (textSize.y / 2);
-	GameUI::GetInstance().DrawTextWithOutline(name.c_str(), { textStartX, y_position }, fontsize);
+	GameUI::GetInstance().DrawTextWithOutline(name.c_str(), { textStartX, y_position }, InsertedDataFontSize);
 }
 bool LoginMenu::checkIsLoginCorrect()
 {
@@ -187,13 +186,9 @@ bool LoginMenu::checkIsLoginCorrect()
 	{
 		thread displayErrorThread(&LoginMenu::showLoginError, this);
 		displayErrorThread.detach();
-		errorType = 1;
+		error = errorType::REGEX_ERROR;
 		return false;
 	}
-}
-void LoginMenu::changeSignBarLevel(bool value)
-{
-	isSignupAreaActive = value;
 }
 bool LoginMenu::checkIsPlayerInDataBase()
 {
@@ -225,12 +220,10 @@ void LoginMenu::addPlayerToDataBase()
 {
 	ofstream file(data_basePath.string(), ios::app);
 	string line;
-	if (!file.is_open())
-	{
-	}
+	if (!file.is_open()){}
 	else
 	{
-		file << endl << username << "," << password << ",Highest Score: 000000";
+		file << endl << username << "," << password << ",Highest Score:";
 	}
 
 }
@@ -269,13 +262,13 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 				{
 					thread displayErrorThread(&LoginMenu::showLoginError, this);
 					displayErrorThread.detach();
-					errorType = 2;
+					error = errorType::PASSWORD_ERROR;
 				}
 				else
 				{
 					thread displayErrorThread(&LoginMenu::showLoginError, this);
 					displayErrorThread.detach();
-					errorType = 3;
+					error = errorType::USERNAME_ERROR;
 				}
 			}
 		}
@@ -285,7 +278,7 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 			{
 				thread displayErrorThread(&LoginMenu::showLoginError, this);
 				displayErrorThread.detach();
-				errorType = 4;
+				error = errorType::NOT_EXIST_ERROR;
 			}
 			else
 			{
@@ -303,7 +296,7 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 		break;
 	case 4:
 		clearUsernameandPassword();
-		changeSignBarLevel(false);
+		isSignupAreaActive = false;
 		setAction = 0;
 		break;
 	default:
@@ -318,9 +311,8 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 }
 void LoginMenu::showLoginError()
 {
-	errorStartTime = GetTime();
 	showError = true;
-	std::this_thread::sleep_for(std::chrono::seconds(3));
+	std::this_thread::sleep_for(std::chrono::seconds(errorDurationTime));
 	showError = false;
 }
 void LoginMenu::DrawingErrorSettingUp(string information)
@@ -334,23 +326,26 @@ void LoginMenu::DrawingErrorSettingUp(string information)
 }
 void LoginMenu::DrawError()
 {
-	switch (errorType)
+	string errorInformation="";
+	switch (error)
 	{
-	case 1://Nie pasuje do regexa
-		DrawingErrorSettingUp("Error: Data does not meet criteria");
+	case REGEX_ERROR:
+		errorInformation = "Error: Data does not meet criteria";
 		break;
-	case 2://Bledne Haslo
-		DrawingErrorSettingUp("Error: Password is invalid");
+	case PASSWORD_ERROR:
+		errorInformation = "Error: Password is invalid";
 		break;
-	case 3://Nie ma uzytkownika o podanej nazwie
-		DrawingErrorSettingUp("Error: Username is invalid");
+	case USERNAME_ERROR:
+		errorInformation = "Error: Username is invalid";
 		break;
-	case 4://Juz istnieje taki uzytkownik
-		DrawingErrorSettingUp("Error: Username is already in use");
+	case NOT_EXIST_ERROR:
+		errorInformation = "Error: Username is already in use";
 		break;
 	default:
 		break;
 	}
+	DrawingErrorSettingUp(errorInformation);
+	//zamienic to na jakas funkcje w GameUI
 }
 
 MainMenu::MainMenu()
@@ -381,7 +376,7 @@ void MainMenu::setButtonsPosition()
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
-		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,30, 30);
+		Rectangle rect=GameUI::GetInstance().LOGINMENU_setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,30, 30);
 		Buttons[name] = {rect, buttonPosition};
 	}
 }
@@ -442,8 +437,6 @@ void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool
 CharacterSelectionMenu::CharacterSelectionMenu()
 {
 	LoadTextures("backgroundCHAR.png");
-	commsAssetsPath= fs::current_path() / "assets" / "comments_assets";
-	LoadCommsTextures();
 	ArrowArea = {66,593,219-66,701-593};
 	ConfirmArea = { 628,541,796-628,778-541 };
 	CharacterInformationArea = {620,294,790-620,473-294};
@@ -453,35 +446,15 @@ CharacterSelectionMenu::CharacterSelectionMenu()
 	pageNumber = 0;
 	leftSidePageLimit = -1;
 	rightSidePageLimit = 1;
-}//ZROBIC OD NOWA TE COMMENTSY TAK ZEBY DZIALALY
+}
 CharacterSelectionMenu::~CharacterSelectionMenu()
 {
 	UnloadTexture(BackgroundTexture);
-	for (auto& i : loadedComms)
-	{
-		UnloadTexture(i.second);
-	}
 }
 void CharacterSelectionMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
-}
-void CharacterSelectionMenu::LoadCommsTextures()
-{
-	for (const auto& textureName : fs::directory_iterator(commsAssetsPath))
-	{
-		loadedComms.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
-	}
-}
-Texture2D CharacterSelectionMenu::passCorrectTexture(string textureName)
-{
-	for (auto& checking : loadedComms)
-	{
-		if (checking.first == textureName)
-		{
-			return checking.second;
-		}
-	}
+	chooseExplanationType();
 }
 void CharacterSelectionMenu::DrawComments(CommentType type)
 {
@@ -489,19 +462,24 @@ void CharacterSelectionMenu::DrawComments(CommentType type)
 	{
 	case SWITCH_CHARACTER:
 		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextWithOutline("SWITCH CHARACTER", { SmallerCommentsBar.x,SmallerCommentsBar.y+(SmallerCommentsBar.height / 4) }, 35);
+		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 55, "SWITCH CHARACTER", SmallerCommentsBar.y+20);
+		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 30, "CLICK THIS BUTTON TO CHANGE THE CHARACTER YOU WANT TO PLAY AS", SmallerCommentsBar.y+150);
 		break;
 	case SELECT_CHARACTER:
 		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextWithOutline("SELECT CHARACTER", { SmallerCommentsBar.x,SmallerCommentsBar.y + (SmallerCommentsBar.height / 4) }, 35);
+		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 55, "SELECT CHARACTER", SmallerCommentsBar.y + 20);
+		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 30, "CLICK THIS BUTTON TO SELECT THE CHARACTER AND START A NEW GAME", SmallerCommentsBar.y + 150);
 		break;
 	case STATS_CHARACTER:
 		GameUI::GetInstance().DrawBlackBar(BiggerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextWithOutline("CHARACTERS STATS", { SmallerCommentsBar.x ,SmallerCommentsBar.y + (SmallerCommentsBar.height / 4) }, 35);
+		GameUI::GetInstance().DrawTextOnBar(BiggerCommentsBar, 55, "CHARACTER STATS", BiggerCommentsBar.y + 20);
+		GameUI::GetInstance().DrawTextOnBar(BiggerCommentsBar, 30, "STATS OF SELECTED CHARACTER ARE SHOWN BELOW", BiggerCommentsBar.y + 150);
+		GameUI::GetInstance().DrawCharacterStatsInMenu(pageNumber, BiggerCommentsBar, 30, BiggerCommentsBar.y+300);
 		break;
 	case RETURN_BUTTON:
 		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextWithOutline("RETURN TO MENU", { SmallerCommentsBar.x,SmallerCommentsBar.y + (SmallerCommentsBar.height / 4) },35);
+		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 55, "RETURN TO MAIN MENU", SmallerCommentsBar.y + 20);
+		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 30, "CLICK THIS BUTTON TO RETURN BACK TO MAIN MENU", SmallerCommentsBar.y + 150);
 		break;
 	default:
 		break;
@@ -527,61 +505,17 @@ void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
 		gameState = CurrentState::MAIN_MENU;
 	}
 }
-/*void CharacterSelectionMenu::DrawCharacterStats(string characterName)
+void CharacterSelectionMenu::chooseExplanationType()
 {
-	CharacterData::LoadStatsOnce();
-	const auto& statsMap = CharacterData::GetAllStats();
-
-	auto it = statsMap.find(characterName);
-	if (it == statsMap.end()) return;
-
-	const characterStats& stats = it->second;
-
-	Vector2 basePos = { 1263, 383 };
-	float spacing = 42.5;
-	float fontSize = 30.0;
-	GameUI::GetInstance().DrawTextWithOutline(stats.playerDamage.c_str(), { basePos.x, basePos.y + 0 * spacing }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline(stats.playerSpeed.c_str(), { basePos.x, basePos.y + 1 * spacing }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline(stats.tearRate.c_str(), { basePos.x, basePos.y + 2 * spacing }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline(stats.tearSpeed.c_str(), { basePos.x, basePos.y + 3 * spacing }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline(stats.maxPlayerHealth.c_str(), { basePos.x, basePos.y + 4 * spacing }, fontSize);
-}
-void CharacterSelectionMenu::GetCharacterStats(int CurrentPage)
-{
-	switch (CurrentPage)
-	{
-	case 0:
-		DrawCharacterStats("FirstCharacter");
-		break;
-	case -1:
-		DrawCharacterStats("SecondCharacter");
-		break;
-	case 1:
-		DrawCharacterStats("ThirdCharacter");
-		break;
-	default:
-		break;
-	}
-}*/
-void CharacterSelectionMenu::showExplanations()
-{
+	vector < pair<Rectangle, CommentType>>comments = { { ConfirmArea, CommentType::SELECT_CHARACTER }, {ArrowArea,CommentType::SWITCH_CHARACTER},{CharacterInformationArea,CommentType::STATS_CHARACTER},{ReturnArea,CommentType::RETURN_BUTTON } };
 	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, ConfirmArea))
+	for (const auto& [area, type] : comments)
 	{
-		DrawComments(CommentType::SELECT_CHARACTER);
-	}
-	if (CheckCollisionPointRec(mousePos, ArrowArea))
-	{
-		DrawComments(CommentType::SWITCH_CHARACTER);
-	}
-	if (CheckCollisionPointRec(mousePos, CharacterInformationArea))
-	{
-		DrawComments(CommentType::STATS_CHARACTER);
-
-	}
-	if (CheckCollisionPointRec(mousePos, ReturnArea))
-	{
-		DrawComments(CommentType::RETURN_BUTTON);
+		if (CheckCollisionPointRec(mousePos, area))
+		{
+			DrawComments(type);
+			break;
+		}
 	}
 }
 int CharacterSelectionMenu::getPageNumber()

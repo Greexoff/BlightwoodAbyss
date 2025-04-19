@@ -72,10 +72,10 @@ void LoginMenu::setXYofTexts()
 }
 void LoginMenu::setBarAreas()
 {
-	LoginMenu_UsernameBarArea=GameUI::GetInstance().LOGINMENU_setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 30, 30);
-	LoginMenu_PasswordBarArea=	GameUI::GetInstance().LOGINMENU_setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 30, 30);
-	LoginMenu_ConfirmArea=GameUI::GetInstance().LOGINMENU_setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
-	LoginMenu_SingupArea=GameUI::GetInstance().LOGINMENU_setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
+	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 30, 30);
+	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 30, 30);
+	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
+	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
 }
 void LoginMenu::Draw()
 {
@@ -125,55 +125,6 @@ void LoginMenu::insertData(string& name)
 	if (IsKeyPressed(KEY_BACKSPACE) && !name.empty() || IsKeyPressedRepeat(KEY_BACKSPACE) && !name.empty()) {
 		name.pop_back();
 	}
-}
-void LoginMenu::DrawLogin(string& name, int type)
-{
-	int maxFontSize = 80;
-	int minFontSize = 40;
-	int spacing = 2;
-	int position = 0;
-	Rectangle Area;
-
-	switch (type)
-	{
-	case 1:
-		Area = LoginMenu_UsernameBarArea;
-		break;
-	case 2:
-		Area = LoginMenu_PasswordBarArea;
-		break;
-	default:
-		break;
-	}
-
-	position = Area.y + (Area.height / 2);
-
-	float textStartX = Area.x + 30;
-	float maxTextEndX = Area.x + Area.width - 60;
-	Area.x = textStartX;
-	Vector2 textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
-	while ((textStartX + textSize.x > maxTextEndX) && InsertedDataFontSize > minFontSize)
-	{
-		InsertedDataFontSize -= 1;
-		textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
-	}
-	while (InsertedDataFontSize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
-	{
-		name.pop_back();
-		textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
-	}
-	while ((textStartX + textSize.x < maxTextEndX) && InsertedDataFontSize < maxFontSize)
-	{
-		InsertedDataFontSize += 1;
-		textSize = GameUI::GetInstance().MeasureText(InsertedDataFontSize, name.c_str());
-		if (textStartX + textSize.x > maxTextEndX)
-		{
-			InsertedDataFontSize -= 1;
-			break;
-		}
-	}
-	float y_position = position - (textSize.y / 2);
-	GameUI::GetInstance().DrawTextWithOutline(name.c_str(), { textStartX, y_position }, InsertedDataFontSize);
 }
 bool LoginMenu::checkIsLoginCorrect()
 {
@@ -278,7 +229,7 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 			{
 				thread displayErrorThread(&LoginMenu::showLoginError, this);
 				displayErrorThread.detach();
-				error = errorType::NOT_EXIST_ERROR;
+				error = errorType::IN_USE_ERROR;
 			}
 			else
 			{
@@ -304,10 +255,10 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 	}
 	if (showError)
 	{
-		DrawError();
+		ChooseErrorType();
 	}
-	DrawLogin(username, 1);
-	DrawLogin(password, 2);
+	GameUI::GetInstance().DrawData(username, LoginMenu_UsernameBarArea, InsertedDataFontSize);
+	GameUI::GetInstance().DrawData(password, LoginMenu_PasswordBarArea, InsertedDataFontSize);
 }
 void LoginMenu::showLoginError()
 {
@@ -315,37 +266,19 @@ void LoginMenu::showLoginError()
 	std::this_thread::sleep_for(std::chrono::seconds(errorDurationTime));
 	showError = false;
 }
-void LoginMenu::DrawingErrorSettingUp(string information)
+void LoginMenu::ChooseErrorType()
 {
-	float fontSize = 50;
-	float spacing = 2;
-	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, information.c_str());
-	float barCenterX= LoginMenu_PasswordBarArea.x + LoginMenu_PasswordBarArea.width / 2.0;
-	float textX = barCenterX - textSize.x / 2.0;
-	GameUI::GetInstance().DrawTextWithOutline(information.c_str(), { textX, (LoginMenu_PasswordBarArea.y + LoginMenu_PasswordBarArea.height+30) }, fontSize);
-}
-void LoginMenu::DrawError()
-{
-	string errorInformation="";
-	switch (error)
+	vector<pair<string, errorType>> errors = {
+	{"Error: Data does not meet criteria", errorType::REGEX_ERROR},
+	{ "Error: Password is invalid", errorType::PASSWORD_ERROR},
+	{ "Error: Username is invalid", errorType::USERNAME_ERROR },
+	{"Error: Username is already in use", errorType::IN_USE_ERROR} };
+	for (const auto& [errorInfo, type] : errors)
 	{
-	case REGEX_ERROR:
-		errorInformation = "Error: Data does not meet criteria";
-		break;
-	case PASSWORD_ERROR:
-		errorInformation = "Error: Password is invalid";
-		break;
-	case USERNAME_ERROR:
-		errorInformation = "Error: Username is invalid";
-		break;
-	case NOT_EXIST_ERROR:
-		errorInformation = "Error: Username is already in use";
-		break;
-	default:
-		break;
+		if (error == type) {
+			GameUI::GetInstance().DrawError(errorInfo, LoginMenu_PasswordBarArea);
+		}
 	}
-	DrawingErrorSettingUp(errorInformation);
-	//zamienic to na jakas funkcje w GameUI
 }
 
 MainMenu::MainMenu()
@@ -376,7 +309,7 @@ void MainMenu::setButtonsPosition()
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
-		Rectangle rect=GameUI::GetInstance().LOGINMENU_setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,30, 30);
+		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,30, 30);
 		Buttons[name] = {rect, buttonPosition};
 	}
 }

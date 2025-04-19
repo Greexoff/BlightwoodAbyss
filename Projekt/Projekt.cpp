@@ -152,12 +152,11 @@ int main()
 	delete charTab;
 	delete game;
 }
-/*
-* Do zrobienia:
-* !!!!GameUI todoIMP: poprawic mechanizmy tworzenia, wyswietlania tla, tesktu itp
-* !!!!GameUI todo: rysowanie commentsow w CharSelect, odliczanie do nastepnej fali,Dobrze dzialajacy loadingScreen
+/*|---TODO-----------------------------------------------------------------------|
+* !!!!GameUI todo:odliczanie do nastepnej fali, Dobrze dzialajacy loadingScreen
 * !!!/Dokonczyc highestscores(wyswieltanie), rules, collectibles. Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
-* !!!ladowanie statystyk postaci (i idealnie potworow) z plikow tekstowych za pomoca modulu 
+* !!!ladowanie statystyk potworow z pliku tekstowego
+* !!!Oczyścić main i uporządkować pozostałe pliku h
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
 * !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
@@ -165,12 +164,9 @@ int main()
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
 */
 
-/*
-* Wykorzystane rzeczy z labów:
+/*|---Rzeczy-z-Labow------------------------------------------------------------|
 * <thread> wątek do zastopowania nowej fali i obslugi bledow w LoginMenu
 * <regex> logowanie sie do gierki
 * <filesystem> ladowanie tekstur
 * <module> strukutra CharacterStats
-* 
-* 
 */

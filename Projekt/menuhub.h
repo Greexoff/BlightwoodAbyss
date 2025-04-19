@@ -73,7 +73,7 @@ private:
 	string password;//zmienna do przechowywania wpisywanego hasla uzytkownika
 	bool userExist;
 	int error;//zmienna do przechowywania typu bledu, ktory nalezy wyswietlic
-	enum errorType {NO_ERROR, REGEX_ERROR, PASSWORD_ERROR, USERNAME_ERROR, NOT_EXIST_ERROR };//typy bledow
+	enum errorType {NO_ERROR, REGEX_ERROR, PASSWORD_ERROR, USERNAME_ERROR, IN_USE_ERROR };//typy bledow
 	atomic<bool> showError;//zmienna, ktora aktywuje wyswietlanie bledu jezeli taki istnieje
 	long long errorDurationTime;//zmienna przechowujaca dlugosc wyswietlania bledu na ekranie
 	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };//typ przycisnietego przycisku
@@ -82,10 +82,8 @@ private:
 	void setBarAreas();//Ustawianie rozmiarow poszczegolnych napisow
 	void setXYofTexts();//Ustawianie pozycji x i y poszczegolnych napisow na ekranie
 	void showLoginError();//Metoda pod wątek wyświetlania błędów - ustawia wyświetlanie błędu na ekranie na określony czas
-	void DrawingErrorSettingUp(string information);
 	void insertData(string& name);//Ustawianie wartosci dla zmiennych username/password 
-	void DrawError();//Ustawianie napisu, który zostanie wyświetlony i wywolanie funkcji rysujacej na ekranie
-	void DrawLogin(string& name, int type);//Wyswietlanie username/password na ekranie !!!MOZLIWE ZE MOZNA USUNAC I WSTAWIC GAMEUI::DRAWTEXTONBAR
+	void ChooseErrorType();//Ustawianie napisu, który zostanie wyświetlony i wywolanie funkcji rysujacej na ekranie
 	bool checkIsLoginCorrect();//Sprawdzanie czy kryteria (regex) username/password są spelnione 
 	int isButtonClicked();//Sprawdzanie, czy któryś z przycisków został wciśnięty
 	bool checkIsPlayerInDataBase();//Sprawdzanie, czy użytkownik znajduje się w DataBase

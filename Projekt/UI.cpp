@@ -1,13 +1,12 @@
 #include "UI.h"
 
-GameUI::GameUI()
+GameUI:: GameUI()
 {
 	MyOrange = { 255,110,37,255};
 	MyYellow = { 218,208,0,255 };
 	loadingScreenAssetsPath = fs::current_path() / "assets" / "background_loading_screen_assets";
 	loadTexturesIntoMap();
 	currentBackground = passCorrectTexture("backgroundLOADINGSTART.png"); \
-	scoreText = "";
 	fontPath = fs::current_path() / "assets" / "font_assets" / "VT323.ttf";
 	font = LoadFontEx(fontPath.string().c_str(), 80, 0, 0);
 }
@@ -24,6 +23,31 @@ GameUI::~GameUI()
 	}
 	UnloadFont(font);
 }
+
+//|---DO USUNIECIA-----------------------------------------------------------------|
+void GameUI::loadTexturesIntoMap()
+{
+	for (const auto& textureName : fs::directory_iterator(loadingScreenAssetsPath))
+	{
+		loadedScreenTextures.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
+	}
+}
+Texture2D GameUI::passCorrectTexture(string textureName)
+{
+	for (auto& checking : loadedScreenTextures)
+	{
+		if (checking.first == textureName)
+		{
+			return checking.second;
+		}
+	}
+}
+void GameUI::setLoadingProgress(string backgroundName)
+{
+	currentBackground = passCorrectTexture(backgroundName);
+}
+
+//|---Drawing----------------------------------------------------------------------|
 void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fontSize) {
 	int spacing = (int)(fontSize / 20.0 + 0.5);
 	int outlineSize = (int)(fontSize / 20.0 + 0.5);
@@ -46,79 +70,21 @@ void GameUI::DrawCurrentScore(int currentPlayerScore, float fontSize)
 	Vector2 labelPos = { 50, 42.5 };
 	Vector2 scorePos = { 50, 92.5 };
 
-	scoreText = to_string(currentPlayerScore);
+	string scoreText = to_string(currentPlayerScore);
 	int leadingZeros = width - scoreText.length();
 	string scoreWithZeros = string(leadingZeros, '0') + scoreText;
 
 	DrawTextWithOutline("SCORE:", labelPos, fontSize);
 	DrawTextWithOutline(scoreWithZeros, scorePos, fontSize);
 }
-Rectangle GameUI::LOGINMENU_setBarArea(float fontSize, string text, Vector2 textPosition, int type,float additional_x_space, float additional_y_space)
-{
-	float additionalSpace = 20;
-	Vector2 measurements = MeasureTextBar(fontSize, text);
-	switch (type)
-	{
-	case 1://Napis wewnatrz
-		return { textPosition.x - additional_x_space,textPosition.y - additional_y_space, measurements.x + additional_x_space * 2,measurements.y + additional_y_space * 2 };
-		break;
-	case 2://Napis nad paskiem
-		return { textPosition.x- additional_x_space,textPosition.y + measurements.y, measurements.x + additional_x_space * 2,measurements.y};
-		break;
-	default:
-		return{ 0,0,0,0 };
-		break;
-	}
-}
-Vector2 GameUI::MeasureTextBar(float& fontSize, string text)
-{
-	Vector2 measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
-	while (measurements.x+30 > GetScreenWidth() || measurements.y+30 > GetScreenHeight())
-	{
-		fontSize -= 1;
-		measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
-	}
-	return measurements;
-}
-Vector2 GameUI::MeasureText(float fontSize, string text)
-{
-	return MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
-}
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
 	DrawRectangleRec(borders, { 0,0,0,opacity });
 	DrawRectangleLinesEx(borders, 10, BLACK);
 }
-void GameUI::loadTexturesIntoMap()
-{
-	for (const auto& textureName : fs::directory_iterator(loadingScreenAssetsPath))
-	{
-		loadedScreenTextures.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
-	}
-}
-Texture2D GameUI::passCorrectTexture(string textureName)
-{
-	for (auto& checking : loadedScreenTextures)
-	{
-		if (checking.first == textureName)
-		{
-			return checking.second;
-		}
-	}
-}
-void GameUI::setLoadingProgress(string backgroundName)
-{
-	currentBackground=passCorrectTexture(backgroundName);
-}
 void GameUI::DrawBackground()
 {
 	DrawTextureV(currentBackground, { 0,0 }, WHITE);
-}
-string GameUI::ConvertToString(float number, int prec)
-{
-	ostringstream text;
-	text<<fixed<<setprecision(prec) << number;
-	return text.str();
 }
 void GameUI::DrawCharacterStatsInGame(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate, int playerMaxHealth, float x_pos, float starting_y_pos, float gap, float fontSize)//to jakos lepiej zrobic
 {
@@ -168,7 +134,7 @@ void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, fl
 {
 	float barBorders = 10;
 	float lineWidthScale = 0.9;
-	float minFontSize = 20;
+	float minFontSize = 30;
 	float gap = 2;
 
 	vector<string> lines;
@@ -188,7 +154,7 @@ void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, fl
 			break;
 		}
 
-		fontSize -= 1;
+		fontSize--;
 	}
 
 	if (!textFits)
@@ -203,6 +169,58 @@ void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, fl
 		GameUI::GetInstance().DrawTextWithOutline(line, { textX, y_position }, fontSize);
 		y_position += lineHeight + gap;
 	}
+}
+void GameUI::DrawData(string& name, Rectangle bar, float& fontSize)
+{
+	int maxFontSize = 80;
+	int minFontSize = 40;
+	int spacing = 2;
+	int position = 0;
+	position = bar.y + (bar.height / 2);
+	float barBorder = 30;
+	float textStartX = bar.x + barBorder;
+	float maxTextEndX = bar.x + bar.width - barBorder;
+	bar.x = textStartX;
+	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());
+	while ((textStartX + textSize.x > maxTextEndX) && fontSize > minFontSize)
+	{
+		fontSize -= 1;
+		textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());
+	}
+	while (fontSize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
+	{
+		name.pop_back();
+		textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());
+	}
+	while ((textStartX + textSize.x < maxTextEndX) && fontSize < maxFontSize)
+	{
+		fontSize += 1;
+		textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());
+		if (textStartX + textSize.x > maxTextEndX)
+		{
+			fontSize -= 1;
+			break;
+		}
+	}
+	float y_position = position - (textSize.y / 2);
+	GameUI::GetInstance().DrawTextWithOutline(name.c_str(), { textStartX, y_position }, fontSize);
+}
+void GameUI::DrawError(string information, Rectangle bar)
+{
+	float fontSize = 50;
+	float spacing = 2;
+	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, information.c_str());
+	float barCenterX = bar.x + bar.width / 2.0;
+	float textX = barCenterX - textSize.x / 2.0;
+	GameUI::GetInstance().DrawTextWithOutline(information.c_str(), { textX, (bar.y + bar.height + 30) }, fontSize);
+}
+
+//|---Inne-------------------------------------------------------------------------|
+string GameUI::ConvertToString(float number, int prec)
+{
+	ostringstream text;
+	text << fixed << setprecision(prec) << number;
+	return text.str();
 }
 vector<string> GameUI::DivideTextIntoParts(const string& text, float fontSize, float maxWidth)
 {
@@ -242,4 +260,35 @@ vector<string> GameUI::DivideTextIntoParts(const string& text, float fontSize, f
 		result.push_back(line);
 	}
 	return result;
+}
+Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space)
+{
+	float additionalSpace = 20;
+	Vector2 measurements = MeasureTextBar(fontSize, text);
+	switch (type)
+	{
+	case 1://Napis wewnatrz
+		return { textPosition.x - additional_x_space,textPosition.y - additional_y_space, measurements.x + additional_x_space * 2,measurements.y + additional_y_space * 2 };
+		break;
+	case 2://Napis nad paskiem
+		return { textPosition.x - additional_x_space,textPosition.y + measurements.y, measurements.x + additional_x_space * 2,measurements.y };
+		break;
+	default:
+		return{ 0,0,0,0 };
+		break;
+	}
+}
+Vector2 GameUI::MeasureTextBar(float& fontSize, string text)
+{
+	Vector2 measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+	while (measurements.x + 30 > GetScreenWidth() || measurements.y + 30 > GetScreenHeight())
+	{
+		fontSize -= 1;
+		measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+	}
+	return measurements;
+}
+Vector2 GameUI::MeasureText(float fontSize, string text)
+{
+	return MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 }

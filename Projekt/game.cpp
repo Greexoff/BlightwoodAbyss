@@ -128,9 +128,9 @@ void Game::Draw() {
 	}
 	if (startCountdown)
 	{
-		countdownToNewWave();
+		DrawCountdownToNewWave();
 	}
-	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50, 160, 30, 30);
+	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50,50, 30);
 }
 void Game::InputHandle() {
 	int moveX = 0;

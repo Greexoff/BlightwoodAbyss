@@ -24,7 +24,7 @@ StartingMenu::StartingMenu()
 	LoadTextures("backgroundSTARTING.png");
 	titleFontSize = 200;
 	titleName = "BLIGHTWOOD ABBYS";
-	ScreenBar={ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 };
+	ScreenBar={ (float)GetScreenWidth()/8,0,(float)GetScreenWidth()-2*(float)GetScreenWidth()/8,(float)GetScreenHeight()};
 }
 StartingMenu::~StartingMenu()
 {

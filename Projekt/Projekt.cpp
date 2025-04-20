@@ -38,6 +38,8 @@ int main()
 	bool shouldEnd = false;
 	int setAction=0;
 	int loadingStage = 0;
+	string keepWaveNumberText = "";
+	string keepPlayerScoreText = "";
 	CurrentState gameState = CurrentState::LOADING;
 	while (!WindowShouldClose()&& !shouldEnd){
 		BeginDrawing();
@@ -130,8 +132,9 @@ int main()
 			game->Update();
 			game->DrawBackground();
 			game->Draw();
-			GameUI::GetInstance().DrawCurrentScore(game->playerTotalScore, 60);
-			GameUI::GetInstance().DrawWaveNumber(game->getWaveNumber(), 60);
+			keepWaveNumberText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->getWaveNumber(), 3, "WAVE: ");
+			keepPlayerScoreText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->playerTotalScore, 6, "SCORE: ");
+			GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " "+ keepWaveNumberText, 60, GetScreenHeight()-30);
 			if (game->isGameOver())
 			{
 				shouldEnd = true;

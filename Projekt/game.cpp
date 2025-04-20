@@ -20,6 +20,8 @@ Game::Game() {
 	proceedCreatingEnemies = false;
 	playerTotalScore = 0;
 	enemies = CreateEnemy();
+	startCountdown = false;
+	breakStartingTime = 0;
 }
 Game::~Game() {
 	enemies.clear();
@@ -123,6 +125,10 @@ void Game::Draw() {
 	for (auto& enemTears : EnemyTears)
 	{
 		enemTears.Draw();
+	}
+	if (startCountdown)
+	{
+		countdownToNewWave();
 	}
 	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50, 160, 30, 30);
 }
@@ -349,7 +355,10 @@ void Game::beginNewWave()
 	disableEnemyTears();
 	increasePlayerTotalScore(200 * waveNumber);
 	waveNumber++;
+	breakStartingTime = GetTime();
+	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));
+	startCountdown = false;
 	if (waveNumber < 11)
 	{
 		amountofEnemies++;
@@ -425,4 +434,14 @@ Texture2D Game::passCorrectTexture(string textureName)
 int Game::getWaveNumber()
 {
 	return waveNumber;
+}
+void Game::DrawCountdownToNewWave()
+{
+	double remainingTime =breakTime-(int)(GetTime()- breakStartingTime);
+	string information = "NEW WAVE BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
+	if (waveNumber % 5 == 0)
+	{
+		information = "BOSS FIGHT BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
+	}
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, 200);
 }

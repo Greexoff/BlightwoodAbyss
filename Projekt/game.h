@@ -57,4 +57,7 @@ private:
 	long long breakTime;
 	void loadTextures();
 	void increasePlayerTotalScore(int amount);
+	bool startCountdown;
+	double breakStartingTime;
+	void DrawCountdownToNewWave();
 };

@@ -34,6 +34,7 @@ public:
 	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space);// Ustawia obszar paska wraz z dodatkową przestrzenią po bokach
 	Vector2 MeasureTextBar(float& fontSize, string text);//CHYBA DO USUNIECIA POTEM BO TAK TROCHE NWM PO CO 
 	Vector2 MeasureText(float fontSize, string text);//GENERAL: Sprawdzanie długości tekstu dla wykorzystywanej czcionki (bez potrzeby przechowywania czcionki w innych klasach)
+	string ConvertToString(float number, int prec);//Metoda konwertująca liczbe(float) na string o podanej precyzji
 private:
 	//|---Singleton--------------------------------------------------------------------------|
 	GameUI();
@@ -50,7 +51,6 @@ private:
 	//|---Metody-----------------------------------------------------------------------------|
 	void loadTexturesIntoMap();//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
 	Texture2D passCorrectTexture(string textureName);//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
-	string ConvertToString(float number, int prec);//Metoda konwertująca liczbe(float) na string o podanej precyzji
 	vector<string> DivideTextIntoParts(const string& text, float fontSize, float maxWidth);//Metoda rozdzielająca napis na części
 
 };

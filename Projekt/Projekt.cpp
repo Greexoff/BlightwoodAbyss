@@ -153,7 +153,7 @@ int main()
 	delete game;
 }
 /*|---TODO-----------------------------------------------------------------------|
-* !!!!GameUI todo:odliczanie do nastepnej fali, Dobrze dzialajacy loadingScreen
+* !!!!GameUI todo:Dobrze dzialajacy loadingScreen
 * !!!/Dokonczyc highestscores(wyswieltanie), rules, collectibles. Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
 * !!!ladowanie statystyk potworow z pliku tekstowego
 * !!!Oczyścić main i uporządkować pozostałe pliku h

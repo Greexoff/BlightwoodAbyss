@@ -66,7 +66,7 @@ void LoginMenu::setFontSizes()
 	UsernameTextFontSize = 150;
 	PasswordTextFontSize = 150;
 	ConfirmTextFontSize = 75;
-	SignupTextFontSize = 70;
+	SignupTextFontSize = 75;
 	InsertedDataFontSize = 80;
 }
 void LoginMenu::setXYofTexts()
@@ -89,13 +89,15 @@ void LoginMenu::Draw()
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_UsernameBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
+	GameUI::GetInstance().DrawTextOnBar(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition.y);
+
 	GameUI::GetInstance().DrawTextWithOutline("USERNAME", UsernamePosition, UsernameTextFontSize);
 	GameUI::GetInstance().DrawTextWithOutline("PASSWORD", PasswordPosition, PasswordTextFontSize);
-	GameUI::GetInstance().DrawTextWithOutline("CONFIRM", ConfirmPosition, ConfirmTextFontSize);
 	if (isSignupAreaActive)
 	{
 		GameUI::GetInstance().DrawBlackBar(LoginMenu_SingupArea, 160);
-		GameUI::GetInstance().DrawTextWithOutline("SIGNUP", SignupPosition, SignupTextFontSize);
+		GameUI::GetInstance().DrawTextOnBar(LoginMenu_SingupArea, SignupTextFontSize, "SIGNUP", SignupPosition.y);
+
 	}
 }
 int LoginMenu::isButtonClicked()
@@ -290,7 +292,7 @@ void LoginMenu::ChooseErrorType()
 MainMenu::MainMenu()
 {
 	LoadTextures("backgroundSTARTING.png");
-	ButtonNames = { "New Game", "Game Rules", "Collection","Highest Scores","Exit" };
+	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
 	buttonsFontSize = 120;
 	setButtonsPosition();
 
@@ -322,23 +324,23 @@ void MainMenu::setButtonsPosition()
 int MainMenu::isButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, Buttons["New Game"].rectangle))
+	if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
 	{
 		return NEWGAME_BUTTON;
 	}
-	if(CheckCollisionPointRec(mousePos, Buttons["Game Rules"].rectangle))
+	if(CheckCollisionPointRec(mousePos, Buttons["GAME RULES"].rectangle))
 	{
 		return RULES_BUTTON;
 	}
-	if (CheckCollisionPointRec(mousePos, Buttons["Collection"].rectangle))
+	if (CheckCollisionPointRec(mousePos, Buttons["COLLECTION"].rectangle))
 	{
 		return UNLOCKED_BUTTON;
 	}
-	if (CheckCollisionPointRec(mousePos, Buttons["Highest Scores"].rectangle))
+	if (CheckCollisionPointRec(mousePos, Buttons["HIGHEST SCORES"].rectangle))
 	{
 		return SCORE_BUTTON;
 	}
-	if (CheckCollisionPointRec(mousePos, Buttons["Exit"].rectangle))
+	if (CheckCollisionPointRec(mousePos, Buttons["EXIT"].rectangle))
 	{
 		return EXIT_BUTTON;
 	}
@@ -489,9 +491,12 @@ void UnlockedItemsMenu::Draw()
 HighestScoreMenu::HighestScoreMenu()
 {
 	LoadTextures("backgroundOPTIONS.png");
-	maxPageNumber = 0;
-	currentPageNumber = 1;
+	currentPageNumber = maxPageNumber = minPageNumber = 1;
+	prievousPageButton = {1083,862,1218-1083,1001-862};
+	nextPageButton = { 1256,862,1391-1256 ,1001 - 862 };
 	areUsersLoadedIntoVector = false;
+	isNextPageButtonVisible = false;
+	isPrievousPageButtonVisible = false;
 }
 HighestScoreMenu::~HighestScoreMenu()
 {
@@ -500,14 +505,30 @@ HighestScoreMenu::~HighestScoreMenu()
 void HighestScoreMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	if (isNextPageButtonVisible)
+	{
+		GameUI::GetInstance().DrawBlackBar(nextPageButton, 160);
+		GameUI::GetInstance().DrawTextOnBar(nextPageButton, 75, "-->",nextPageButton.y+nextPageButton.height/4);
+	}
+	if (isPrievousPageButtonVisible)
+	{
+		GameUI::GetInstance().DrawBlackBar(prievousPageButton, 160);
+		GameUI::GetInstance().DrawTextOnBar(prievousPageButton, 75, "<--", prievousPageButton.y+prievousPageButton.height/4);
+	}
 }
 void HighestScoreMenu::handleScoresMenuLogic()
 {
+	setButtonVisibility(isPrievousPageButtonVisible, minPageNumber);
+	setButtonVisibility(isNextPageButtonVisible, maxPageNumber);
 	if (!areUsersLoadedIntoVector)
 	{
 		LoadUsersScoresIntoVector();
 	}
 	DrawPlayersScores();
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		ArrowClicked(nextPageButton, 1, isNextPageButtonVisible);
+		ArrowClicked(prievousPageButton, -1,isPrievousPageButtonVisible);
+	}
 }
 void HighestScoreMenu::LoadUsersScoresIntoVector()
 {
@@ -541,22 +562,41 @@ void HighestScoreMenu::LoadUsersScoresIntoVector()
 }
 void HighestScoreMenu::DrawPlayersScores()
 {
+	int iteratorLimit = currentPageNumber * 10;
+	float gap = 90;
+	string convertedData;
+	int placeInList = 0;
+	int Limit = iteratorLimit;
 	if (currentPageNumber == maxPageNumber)
 	{
-		int iteratorLimit = currentPageNumber * 10;
-		cout << "|----Strona: " << currentPageNumber << "-----------------------|" << endl;
-		for (int i = iteratorLimit - 10; i < UsersScores.size(); i++)
-		{
-			cout << "ID:" << i << " User:" << UsersScores[i].first << " : " << UsersScores[i].second << endl;
-		}
+		Limit = UsersScores.size();
+	}
+	for (int i = iteratorLimit - 10; i < Limit; i++)
+	{
+		placeInList = i + 1;
+		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 50, "HIGHEST SCORES", 20);
+		convertedData = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(UsersScores[i].second, 6, to_string(placeInList) + ". " + UsersScores[i].first);
+		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 50, convertedData, 20 + gap);
+		gap += 90;
+	}
+}
+void HighestScoreMenu::ArrowClicked(Rectangle bar, int action, bool visibility)
+{
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos, bar)&& visibility)
+	{
+		currentPageNumber+=action;
+	}
+}
+void HighestScoreMenu::setButtonVisibility(bool& visibilty, int extremePageNumber)
+{
+
+	if (currentPageNumber ==extremePageNumber)
+	{
+		visibilty = false;
 	}
 	else
 	{
-		int iteratorLimit = currentPageNumber * 10;
-		cout << "|----Strona: " << currentPageNumber << "-----------------------|" << endl;
-		for (int i = iteratorLimit-10; i < iteratorLimit; i++)
-		{
-			cout << "ID:"<<i<<" User:"<<UsersScores[i].first << " : " << UsersScores[i].second << endl;
-		}
+		visibilty = true;
 	}
 }

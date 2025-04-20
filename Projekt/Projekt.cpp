@@ -125,8 +125,8 @@ int main()
 			game->Update();
 			game->DrawBackground();
 			game->Draw();
-			keepWaveNumberText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->getWaveNumber(), 3, "WAVE: ");
-			keepPlayerScoreText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->playerTotalScore, 6, "SCORE: ");
+			keepWaveNumberText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->getWaveNumber(), 3, "WAVE");
+			keepPlayerScoreText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->playerTotalScore, 6, "SCORE");
 			GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " "+ keepWaveNumberText, 60, GetScreenHeight()-30);
 			if (game->isGameOver())
 			{
@@ -149,10 +149,11 @@ int main()
 	delete game;
 }
 /*|---TODO-----------------------------------------------------------------------|
-* !!!!GameUI todo:Dobrze dzialajacy loadingScreen
-* !!!/Dokonczyc highestscores(wyswieltanie), rules, collectibles. Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt
+* !!!!Poprawic bary w mainMenu bo jakos dziwnie dzialaja, sprobowac zrobic ten setw na tych napisach w highest scores
+* !!!!GameUI todo:Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt        Dobrze dzialajacy loadingScreen
+* !!!/rules, collectibles
+* * !!!Oczyścić main i uporządkować pozostałe pliku h
 * !!!ladowanie statystyk potworow z pliku tekstowego
-* !!!Oczyścić main i uporządkować pozostałe pliku h
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
 * !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji

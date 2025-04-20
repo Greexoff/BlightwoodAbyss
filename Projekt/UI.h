@@ -30,8 +30,8 @@ public:
 	void DrawData(string& name, Rectangle bar, float& fontSize);//LOGIN_MENU: Wyświetla dane wpisywane przez uzytkownika
 	void DrawError(string information, Rectangle bar);//LOGIN_MENU: Wyświetla komunikaty błędów podczas logowania/tworzenia konta
 	void DrawGameUI(const string& text, float fontSize, float y_pos);//GAME: Wyświetla Wave+waveNumber oraz Score+score wysrodkowane wzgledem srodka ekranu
-	void DrawReturnToMenuComment(Rectangle bar, float opacity);
-	string CreateTextWithLeadingZerosGameUI(int number, int amountOfZeros, const string& text);//GAME:: Tworzy tekst wraz z liczbą z poprzedzającymi zerami np. 001234
+	void DrawReturnToMenuComment(Rectangle bar, float opacity);//GENERAL: Wyswietla komunikat o powrocie do menu glownego
+	string CreateTextWithLeadingZerosGameUI(int number, int amountOfZeros, const string& text);//GENERAL:: Tworzy tekst wraz z liczbą z poprzedzającymi zerami np. 001234
 	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space);// Ustawia obszar paska wraz z dodatkową przestrzenią po bokach
 	Vector2 MeasureTextBar(float& fontSize, string text);//CHYBA DO USUNIECIA POTEM BO TAK TROCHE NWM PO CO 
 	Vector2 MeasureText(float fontSize, string text);//GENERAL: Sprawdzanie długości tekstu dla wykorzystywanej czcionki (bez potrzeby przechowywania czcionki w innych klasach)

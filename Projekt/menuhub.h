@@ -154,11 +154,17 @@ public:
 	void Draw() override;	
 	void handleScoresMenuLogic();
 private:
+	Rectangle prievousPageButton;
 	Rectangle nextPageButton;
 	vector<pair<string, int>>UsersScores;
+	bool isNextPageButtonVisible;
+	bool isPrievousPageButtonVisible;
 	int maxPageNumber;
+	int minPageNumber;
 	int currentPageNumber;
 	bool areUsersLoadedIntoVector;
 	void LoadUsersScoresIntoVector();
 	void DrawPlayersScores();
+	void ArrowClicked(Rectangle bar, int action, bool visibility);
+	void setButtonVisibility(bool& visibility, int extremePageNumber);
 };

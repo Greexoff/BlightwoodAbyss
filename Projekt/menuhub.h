@@ -156,6 +156,9 @@ public:
 private:
 	Rectangle nextPageButton;
 	vector<pair<string, int>>UsersScores;
-	void LoadUsersScoresIntoVector();
+	int maxPageNumber;
+	int currentPageNumber;
 	bool areUsersLoadedIntoVector;
+	void LoadUsersScoresIntoVector();
+	void DrawPlayersScores();
 };

@@ -180,7 +180,7 @@ void LoginMenu::addPlayerToDataBase()
 	if (!file.is_open()){}
 	else
 	{
-		file << endl << username << "," << password << ",Highest Score:";
+		file << endl << username << "," << password << ",Highest Score: 000000,";
 	}
 
 }
@@ -302,9 +302,9 @@ MainMenu::~MainMenu()
 void MainMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
-	for (const auto& it : Buttons)
+	for (const auto& [name, button_Data] : Buttons)
 	{
-		GameUI::GetInstance().DrawTextWithOutline(it.first, it.second.position, buttonsFontSize);
+		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
 	}
 }
 void MainMenu::setButtonsPosition()
@@ -489,6 +489,8 @@ void UnlockedItemsMenu::Draw()
 HighestScoreMenu::HighestScoreMenu()
 {
 	LoadTextures("backgroundOPTIONS.png");
+	maxPageNumber = 0;
+	currentPageNumber = 1;
 	areUsersLoadedIntoVector = false;
 }
 HighestScoreMenu::~HighestScoreMenu()
@@ -505,6 +507,7 @@ void HighestScoreMenu::handleScoresMenuLogic()
 	{
 		LoadUsersScoresIntoVector();
 	}
+	DrawPlayersScores();
 }
 void HighestScoreMenu::LoadUsersScoresIntoVector()
 {
@@ -526,9 +529,34 @@ void HighestScoreMenu::LoadUsersScoresIntoVector()
 	}
 	auto comparator = [](pair<string, int>a, pair<string, int>b) {return a.second > b.second; };
 	sort(UsersScores.begin(), UsersScores.end(),comparator);
-	for (const auto& [name, number] : UsersScores)
+	if (UsersScores.size() % 10 == 0)
 	{
-		cout << name << " : " << number << endl;
+		maxPageNumber = UsersScores.size() / 10;
+	}
+	else
+	{
+		maxPageNumber = ((UsersScores.size() / 10) + 1);
 	}
 	areUsersLoadedIntoVector = true;
+}
+void HighestScoreMenu::DrawPlayersScores()
+{
+	if (currentPageNumber == maxPageNumber)
+	{
+		int iteratorLimit = currentPageNumber * 10;
+		cout << "|----Strona: " << currentPageNumber << "-----------------------|" << endl;
+		for (int i = iteratorLimit - 10; i < UsersScores.size(); i++)
+		{
+			cout << "ID:" << i << " User:" << UsersScores[i].first << " : " << UsersScores[i].second << endl;
+		}
+	}
+	else
+	{
+		int iteratorLimit = currentPageNumber * 10;
+		cout << "|----Strona: " << currentPageNumber << "-----------------------|" << endl;
+		for (int i = iteratorLimit-10; i < iteratorLimit; i++)
+		{
+			cout << "ID:"<<i<<" User:"<<UsersScores[i].first << " : " << UsersScores[i].second << endl;
+		}
+	}
 }

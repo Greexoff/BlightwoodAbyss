@@ -203,7 +203,12 @@ void GameUI::DrawGameUI(const string& text, float fontSize, float y_pos)
 	Vector2 ui_pos = { (float)GetScreenWidth() / 2 - measurements.x / 2, y_pos-measurements.y };
 	GameUI::DrawTextWithOutline(text, ui_pos, fontSize);
 }
-
+void GameUI::DrawReturnToMenuComment(Rectangle bar, float opacity)
+{
+	GameUI::GetInstance().DrawBlackBar(bar, opacity);
+	GameUI::GetInstance().DrawTextOnBar(bar, 55, "RETURN TO MAIN MENU", bar.y + 20);
+	GameUI::GetInstance().DrawTextOnBar(bar, 30, "CLICK THIS BUTTON TO RETURN BACK TO MAIN MENU", bar.y + 150);
+}
 //|---Inne-------------------------------------------------------------------------|
 string GameUI::ConvertToString(float number, int prec)
 {

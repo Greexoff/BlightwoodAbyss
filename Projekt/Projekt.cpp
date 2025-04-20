@@ -109,23 +109,16 @@ int main()
 			break;
 		case CurrentState::RULES_MENU:
 			rulesTab->Draw();
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && rulesTab->isReturnButtonClicked())
-			{
-				gameState = CurrentState::MAIN_MENU;
-			}
+			rulesTab->ReturnToMenu(gameState);
 			break;
 		case CurrentState::UNLOCKED_ITEMS_MENU:
 			unlockedTab->Draw();
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && unlockedTab->isReturnButtonClicked())
-			{
-				gameState = CurrentState::MAIN_MENU;
-			}
+			unlockedTab->ReturnToMenu(gameState);
 			break;
 		case CurrentState::SCORE_MENU:
 			scoresTab->Draw();
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && scoresTab->isReturnButtonClicked()) {
-				gameState = CurrentState::MAIN_MENU;
-			}
+			scoresTab->handleScoresMenuLogic();
+			scoresTab->ReturnToMenu(gameState);
 			break;
 		case CurrentState::GAMEPLAY:
 			game->InputHandle();

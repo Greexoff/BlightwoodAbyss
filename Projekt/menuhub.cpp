@@ -14,9 +14,16 @@ bool Menu::isReturnButtonClicked()
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
 	{
+		GameUI::GetInstance().DrawReturnToMenuComment(ReturnToMenuCommentBar, 130);
 		return true;
 	}
 	return false;
+}
+void Menu::ReturnToMenu(CurrentState& gameState)
+{
+	if (isReturnButtonClicked() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		gameState = CurrentState::MAIN_MENU;
+	}
 }
 
 StartingMenu::StartingMenu()
@@ -38,7 +45,6 @@ void StartingMenu::Draw()
 
 LoginMenu::LoginMenu()
 {
-	data_basePath = fs::current_path() / "database"/"DataBase.txt";
 	LoadTextures("backgroundSTARTING.png");
 	username = "";
 	password = "";
@@ -148,7 +154,7 @@ bool LoginMenu::checkIsPlayerInDataBase()
 	{
 		return false;
 	}
-	regex userRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+)$)");
+	regex userRegex(R"(^(\w+),(\w+),.*)");
 	smatch match;
 	string line;
 	userExist = false;
@@ -410,9 +416,7 @@ void CharacterSelectionMenu::DrawComments(CommentType type)
 		GameUI::GetInstance().DrawCharacterStatsInMenu(pageNumber, BiggerCommentsBar, 30, BiggerCommentsBar.y+300);
 		break;
 	case RETURN_BUTTON:
-		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 55, "RETURN TO MAIN MENU", SmallerCommentsBar.y + 20);
-		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 30, "CLICK THIS BUTTON TO RETURN BACK TO MAIN MENU", SmallerCommentsBar.y + 150);
+		GameUI::GetInstance().DrawReturnToMenuComment(SmallerCommentsBar, 180);
 		break;
 	default:
 		break;
@@ -485,6 +489,7 @@ void UnlockedItemsMenu::Draw()
 HighestScoreMenu::HighestScoreMenu()
 {
 	LoadTextures("backgroundOPTIONS.png");
+	areUsersLoadedIntoVector = false;
 }
 HighestScoreMenu::~HighestScoreMenu()
 {
@@ -493,4 +498,37 @@ HighestScoreMenu::~HighestScoreMenu()
 void HighestScoreMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+}
+void HighestScoreMenu::handleScoresMenuLogic()
+{
+	if (!areUsersLoadedIntoVector)
+	{
+		LoadUsersScoresIntoVector();
+	}
+}
+void HighestScoreMenu::LoadUsersScoresIntoVector()
+{
+	ifstream DataBase(data_basePath.string());
+	if (!DataBase.is_open())
+	{
+		return;
+	}
+	regex userRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),.*)");
+	smatch match;
+	string line;
+
+	while (getline(DataBase, line))
+	{
+		if (regex_match(line, match, userRegex))
+		{
+			UsersScores.push_back({ match[1],stoi(match[3]) });
+		}
+	}
+	auto comparator = [](pair<string, int>a, pair<string, int>b) {return a.second > b.second; };
+	sort(UsersScores.begin(), UsersScores.end(),comparator);
+	for (const auto& [name, number] : UsersScores)
+	{
+		cout << name << " : " << number << endl;
+	}
+	areUsersLoadedIntoVector = true;
 }

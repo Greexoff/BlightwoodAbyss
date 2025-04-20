@@ -38,11 +38,14 @@ public:
 	virtual void Draw()=0;
 	virtual void LoadTextures(fs::path filePath);
 	virtual bool isReturnButtonClicked();
+	virtual void ReturnToMenu(CurrentState& gameState);
 	virtual ~Menu();
 protected:
-	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";
+	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";//sciezka do bazy danych
+	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";//sciezka do folderu z tlami
 	Texture2D BackgroundTexture; 
-	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };//to raczej do usuniecia
+	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
+	Rectangle ReturnToMenuCommentBar = {50,50,300,300};
 };
 class StartingMenu : public Menu
 {
@@ -64,7 +67,6 @@ public:
 	void Draw() override;//Metoda wyswietlajaca informacje na ekranie
 private:
 	//|-----Zmienne------------------------------------------------------------------------------------------|
-	fs::path data_basePath;//sciezka do bazy danych
 	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea; //przechowanie prostokatow przyciskow
 	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition;//przechowanie pozycji x i y przyciskow
 	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize;// przechowanie rozmiaru czcionki poszczegolnych elementow
@@ -149,6 +151,11 @@ class HighestScoreMenu : public Menu
 public:
 	HighestScoreMenu();
 	~HighestScoreMenu();
-	void Draw() override;
+	void Draw() override;	
+	void handleScoresMenuLogic();
 private:
+	Rectangle nextPageButton;
+	vector<pair<string, int>>UsersScores;
+	void LoadUsersScoresIntoVector();
+	bool areUsersLoadedIntoVector;
 };

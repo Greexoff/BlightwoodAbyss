@@ -27,6 +27,7 @@ enum class CurrentState
 	SCORE_MENU,
 	GAMEPLAY,
 	AFTERGAME_MENU,
+	END,
 };//Aktualny stan rozgrywki (wykorzystywany rowniez w mainie)
 struct ButtonData
 {
@@ -131,9 +132,7 @@ private:
 	//|---Metody----------------------------------------------------------------------------------|
 	void DrawComments(CommentType type);//Metoda wyświetlająca wlasciwe informacje w zaleznosci od typu komentarza
 	void chooseExplanationType();//Metoda wybierajaca typ komentarza na podstawie polozenia kursora
-	void LoadCharacterImagesIntoMap(fs::path characterAssetsPath);
 	void DrawPlayerCharacterImage();
-	Texture2D passCorrectTexture(string textureName);
 };
 class RulesMenu : public Menu
 {
@@ -179,6 +178,12 @@ public:
 	AfterGameMenu();
 	~AfterGameMenu();
 	void Draw() override;
+	void isButtonClicked(CurrentState& gameState);
 private:
-
+	enum Pressed {NOTHING, NEWGAME_BUTTON, MAINMENU_BUTTON, EXIT_BUTTON};
+	map<string, ButtonData>Buttons;
+	vector<string> ButtonNames;
+	float buttonsFontSize;
+	void setButtonPosition();
+	void DrawButtons();
 };

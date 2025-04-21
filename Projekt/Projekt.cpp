@@ -112,8 +112,14 @@ int main()
 			}
 			break;
 		case CurrentState::AFTERGAME_MENU:
-			gameState = CurrentState::MAIN_MENU;
-			//shouldEnd = true;
+			afterTab->Draw();
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				afterTab->isButtonClicked(gameState);
+			}
+			break;
+		case CurrentState::END:
+			shouldEnd = true;
 			break;
 		default:
 			break;

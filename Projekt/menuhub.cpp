@@ -616,7 +616,10 @@ void HighestScoreMenu::setButtonVisibility(bool& visibilty, int extremePageNumbe
 
 AfterGameMenu::AfterGameMenu()
 {
-
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
+	ButtonNames = { "NEW GAME", "MAIN MENU","EXIT" };
+	buttonsFontSize = 120;
+	setButtonPosition();
 }
 AfterGameMenu::~AfterGameMenu()
 {
@@ -624,5 +627,41 @@ AfterGameMenu::~AfterGameMenu()
 }
 void AfterGameMenu::Draw()
 {
-
+	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	DrawButtons();
+}
+void AfterGameMenu::setButtonPosition()
+{
+	float spacing = GetScreenHeight() / 8;
+	for (size_t i = 0; i < ButtonNames.size(); i++)
+	{
+		const string& name = ButtonNames[i];
+		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
+		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i * spacing) - (measurements.y / 2) };
+		Rectangle rect = GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1, 0, 0);
+		Buttons[name] = { rect, buttonPosition };
+	}
+}
+void AfterGameMenu::DrawButtons()
+{
+	for (const auto& [name, button_Data] : Buttons)
+	{
+		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
+	}
+}
+void AfterGameMenu::isButtonClicked(CurrentState& gameState)
+{
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
+	{
+		gameState = CurrentState::CHARACTER_SELECT_MENU;
+	}
+	if (CheckCollisionPointRec(mousePos, Buttons["MAIN MENU"].rectangle))
+	{
+		gameState = CurrentState::MAIN_MENU;
+	}
+	if (CheckCollisionPointRec(mousePos, Buttons["EXIT"].rectangle))
+	{
+		gameState = CurrentState::END;
+	}
 }

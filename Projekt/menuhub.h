@@ -10,6 +10,7 @@
 #include <map>
 #include <thread>
 #include "UI.h"
+#include "Textures.h"
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
@@ -25,6 +26,7 @@ enum class CurrentState
 	UNLOCKED_ITEMS_MENU,
 	SCORE_MENU,
 	GAMEPLAY,
+	AFTERGAME_MENU,
 };//Aktualny stan rozgrywki (wykorzystywany rowniez w mainie)
 struct ButtonData
 {
@@ -36,13 +38,12 @@ class Menu
 {
 public:
 	virtual void Draw()=0;
-	virtual void LoadTextures(fs::path filePath);
+	virtual void LoadTextures(Texture2D correctTexture);
 	virtual bool isReturnButtonClicked();
 	virtual void ReturnToMenu(CurrentState& gameState);
 	virtual ~Menu();
 protected:
 	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";//sciezka do bazy danych
-	fs::path background_assets_path = fs::current_path() / "assets" / "background_assets";//sciezka do folderu z tlami
 	Texture2D BackgroundTexture; 
 	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
 	Rectangle ReturnToMenuCommentBar = {50,50,300,300};
@@ -119,6 +120,8 @@ public:
 	void Draw() override;//Metoda wyświetlająca na ekranie
 private:
 	//|---Zmienne---------------------------------------------------------------------------------|
+	fs::path CharImagePath;
+	map<string,Texture2D> CharacterImages;
 	enum CommentType{NOTHING, SWITCH_CHARACTER, SELECT_CHARACTER, STATS_CHARACTER, RETURN_BUTTON};
 	Rectangle ArrowArea, ConfirmArea, CharacterInformationArea, ReturnArea;//Przechowanie polozen przyciskow, ktore wykonuja dane funkcje (+wyswietlaja informacje)
 	Rectangle SmallerCommentsBar, BiggerCommentsBar;//Przechowanie rozmiarow tla na ktorym wyswietlane sa comments (bigger dla statystyk postaci)
@@ -128,7 +131,9 @@ private:
 	//|---Metody----------------------------------------------------------------------------------|
 	void DrawComments(CommentType type);//Metoda wyświetlająca wlasciwe informacje w zaleznosci od typu komentarza
 	void chooseExplanationType();//Metoda wybierajaca typ komentarza na podstawie polozenia kursora
-
+	void LoadCharacterImagesIntoMap(fs::path characterAssetsPath);
+	void DrawPlayerCharacterImage();
+	Texture2D passCorrectTexture(string textureName);
 };
 class RulesMenu : public Menu
 {
@@ -167,4 +172,13 @@ private:
 	void DrawPlayersScores();
 	void ArrowClicked(Rectangle bar, int action, bool visibility);
 	void setButtonVisibility(bool& visibility, int extremePageNumber);
+};
+class AfterGameMenu : public Menu
+{
+public:
+	AfterGameMenu();
+	~AfterGameMenu();
+	void Draw() override;
+private:
+
 };

@@ -26,6 +26,7 @@ int main()
 	SetTargetFPS(60);
 	DrawLoadingStartBackground();
 	CharacterData::LoadStatsOnce();
+
 	StartingMenu* startingTab = nullptr;
 	LoginMenu* loginTab = nullptr;
 	MainMenu* mainTab = nullptr;
@@ -33,11 +34,11 @@ int main()
 	UnlockedItemsMenu* unlockedTab = nullptr;
 	HighestScoreMenu* scoresTab = nullptr;
 	CharacterSelectionMenu* charTab = nullptr;
+	AfterGameMenu* afterTab = nullptr;
 	Game* game = nullptr;
 	string scoreText = "";
 	bool shouldEnd = false;
 	int setAction=0;
-	int loadingStage = 0;
 	string keepWaveNumberText = "";
 	string keepPlayerScoreText = "";
 	CurrentState gameState = CurrentState::LOADING;
@@ -46,39 +47,14 @@ int main()
 		switch (gameState)
 		{
 		case CurrentState::LOADING:
-			switch (loadingStage) {
-			case 0:
-				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGSTART.png");
-				break;
-			case 1:
-				startingTab = new StartingMenu();
-				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGLOGIN.png");
-				break;
-			case 2:
-				loginTab = new LoginMenu();
-				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGMENU.png");
-				break;
-			case 3:
-				mainTab = new MainMenu();
-				rulesTab = new RulesMenu();
-				unlockedTab = new UnlockedItemsMenu();
-				scoresTab = new HighestScoreMenu();
-				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGTABS.png");
-				break;
-			case 4:
-				charTab = new CharacterSelectionMenu();
-				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGCHAR.png");
-				break;
-			case 5:
-				game = new Game();
-				GameUI::GetInstance().setLoadingProgress("backgroundLOADINGFULL.png");
-				break;
-			case 6:
-				gameState = CurrentState::STARTING_MENU;
-				break;
-			}
-			GameUI::GetInstance().DrawBackground();
-			loadingStage++;
+			startingTab = new StartingMenu();
+			loginTab = new LoginMenu();
+			mainTab = new MainMenu();
+			rulesTab = new RulesMenu();
+			unlockedTab = new UnlockedItemsMenu();
+			scoresTab = new HighestScoreMenu();
+			charTab = new CharacterSelectionMenu();
+			gameState = CurrentState::STARTING_MENU;
 			break;
 		case CurrentState::STARTING_MENU:
 			startingTab->Draw();
@@ -97,11 +73,11 @@ int main()
 			break;
 		case CurrentState::CHARACTER_SELECT_MENU:
 			charTab->Draw();
-			game->DrawPlayerCharacterImage(charTab->getPageNumber());
 			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				charTab->isButtonClicked(gameState);
 				if (gameState == CurrentState::GAMEPLAY) {
+					game = new Game();
 					game->setPlayerCharacter(charTab->getPageNumber());
 					game->setLastTimePlayerWasTouched();
 				}
@@ -130,8 +106,14 @@ int main()
 			GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " "+ keepWaveNumberText, 60, GetScreenHeight()-30);
 			if (game->isGameOver())
 			{
-				shouldEnd = true;
+				afterTab = new AfterGameMenu();
+				delete game;
+				gameState = CurrentState::AFTERGAME_MENU;
 			}
+			break;
+		case CurrentState::AFTERGAME_MENU:
+			gameState = CurrentState::MAIN_MENU;
+			//shouldEnd = true;
 			break;
 		default:
 			break;
@@ -146,10 +128,9 @@ int main()
 	delete unlockedTab;
 	delete scoresTab;
 	delete charTab;
-	delete game;
 }
 /*|---TODO-----------------------------------------------------------------------|
-* !!!!Poprawic bary w mainMenu bo jakos dziwnie dzialaja, sprobowac zrobic ten setw na tych napisach w highest scores
+* !!!!sprobowac zrobic ten setw na tych napisach w highest scores
 * !!!!GameUI todo:Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt        Dobrze dzialajacy loadingScreen
 * !!!/rules, collectibles
 * * !!!Oczyścić main i uporządkować pozostałe pliku h

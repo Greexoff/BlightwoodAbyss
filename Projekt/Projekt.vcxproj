@@ -139,6 +139,7 @@
     <ClCompile Include="menuhub.cpp" />
     <ClCompile Include="Projekt.cpp" />
     <ClCompile Include="tears.cpp" />
+    <ClCompile Include="Textures.cpp" />
     <ClCompile Include="typ.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="items.h" />
     <ClInclude Include="menuhub.h" />
     <ClInclude Include="tears.h" />
+    <ClInclude Include="Textures.h" />
     <ClInclude Include="typ.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>

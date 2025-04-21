@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <map>
 #include <thread>
+#include "Textures.h"
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
@@ -20,8 +21,6 @@ public:
 	static GameUI& GetInstance();
 	~GameUI();
 	//|---Metody-----------------------------------------------------------------------------|
-	void setLoadingProgress(string backgroundName);//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
-	void DrawBackground();//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);//GENERAL: Wyświetla podany tekst w danym miejscu o podanym rozmiarze w pomarańczowo-zółtym stylu
 	void DrawBlackBar(Rectangle border, unsigned char opacity);//GENERAL: Wyświetla ciemny pasek o podanych rozmiarach i przejrzystości wraz z czarną obramówką
 	void DrawCharacterStatsInGame(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate, int playerMaxHealth, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry

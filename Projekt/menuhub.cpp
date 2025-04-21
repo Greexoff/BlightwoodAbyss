@@ -4,10 +4,9 @@
 Menu::~Menu()
 {
 }
-void Menu::LoadTextures(fs::path filePath)
+void Menu::LoadTextures(Texture2D correctTexture)
 {
-	fs::path wholePath = background_assets_path / filePath;
-	BackgroundTexture=LoadTexture(wholePath.string().c_str());
+	BackgroundTexture=correctTexture;
 }
 bool Menu::isReturnButtonClicked()
 {
@@ -28,14 +27,13 @@ void Menu::ReturnToMenu(CurrentState& gameState)
 
 StartingMenu::StartingMenu()
 {
-	LoadTextures("backgroundSTARTING.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	titleFontSize = 200;
 	titleName = "BLIGHTWOOD ABBYS";
 	ScreenBar={ (float)GetScreenWidth()/8,0,(float)GetScreenWidth()-2*(float)GetScreenWidth()/8,(float)GetScreenHeight()};
 }
 StartingMenu::~StartingMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void StartingMenu::Draw()
 {
@@ -45,7 +43,7 @@ void StartingMenu::Draw()
 
 LoginMenu::LoginMenu()
 {
-	LoadTextures("backgroundSTARTING.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	username = "";
 	password = "";
 	setFontSizes();
@@ -59,7 +57,6 @@ LoginMenu::LoginMenu()
 }
 LoginMenu::~LoginMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void LoginMenu::setFontSizes()
 {
@@ -291,7 +288,7 @@ void LoginMenu::ChooseErrorType()
 
 MainMenu::MainMenu()
 {
-	LoadTextures("backgroundSTARTING.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
 	buttonsFontSize = 120;
 	setButtonsPosition();
@@ -299,7 +296,6 @@ MainMenu::MainMenu()
 }
 MainMenu::~MainMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void MainMenu::Draw()
 {
@@ -317,7 +313,7 @@ void MainMenu::setButtonsPosition()
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
-		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,30, 30);
+		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,0, 0);
 		Buttons[name] = {rect, buttonPosition};
 	}
 }
@@ -377,7 +373,7 @@ void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool
 
 CharacterSelectionMenu::CharacterSelectionMenu()
 {
-	LoadTextures("backgroundCHAR.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundCHAR.png", textureType::BACKGROUND_TEXTURE));
 	ArrowArea = {66,593,219-66,701-593};
 	ConfirmArea = { 628,541,796-628,778-541 };
 	CharacterInformationArea = {620,294,790-620,473-294};
@@ -390,11 +386,11 @@ CharacterSelectionMenu::CharacterSelectionMenu()
 }
 CharacterSelectionMenu::~CharacterSelectionMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void CharacterSelectionMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	DrawPlayerCharacterImage();
 	chooseExplanationType();
 }
 void CharacterSelectionMenu::DrawComments(CommentType type)
@@ -461,14 +457,33 @@ int CharacterSelectionMenu::getPageNumber()
 {
 	return pageNumber;
 }
+void CharacterSelectionMenu::DrawPlayerCharacterImage()
+{
+	string file_name = "";
+	switch (pageNumber)
+	{
+	case 0:
+		file_name = "FirstCharacter.png";
+		break;
+	case -1:
+		file_name = "SecondCharacter.png";
+		break;
+	case 1:
+		file_name = "ThirdCharacter.png";
+		break;
+	default:
+		file_name = "FirstCharacter.png";
+		break;
+	}
+	DrawTextureEx(LoadingTextures::GetInstance().passCorrectTexture(file_name, textureType::OBJECT_TEXTURE), {628,535}, 0, 2, WHITE);
+}
 
 RulesMenu::RulesMenu()
 {
-	LoadTextures("backgroundOPTIONS.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 }
 RulesMenu::~RulesMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void RulesMenu::Draw()
 {
@@ -477,11 +492,10 @@ void RulesMenu::Draw()
 
 UnlockedItemsMenu::UnlockedItemsMenu()
 {
-	LoadTextures("backgroundOPTIONS.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 }
 UnlockedItemsMenu::~UnlockedItemsMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void UnlockedItemsMenu::Draw()
 {
@@ -490,7 +504,7 @@ void UnlockedItemsMenu::Draw()
 
 HighestScoreMenu::HighestScoreMenu()
 {
-	LoadTextures("backgroundOPTIONS.png");
+	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 	currentPageNumber = maxPageNumber = minPageNumber = 1;
 	prievousPageButton = {1083,862,1218-1083,1001-862};
 	nextPageButton = { 1256,862,1391-1256 ,1001 - 862 };
@@ -500,7 +514,6 @@ HighestScoreMenu::HighestScoreMenu()
 }
 HighestScoreMenu::~HighestScoreMenu()
 {
-	UnloadTexture(BackgroundTexture);
 }
 void HighestScoreMenu::Draw()
 {
@@ -599,4 +612,17 @@ void HighestScoreMenu::setButtonVisibility(bool& visibilty, int extremePageNumbe
 	{
 		visibilty = true;
 	}
+}
+
+AfterGameMenu::AfterGameMenu()
+{
+
+}
+AfterGameMenu::~AfterGameMenu()
+{
+
+}
+void AfterGameMenu::Draw()
+{
+
 }

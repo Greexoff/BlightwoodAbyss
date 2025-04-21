@@ -6,9 +6,6 @@
 using namespace std;
 
 Game::Game() {
-	object_assets = fs::current_path() / "assets" / "object_assets";
-	backgroundPath = fs::current_path() / "assets" / "background_assets"/ "backgroundOG.png";
-	loadTextures();
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
@@ -24,58 +21,33 @@ Game::Game() {
 	breakStartingTime = 0;
 }
 Game::~Game() {
-	enemies.clear();
-	for (auto& i : loadedTextures)
-	{
-		UnloadTexture(i.second);
-	}
-	
+	enemies.clear();	
 }
 void Game::DrawBackground()
 {
-	DrawTexture(passCorrectTexture("backgroundOG.png"), 0, 0, WHITE);
+	DrawTexture(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE), 0, 0, WHITE);
 }
 void Game::setPlayerCharacter(int Character)
 {
 	switch (Character)
 	{
 	case 0:
-		Player = make_unique<FirstCharacter>(passCorrectTexture("FirstCharacter.png"));
+		Player = make_unique<FirstCharacter>(LoadingTextures::GetInstance().passCorrectTexture("FirstCharacter.png", textureType::OBJECT_TEXTURE));
 		playerTearType = "PlayerRedTear.png";
 		break;
 	case -1:
-		Player = make_unique<SecondCharacter>(passCorrectTexture("SecondCharacter.png"));
+		Player = make_unique<SecondCharacter>(LoadingTextures::GetInstance().passCorrectTexture("SecondCharacter.png", textureType::OBJECT_TEXTURE));
 		playerTearType = "PlayerGreenTear.png";
 		break;
 	case 1:
-		Player = make_unique<ThirdCharacter>(passCorrectTexture("ThirdCharacter.png"));
+		Player = make_unique<ThirdCharacter>(LoadingTextures::GetInstance().passCorrectTexture("ThirdCharacter.png", textureType::OBJECT_TEXTURE));
 		playerTearType = "PlayerBlueTear.png";
 		break;
 	default:
-		Player = make_unique<FirstCharacter>(passCorrectTexture("FirstCharacter.png"));
+		Player = make_unique<FirstCharacter>(LoadingTextures::GetInstance().passCorrectTexture("FirstCharacter.png", textureType::OBJECT_TEXTURE));
 		playerTearType = "PlayerRedTear.png";
 		break;
 	}
-}
-void Game::DrawPlayerCharacterImage(int Character)
-{
-	string file_name = "";
-	switch (Character)
-	{
-	case 0:
-		file_name = "FirstCharacter.png";
-		break;
-	case -1:
-		file_name = "SecondCharacter.png";
-		break;
-	case 1:
-		file_name = "ThirdCharacter.png";
-		break;
-	default:
-		file_name = "FirstCharacter.png";
-		break;
-	}
-	DrawTextureEx(passCorrectTexture(file_name), { 628,535 }, 0, 2, WHITE);
 }
 void Game::Update() {
 	if (proceedCreatingEnemies)
@@ -141,16 +113,16 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_S)){moveY = 1;}
 	Player->movePlayer(moveX, moveY);
 	if (IsKeyDown(KEY_UP)) {
-		Player->shootTears(0, -1, passCorrectTexture(playerTearType));
+		Player->shootTears(0, -1, LoadingTextures::GetInstance().passCorrectTexture(playerTearType, textureType::OBJECT_TEXTURE));
 	}
 	if (IsKeyDown(KEY_DOWN)) {
-		Player->shootTears(0, 1, passCorrectTexture(playerTearType));
+		Player->shootTears(0, 1, LoadingTextures::GetInstance().passCorrectTexture(playerTearType, textureType::OBJECT_TEXTURE));
 	}
 	if (IsKeyDown(KEY_LEFT)) {
-		Player->shootTears(-1, 0, passCorrectTexture(playerTearType));
+		Player->shootTears(-1, 0, LoadingTextures::GetInstance().passCorrectTexture(playerTearType, textureType::OBJECT_TEXTURE));
 	}
 	if (IsKeyDown(KEY_RIGHT)) {
-		Player->shootTears(1, 0, passCorrectTexture(playerTearType));
+		Player->shootTears(1, 0, LoadingTextures::GetInstance().passCorrectTexture(playerTearType, textureType::OBJECT_TEXTURE));
 	}
 }
 void Game::DeleteInactiveTears()
@@ -185,7 +157,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	if (waveNumber % 5 == 0)
 	{
 		Vector2 position = { GetRandomValue(300,GetScreenWidth() - 300), GetRandomValue(300,GetScreenHeight() - 300) };
-		enemiesy.push_back(make_shared<Monster5>(position, passCorrectTexture("Enemy5.png")));
+		enemiesy.push_back(make_shared<Monster5>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy5.png", textureType::OBJECT_TEXTURE)));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
@@ -202,16 +174,16 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		int type = GetRandomValue(1, poolOfEnemiesTypes);
 		switch (type) {
 		case 1:
-			enemiesy.push_back(make_shared<Monster1>(position, passCorrectTexture("Enemy1.png")));
+			enemiesy.push_back(make_shared<Monster1>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy1.png", textureType::OBJECT_TEXTURE)));
 			break;
 		case 2:
-			enemiesy.push_back(make_shared<Monster2>(position, passCorrectTexture("Enemy2.png")));
+			enemiesy.push_back(make_shared<Monster2>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy2.png", textureType::OBJECT_TEXTURE)));
 			break;
 		case 3:
-			enemiesy.push_back(make_shared<Monster3>(position, passCorrectTexture("Enemy3.png")));
+			enemiesy.push_back(make_shared<Monster3>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy3.png", textureType::OBJECT_TEXTURE)));
 			break;
 		case 4:
-			enemiesy.push_back(make_shared<Monster4>(position, passCorrectTexture("Enemy4.png")));
+			enemiesy.push_back(make_shared<Monster4>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy4.png", textureType::OBJECT_TEXTURE)));
 			amountOfMiniBoss++;
 			break;
 		default:
@@ -238,15 +210,15 @@ void Game::EnemyShootTears()//Tutaj jeszcze zrobic jakas metode fabrykujaca i w 
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("Enemy3Tear.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy3Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("Enemy4Tear.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy4Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(2.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), passCorrectTexture("Enemy5Tear.png")));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(2.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy5Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			lastTearFired = GetTime();
 		}
@@ -390,19 +362,19 @@ void Game::createRandomLoot(Vector2 enemyPos)
 	switch (type)
 	{
 	case 1:
-		Loot = make_unique<DamageTrinket>(passCorrectTexture("DamageTrinket.png"), enemyPos);
+		Loot = make_unique<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 		break;
 	case 2:
-		Loot = make_unique<TearRateTrinket>(passCorrectTexture("TearRateTrinket.png"), enemyPos);
+		Loot = make_unique<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 		break;
 	case 3:
-		Loot = make_unique<SpeedTrinket>(passCorrectTexture("SpeedTrinket.png"), enemyPos);
+		Loot = make_unique<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 		break;
 	case 4:
-		Loot = make_unique<HealthTrinket>(passCorrectTexture("HealthTrinket.png"), enemyPos);
+		Loot = make_unique<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 		break;
 	case 5:
-		Loot = make_unique<TearSpeedTrinket>(passCorrectTexture("TearSpeedTrinket.png"), enemyPos);
+		Loot = make_unique<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 		break;
 	default:
 		break;
@@ -412,24 +384,6 @@ void Game::createRandomLoot(Vector2 enemyPos)
 void Game::setLastTimePlayerWasTouched()
 {
 	lastTimePlayerWasTouched = GetTime();
-}
-void Game::loadTextures()
-{
-	loadedTextures.insert({ backgroundPath.filename().string(),LoadTexture(backgroundPath.string().c_str())});
-	for (const auto& textureName : fs::directory_iterator(object_assets))
-	{
-		loadedTextures.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
-	}
-}
-Texture2D Game::passCorrectTexture(string textureName)
-{
-	for (auto& checking : loadedTextures)
-	{
-		if (checking.first == textureName)
-		{
-			return checking.second;
-		}
-	}
 }
 int Game::getWaveNumber()
 {

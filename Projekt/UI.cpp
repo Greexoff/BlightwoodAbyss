@@ -4,11 +4,7 @@ GameUI:: GameUI()
 {
 	MyOrange = { 255,110,37,255};
 	MyYellow = { 218,208,0,255 };
-	loadingScreenAssetsPath = fs::current_path() / "assets" / "background_loading_screen_assets";
-	loadTexturesIntoMap();
-	currentBackground = passCorrectTexture("backgroundLOADINGSTART.png"); \
-	fontPath = fs::current_path() / "assets" / "font_assets" / "VT323.ttf";
-	font = LoadFontEx(fontPath.string().c_str(), 80, 0, 0);
+	font = LoadingTextures::GetInstance().getFont();
 }
 GameUI& GameUI::GetInstance()
 {
@@ -17,34 +13,7 @@ GameUI& GameUI::GetInstance()
 }
 GameUI::~GameUI()
 {
-	for (auto& i : loadedScreenTextures)
-	{
-		UnloadTexture(i.second);
-	}
 	UnloadFont(font);
-}
-
-//|---DO USUNIECIA-----------------------------------------------------------------|
-void GameUI::loadTexturesIntoMap()
-{
-	for (const auto& textureName : fs::directory_iterator(loadingScreenAssetsPath))
-	{
-		loadedScreenTextures.insert({ textureName.path().filename().string(), LoadTexture(textureName.path().string().c_str()) });
-	}
-}
-Texture2D GameUI::passCorrectTexture(string textureName)
-{
-	for (auto& checking : loadedScreenTextures)
-	{
-		if (checking.first == textureName)
-		{
-			return checking.second;
-		}
-	}
-}
-void GameUI::setLoadingProgress(string backgroundName)
-{
-	currentBackground = passCorrectTexture(backgroundName);
 }
 
 //|---Drawing----------------------------------------------------------------------|
@@ -68,10 +37,6 @@ void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
 	DrawRectangleRec(borders, { 0,0,0,opacity });
 	DrawRectangleLinesEx(borders, 10, BLACK);
-}
-void GameUI::DrawBackground()
-{
-	DrawTextureV(currentBackground, { 0,0 }, WHITE);
 }
 void GameUI::DrawCharacterStatsInGame(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate, int playerMaxHealth, float x_pos, float starting_y_pos, float fontSize)//to jakos lepiej zrobic
 {
@@ -257,7 +222,6 @@ vector<string> GameUI::DivideTextIntoParts(const string& text, float fontSize, f
 }
 Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space)
 {
-	float additionalSpace = 20;
 	Vector2 measurements = MeasureTextBar(fontSize, text);
 	switch (type)
 	{

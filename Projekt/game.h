@@ -4,6 +4,7 @@
 #include "enemy.h"
 #include "items.h"
 #include "UI.h"
+#include "Textures.h"
 #include <random>
 #include <map>
 #include <filesystem>
@@ -25,15 +26,10 @@ public:
 	int playerTotalScore;
 	void setPlayerCharacter(int Character);
 	void setLastTimePlayerWasTouched();
-	void DrawPlayerCharacterImage(int Character);
 	int getWaveNumber();
 private:
-	fs::path backgroundPath;
 	unique_ptr<Character> Player;
 	string playerTearType;
-	fs::path object_assets;
-	map<string, Texture2D> loadedTextures;
-	Texture2D passCorrectTexture(string textureName);
 	unique_ptr<Items> Loot;
 	void createRandomLoot(Vector2 enemyPos);
 	vector <shared_ptr<Enemy>> CreateEnemy();
@@ -55,7 +51,6 @@ private:
 	atomic<bool> proceedCreatingEnemies;
 	int waveNumber;
 	long long breakTime;
-	void loadTextures();
 	void increasePlayerTotalScore(int amount);
 	bool startCountdown;
 	double breakStartingTime;

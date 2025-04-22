@@ -255,5 +255,5 @@ string GameUI::CreateTextWithLeadingZerosGameUI(int number, int amountOfZeros, c
 	string numberText = to_string(number);
 	int leadingZeros = amountOfZeros - numberText.length();
 	string numberWithZeros = string(leadingZeros, '0') + numberText;
-	return text +": " + numberWithZeros;
+	return text + numberWithZeros;
 }

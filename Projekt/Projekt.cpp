@@ -26,7 +26,6 @@ int main()
 	SetTargetFPS(60);
 	DrawLoadingStartBackground();
 	CharacterData::LoadStatsOnce();
-
 	StartingMenu* startingTab = nullptr;
 	LoginMenu* loginTab = nullptr;
 	MainMenu* mainTab = nullptr;
@@ -101,12 +100,13 @@ int main()
 			game->Update();
 			game->DrawBackground();
 			game->Draw();
-			keepWaveNumberText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->getWaveNumber(), 3, "WAVE");
-			keepPlayerScoreText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->playerTotalScore, 6, "SCORE");
+			keepWaveNumberText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->getWaveNumber(), 3, "WAVE:");
+			keepPlayerScoreText =GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->playerTotalScore, 6, "SCORE:");
 			GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " "+ keepWaveNumberText, 60, GetScreenHeight()-30);
 			if (game->isGameOver())
 			{
 				afterTab = new AfterGameMenu();
+				afterTab->updatePlayerScoreInDataBase(game->playerTotalScore, loginTab->getUsername());
 				delete game;
 				gameState = CurrentState::AFTERGAME_MENU;
 			}
@@ -136,16 +136,22 @@ int main()
 	delete charTab;
 }
 /*|---TODO-----------------------------------------------------------------------|
-* !!!!sprobowac zrobic ten setw na tych napisach w highest scores
-* !!!!GameUI todo:Sprawdzac czy to highest score gracza i jesli jest to zapisywac go do pliku DataBase.txt        Dobrze dzialajacy loadingScreen
-* !!!/rules, collectibles
-* * !!!Oczyścić main i uporządkować pozostałe pliku h
-* !!!ladowanie statystyk potworow z pliku tekstowego
+* !!!!! Oczyścić main - stworzyc jakas metode getSelectedMenu() w Menu i (NOT SURE) w protected zrobic Menu* selectedMenu i po prostu zamiast robic tego pojebanego case, to robic getSelectedMenu() i jesli != nullptr to w zaleznosci na co wskazuje to to wykonywać i na koncu usuwać/ w destruktorze to usuwac a tu robic delete
+* !!!/Dobrze dzialajacy loadingScreen, rules, collectibles 
+* !!! uporządkować pozostałe pliku h
+* !!! Sprawdzic czemu postac nie laduje sie na srodku, tylko troche na boku(pewnie image jeszcze nie jest zaladowany i dlatego)
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
-* !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu
+* !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu - da sie w paru miejscach wyjebac casy chyba
+* !!sprobowac zrobic ten setw na tych napisach w highest scores
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
+* !ladowanie statystyk potworow z pliku tekstowego
+*/
+
+/*|---KLOPOTY-NAJMANA-----------------------------------------------------------|
+* z jakiegos powodu, na juz istniejacym graczu po rozgrywce wynik w scoreMenu sie zmienia (zwieksza) ale w przypadku nowego gracza wynik sie nie nadpisuje
+* solution - pobawic sie z tymi delete i Menu* zeby sobie to tworzyc po kliknieciu tego typu
 */
 
 /*|---Rzeczy-z-Labow------------------------------------------------------------|

@@ -285,6 +285,10 @@ void LoginMenu::ChooseErrorType()
 		}
 	}
 }
+string LoginMenu::getUsername()
+{
+	return username;
+}
 
 MainMenu::MainMenu()
 {
@@ -588,7 +592,7 @@ void HighestScoreMenu::DrawPlayersScores()
 	{
 		placeInList = i + 1;
 		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 50, "HIGHEST SCORES", 20);
-		convertedData = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(UsersScores[i].second, 6, to_string(placeInList) + ". " + UsersScores[i].first);
+		convertedData = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(UsersScores[i].second, 6, to_string(placeInList) + ". " + UsersScores[i].first +": ");
 		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 50, convertedData, 20 + gap);
 		gap += 90;
 	}
@@ -664,4 +668,42 @@ void AfterGameMenu::isButtonClicked(CurrentState& gameState)
 	{
 		gameState = CurrentState::END;
 	}
+}
+void AfterGameMenu::updatePlayerScoreInDataBase(int playerScore, string username)
+{
+	ifstream DataBase(data_basePath);
+	ofstream UpdatedDataBase("temp.txt");
+	if (!DataBase.is_open() || !UpdatedDataBase.is_open()) 
+	{
+		return;
+	}
+
+	regex usersScoresRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),(.*))");
+	smatch match;
+	string line;
+
+	while (getline(DataBase, line))
+	{
+		if (regex_match(line, match, usersScoresRegex) && match[1] == username)
+		{
+			if (isNewScoreHigher(stoi(match[3]), playerScore))
+			{
+				string newScore = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerScore, 6, "");
+				line = match[1].str() + "," + match[2].str() + ",Highest Score: " + newScore + "," + match[4].str();
+			}
+		}
+		UpdatedDataBase << line<<"\n";
+	}
+	DataBase.close();
+	UpdatedDataBase.close();
+	fs::remove(data_basePath);
+	fs::rename("temp.txt", data_basePath.c_str());
+}
+bool AfterGameMenu::isNewScoreHigher(int DataBaseScore, int currentScore)
+{
+	if (currentScore > DataBaseScore)
+	{
+		return true;
+	}
+	return false;
 }

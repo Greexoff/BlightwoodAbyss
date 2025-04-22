@@ -313,7 +313,6 @@ bool Game::isGameOver()
 {
 	if (Player->getPlayerHealth() == 0)
 	{
-		cout << "Koniec gry" << endl;
 		return true;
 	}
 	else

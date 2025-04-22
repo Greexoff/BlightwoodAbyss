@@ -67,6 +67,7 @@ public:
 	~LoginMenu();
 	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);//Metoda wykonujaca odpowiednie dzialanie w zaleznosci od wybranej opcji
 	void Draw() override;//Metoda wyswietlajaca informacje na ekranie
+	string getUsername();
 private:
 	//|-----Zmienne------------------------------------------------------------------------------------------|
 	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea; //przechowanie prostokatow przyciskow
@@ -93,6 +94,7 @@ private:
 	bool checkIsPlayerInDataBase();//Sprawdzanie, czy użytkownik znajduje się w DataBase
 	void addPlayerToDataBase();//Dodawanie nowo stworzonego konta gracza, do DataBase
 	void clearUsernameandPassword();//Czyszczenie zmiennych username/password, w momencie kiedy przycisnieto SignUp
+	
 };
 class MainMenu : public Menu
 {
@@ -179,6 +181,7 @@ public:
 	~AfterGameMenu();
 	void Draw() override;
 	void isButtonClicked(CurrentState& gameState);
+	void updatePlayerScoreInDataBase(int playerScore, string username);
 private:
 	enum Pressed {NOTHING, NEWGAME_BUTTON, MAINMENU_BUTTON, EXIT_BUTTON};
 	map<string, ButtonData>Buttons;
@@ -186,4 +189,5 @@ private:
 	float buttonsFontSize;
 	void setButtonPosition();
 	void DrawButtons();
+	bool isNewScoreHigher(int DataBaseScore, int currentScore);
 };

@@ -34,10 +34,6 @@ Menu* Menu::getSelectedMenu()
 {
 	return selectedMenu.get();
 }
-string Menu::getUsername()
-{
-	return username;
-}
 
 StartingMenu::StartingMenu()
 {
@@ -68,6 +64,8 @@ LoginMenu::LoginMenu()
 {
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	setAction = 0;
+	username = "";
+	password = "";
 	setFontSizes();
 	setXYofTexts();
 	setBarAreas();
@@ -140,7 +138,7 @@ int LoginMenu::isButtonClicked()
 	}
 	return NOTHING;
 }
-void LoginMenu::insertData(string& name)
+void LoginMenu::insertData(string& name, string type)
 {
 	int key = GetCharPressed();
 	while (key > 0) {
@@ -151,6 +149,14 @@ void LoginMenu::insertData(string& name)
 	}
 	if (IsKeyPressed(KEY_BACKSPACE) && !name.empty() || IsKeyPressedRepeat(KEY_BACKSPACE) && !name.empty()) {
 		name.pop_back();
+	}
+	if (type == "username")
+	{
+		UserInfo::GetInstance().setUsername(name);
+	}
+	if (type == "password")
+	{
+		UserInfo::GetInstance().setPassword(name);
 	}
 }
 bool LoginMenu::checkIsLoginCorrect()
@@ -270,10 +276,10 @@ MenuResult LoginMenu::handleMenuLogic()
 		setAction = 0;
 		break;
 	case 2:
-		insertData(username);
+		insertData(username, "username");
 		break;
 	case 3:
-		insertData(password);
+		insertData(password, "password");
 		break;
 	case 4:
 		clearUsernameandPassword();
@@ -576,7 +582,6 @@ void HighestScoreMenu::Draw()
 		GameUI::GetInstance().DrawTextOnBar(prievousPageButton, 75, "<--", prievousPageButton.y+prievousPageButton.height/4);
 	}
 }
-
 void HighestScoreMenu::LoadUsersScoresIntoVector()
 {
 	ifstream DataBase(data_basePath.string());
@@ -708,17 +713,19 @@ MenuResult AfterGameMenu::handleMenuLogic()
 		if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
 		{
 			Menu::setSelectedMenu(make_unique<CharacterSelectionMenu>());
+			return MenuResult::CONTINUE;
 		}
 		if (CheckCollisionPointRec(mousePos, Buttons["MAIN MENU"].rectangle))
 		{
 			Menu::setSelectedMenu(make_unique<MainMenu>());
+			return MenuResult::CONTINUE;
 		}
 		if (CheckCollisionPointRec(mousePos, Buttons["EXIT"].rectangle))
 		{
 			return MenuResult::EXIT;
 		}
 	}
-	return MenuResult::CONTINUE;
+	return MenuResult::AFTER_GAME;
 }
 void AfterGameMenu::updatePlayerScoreInDataBase(int playerScore, string username)
 {

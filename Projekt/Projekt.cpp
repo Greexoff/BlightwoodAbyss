@@ -7,6 +7,7 @@
 #include "game.h"
 #include "menuhub.h"
 #include "UI.h"
+#include "UserInfo.h"
 import CharacterStats;
 
 void DrawLoadingStartBackground()
@@ -63,12 +64,16 @@ int main()
 			{
 				Menu::setSelectedMenu(make_unique<AfterGameMenu>());
 				if (auto* agm = dynamic_cast<AfterGameMenu*>(Menu::getSelectedMenu())) {
-					agm->updatePlayerScoreInDataBase(game->playerTotalScore, agm->getUsername());
+					agm->updatePlayerScoreInDataBase(game->playerTotalScore, UserInfo::GetInstance().getUsername());
 				}
 				delete game;
 				game = nullptr;
 				gameState = Menu::getSelectedMenu()->handleMenuLogic();
 			}
+		}
+		if (gameState == MenuResult::AFTER_GAME)
+		{
+			gameState = Menu::getSelectedMenu()->handleMenuLogic();
 		}
 		EndDrawing();
 	}
@@ -76,7 +81,7 @@ int main()
 	CloseWindow();
 }
 /*|---TODO-----------------------------------------------------------------------|
-* !!!/Dobrze dzialajacy, rules, collectibles 
+* !!!/Dobrze dzialajacy  rules, collectibles 
 * !!! uporządkować pozostałe pliku h
 * !!! Sprawdzic czemu postac nie laduje sie na srodku, tylko troche na boku(pewnie image jeszcze nie jest zaladowany i dlatego)
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
@@ -86,13 +91,6 @@ int main()
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
 * !ladowanie statystyk potworow z pliku tekstowego
-*/
-
-/*|---KLOPOTY-NAJMANA-----------------------------------------------------------|
-* WYPIERDOLKA PO ZAKONCZENIU ROZGRYWKI - PRZYCISKI NIE DZIALAJA, POJAIWA SIE BLAD I KONCZY PROGRAM FOR SOME REASON
-* 
-* z jakiegos powodu, na juz istniejacym graczu po rozgrywce wynik w scoreMenu sie zmienia (zwieksza) ale w przypadku nowego gracza wynik sie nie nadpisuje
-* solution - pobawic sie z tymi delete i Menu* zeby sobie to tworzyc po kliknieciu tego typu
 */
 
 /*|---Rzeczy-z-Labow------------------------------------------------------------|

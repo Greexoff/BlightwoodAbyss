@@ -142,6 +142,7 @@
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="typ.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UserInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enemy.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Textures.h" />
     <ClInclude Include="typ.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UserInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

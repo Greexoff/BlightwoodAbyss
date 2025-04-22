@@ -11,6 +11,7 @@
 #include <thread>
 #include "UI.h"
 #include "Textures.h"
+#include "UserInfo.h"
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
@@ -20,6 +21,7 @@ enum class MenuResult
 	CONTINUE,
 	START_GAME,
 	EXIT,
+	AFTER_GAME,
 };
 struct ButtonData
 {
@@ -35,15 +37,12 @@ public:
 	virtual bool isReturnButtonClicked();
 	virtual void ReturnToMenu();
 	virtual MenuResult handleMenuLogic()=0;
-	virtual string getUsername();
 	virtual ~Menu();
 	static Menu* getSelectedMenu();
 	static void setSelectedMenu(unique_ptr<Menu> newMenu);
 protected:
 	static unique_ptr<Menu> selectedMenu;
 	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";//sciezka do bazy danych
-	string username="";
-	string password="";
 	Texture2D BackgroundTexture; 
 	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
 	Rectangle ReturnToMenuCommentBar = {50,50,300,300};
@@ -70,6 +69,7 @@ public:
 	void Draw() override;//Metoda wyswietlajaca informacje na ekranie
 private:
 	//|-----Zmienne------------------------------------------------------------------------------------------|
+	string username, password;
 	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea; //przechowanie prostokatow przyciskow
 	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition;//przechowanie pozycji x i y przyciskow
 	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize;// przechowanie rozmiaru czcionki poszczegolnych elementow
@@ -86,7 +86,7 @@ private:
 	void setBarAreas();//Ustawianie rozmiarow poszczegolnych napisow
 	void setXYofTexts();//Ustawianie pozycji x i y poszczegolnych napisow na ekranie
 	void showLoginError();//Metoda pod wątek wyświetlania błędów - ustawia wyświetlanie błędu na ekranie na określony czas
-	void insertData(string& name);//Ustawianie wartosci dla zmiennych username/password 
+	void insertData(string& name, string type);//Ustawianie wartosci dla zmiennych username/password 
 	void ChooseErrorType();//Ustawianie napisu, który zostanie wyświetlony i wywolanie funkcji rysujacej na ekranie
 	bool checkIsLoginCorrect();//Sprawdzanie czy kryteria (regex) username/password są spelnione 
 	int isButtonClicked();//Sprawdzanie, czy któryś z przycisków został wciśnięty

@@ -1,8 +1,9 @@
 #include "menuhub.h"
 
-
+unique_ptr<Menu> Menu::selectedMenu = nullptr;
 Menu::~Menu()
 {
+
 }
 void Menu::LoadTextures(Texture2D correctTexture)
 {
@@ -18,11 +19,24 @@ bool Menu::isReturnButtonClicked()
 	}
 	return false;
 }
-void Menu::ReturnToMenu(CurrentState& gameState)
+void Menu::ReturnToMenu()
 {
 	if (isReturnButtonClicked() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		gameState = CurrentState::MAIN_MENU;
+		Menu::setSelectedMenu(make_unique <MainMenu>());
 	}
+}
+
+void Menu::setSelectedMenu(unique_ptr<Menu> newMenu)
+{
+	selectedMenu = move(newMenu);
+}
+Menu* Menu::getSelectedMenu()
+{
+	return selectedMenu.get();
+}
+string Menu::getUsername()
+{
+	return username;
 }
 
 StartingMenu::StartingMenu()
@@ -40,12 +54,20 @@ void StartingMenu::Draw()
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
 	GameUI::GetInstance().DrawTextOnBar(ScreenBar, titleFontSize, titleName, ScreenBar.y+200);
 }
+MenuResult StartingMenu::handleMenuLogic()
+{
+	Draw();
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	{
+		Menu::setSelectedMenu(make_unique <LoginMenu>());
+	}
+	return MenuResult::CONTINUE;
+}
 
 LoginMenu::LoginMenu()
 {
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
-	username = "";
-	password = "";
+	setAction = 0;
 	setFontSizes();
 	setXYofTexts();
 	setBarAreas();
@@ -188,8 +210,9 @@ void LoginMenu::clearUsernameandPassword()
 	username = "";
 	password = "";
 }
-void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
+MenuResult LoginMenu::handleMenuLogic()
 {
+	Draw();
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
 		setAction = isButtonClicked();
@@ -210,7 +233,8 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 		{
 			if (userValid)
 			{
-				gameState = CurrentState::MAIN_MENU;
+				Menu::setSelectedMenu(make_unique <MainMenu>());
+				return MenuResult::CONTINUE;
 			}
 			else
 			{
@@ -239,7 +263,8 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 			else
 			{
 				addPlayerToDataBase();
-				gameState = CurrentState::MAIN_MENU;
+				Menu::setSelectedMenu(make_unique <MainMenu>());
+				return MenuResult::CONTINUE;
 			}
 		}
 		setAction = 0;
@@ -264,6 +289,7 @@ void LoginMenu::handleLoginMenuLogic(int& setAction, CurrentState& gameState)
 	}
 	GameUI::GetInstance().DrawData(username, LoginMenu_UsernameBarArea, InsertedDataFontSize);
 	GameUI::GetInstance().DrawData(password, LoginMenu_PasswordBarArea, InsertedDataFontSize);
+	return MenuResult::CONTINUE;
 }
 void LoginMenu::showLoginError()
 {
@@ -285,13 +311,10 @@ void LoginMenu::ChooseErrorType()
 		}
 	}
 }
-string LoginMenu::getUsername()
-{
-	return username;
-}
 
 MainMenu::MainMenu()
 {
+	setAction = 0;
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
 	buttonsFontSize = 120;
@@ -346,8 +369,9 @@ int MainMenu::isButtonClicked()
 	}
 	return NOTHING;
 }
-void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd)
+MenuResult MainMenu::handleMenuLogic()
 {
+	Draw();
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
 		setAction = isButtonClicked();
@@ -355,24 +379,25 @@ void MainMenu::handleMainMenuLogic(int& setAction, CurrentState& gameState, bool
 	switch (setAction)
 	{
 	case 1:
-		gameState = CurrentState::CHARACTER_SELECT_MENU;
+		Menu::setSelectedMenu(make_unique <CharacterSelectionMenu>());
 		break;
 	case 2:
-		gameState = CurrentState::RULES_MENU;
+		Menu::setSelectedMenu(make_unique <RulesMenu>());
 		break;
 	case 3:
-		gameState = CurrentState::UNLOCKED_ITEMS_MENU;
+		Menu::setSelectedMenu(make_unique <UnlockedItemsMenu>());
 		break;
 	case 4:
-		gameState = CurrentState::SCORE_MENU;
+		Menu::setSelectedMenu(make_unique <HighestScoreMenu>());
 		break;
 	case 5:
-		shouldEnd = true;
+		return MenuResult::EXIT;
 		break;
 	default:
 		break;
 	}
 	setAction = 0;
+	return MenuResult::CONTINUE;
 }
 
 CharacterSelectionMenu::CharacterSelectionMenu()
@@ -424,26 +449,6 @@ void CharacterSelectionMenu::DrawComments(CommentType type)
 		break;
 	}
 }
-void CharacterSelectionMenu::isButtonClicked(CurrentState& gameState)
-{
-	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, ConfirmArea))
-	{
-		gameState = CurrentState::GAMEPLAY;
-	}
-	if (CheckCollisionPointRec(mousePos, ArrowArea))
-	{
-		pageNumber++;
-		if (pageNumber > rightSidePageLimit)
-		{
-			pageNumber = leftSidePageLimit;
-		}
-	}
-	if (CheckCollisionPointRec(mousePos, ReturnArea))
-	{
-		gameState = CurrentState::MAIN_MENU;
-	}
-}
 void CharacterSelectionMenu::chooseExplanationType()
 {
 	vector < pair<Rectangle, CommentType>>comments = { { ConfirmArea, CommentType::SELECT_CHARACTER }, {ArrowArea,CommentType::SWITCH_CHARACTER},{CharacterInformationArea,CommentType::STATS_CHARACTER},{ReturnArea,CommentType::RETURN_BUTTON } };
@@ -481,6 +486,32 @@ void CharacterSelectionMenu::DrawPlayerCharacterImage()
 	}
 	DrawTextureEx(LoadingTextures::GetInstance().passCorrectTexture(file_name, textureType::OBJECT_TEXTURE), {628,535}, 0, 2, WHITE);
 }
+MenuResult CharacterSelectionMenu::handleMenuLogic()
+{
+	Draw();
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	{
+		Vector2 mousePos = GetMousePosition();
+		if (CheckCollisionPointRec(mousePos, ConfirmArea))
+		{
+			return MenuResult::START_GAME;
+		}
+		if (CheckCollisionPointRec(mousePos, ArrowArea))
+		{
+			pageNumber++;
+			if (pageNumber > rightSidePageLimit)
+			{
+				pageNumber = leftSidePageLimit;
+			}
+		}
+		if (CheckCollisionPointRec(mousePos, ReturnArea))
+		{
+			Menu::setSelectedMenu(make_unique <MainMenu>());
+		}
+	}
+	return MenuResult::CONTINUE;
+
+}
 
 RulesMenu::RulesMenu()
 {
@@ -493,6 +524,12 @@ void RulesMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
 }
+MenuResult RulesMenu::handleMenuLogic()
+{
+	Draw();
+	ReturnToMenu();
+	return MenuResult::CONTINUE;
+}
 
 UnlockedItemsMenu::UnlockedItemsMenu()
 {
@@ -504,6 +541,12 @@ UnlockedItemsMenu::~UnlockedItemsMenu()
 void UnlockedItemsMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+}
+MenuResult UnlockedItemsMenu::handleMenuLogic()
+{
+	Draw();
+	ReturnToMenu();
+	return MenuResult::CONTINUE;
 }
 
 HighestScoreMenu::HighestScoreMenu()
@@ -533,20 +576,7 @@ void HighestScoreMenu::Draw()
 		GameUI::GetInstance().DrawTextOnBar(prievousPageButton, 75, "<--", prievousPageButton.y+prievousPageButton.height/4);
 	}
 }
-void HighestScoreMenu::handleScoresMenuLogic()
-{
-	setButtonVisibility(isPrievousPageButtonVisible, minPageNumber);
-	setButtonVisibility(isNextPageButtonVisible, maxPageNumber);
-	if (!areUsersLoadedIntoVector)
-	{
-		LoadUsersScoresIntoVector();
-	}
-	DrawPlayersScores();
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		ArrowClicked(nextPageButton, 1, isNextPageButtonVisible);
-		ArrowClicked(prievousPageButton, -1,isPrievousPageButtonVisible);
-	}
-}
+
 void HighestScoreMenu::LoadUsersScoresIntoVector()
 {
 	ifstream DataBase(data_basePath.string());
@@ -617,6 +647,23 @@ void HighestScoreMenu::setButtonVisibility(bool& visibilty, int extremePageNumbe
 		visibilty = true;
 	}
 }
+MenuResult HighestScoreMenu::handleMenuLogic()
+{
+	Draw();
+	setButtonVisibility(isPrievousPageButtonVisible, minPageNumber);
+	setButtonVisibility(isNextPageButtonVisible, maxPageNumber);
+	if (!areUsersLoadedIntoVector)
+	{
+		LoadUsersScoresIntoVector();
+	}
+	DrawPlayersScores();
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		ArrowClicked(nextPageButton, 1, isNextPageButtonVisible);
+		ArrowClicked(prievousPageButton, -1, isPrievousPageButtonVisible);
+	}
+	ReturnToMenu();
+	return MenuResult::CONTINUE;
+}
 
 AfterGameMenu::AfterGameMenu()
 {
@@ -653,21 +700,25 @@ void AfterGameMenu::DrawButtons()
 		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
 	}
 }
-void AfterGameMenu::isButtonClicked(CurrentState& gameState)
+MenuResult AfterGameMenu::handleMenuLogic()
 {
-	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
-	{
-		gameState = CurrentState::CHARACTER_SELECT_MENU;
+	Draw();
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		Vector2 mousePos = GetMousePosition();
+		if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
+		{
+			Menu::setSelectedMenu(make_unique<CharacterSelectionMenu>());
+		}
+		if (CheckCollisionPointRec(mousePos, Buttons["MAIN MENU"].rectangle))
+		{
+			Menu::setSelectedMenu(make_unique<MainMenu>());
+		}
+		if (CheckCollisionPointRec(mousePos, Buttons["EXIT"].rectangle))
+		{
+			return MenuResult::EXIT;
+		}
 	}
-	if (CheckCollisionPointRec(mousePos, Buttons["MAIN MENU"].rectangle))
-	{
-		gameState = CurrentState::MAIN_MENU;
-	}
-	if (CheckCollisionPointRec(mousePos, Buttons["EXIT"].rectangle))
-	{
-		gameState = CurrentState::END;
-	}
+	return MenuResult::CONTINUE;
 }
 void AfterGameMenu::updatePlayerScoreInDataBase(int playerScore, string username)
 {

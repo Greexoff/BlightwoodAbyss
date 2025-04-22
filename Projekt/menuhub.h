@@ -15,20 +15,12 @@ import CharacterStats;
 using namespace std;
 namespace fs = filesystem;
 
-enum class CurrentState
+enum class MenuResult
 {
-	LOADING,
-	STARTING_MENU,
-	LOGIN_MENU,
-	MAIN_MENU,
-	CHARACTER_SELECT_MENU,
-	RULES_MENU,
-	UNLOCKED_ITEMS_MENU,
-	SCORE_MENU,
-	GAMEPLAY,
-	AFTERGAME_MENU,
-	END,
-};//Aktualny stan rozgrywki (wykorzystywany rowniez w mainie)
+	CONTINUE,
+	START_GAME,
+	EXIT,
+};
 struct ButtonData
 {
 	Rectangle rectangle;
@@ -41,10 +33,17 @@ public:
 	virtual void Draw()=0;
 	virtual void LoadTextures(Texture2D correctTexture);
 	virtual bool isReturnButtonClicked();
-	virtual void ReturnToMenu(CurrentState& gameState);
+	virtual void ReturnToMenu();
+	virtual MenuResult handleMenuLogic()=0;
+	virtual string getUsername();
 	virtual ~Menu();
+	static Menu* getSelectedMenu();
+	static void setSelectedMenu(unique_ptr<Menu> newMenu);
 protected:
+	static unique_ptr<Menu> selectedMenu;
 	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";//sciezka do bazy danych
+	string username="";
+	string password="";
 	Texture2D BackgroundTexture; 
 	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
 	Rectangle ReturnToMenuCommentBar = {50,50,300,300};
@@ -53,6 +52,7 @@ class StartingMenu : public Menu
 {
 public:
 	void Draw() override;
+	MenuResult handleMenuLogic() override;
 	StartingMenu();
 	~StartingMenu();
 private:
@@ -65,23 +65,22 @@ class LoginMenu : public Menu
 public:
 	LoginMenu();
 	~LoginMenu();
-	void handleLoginMenuLogic(int& setAction, CurrentState& gameState);//Metoda wykonujaca odpowiednie dzialanie w zaleznosci od wybranej opcji
+
+	MenuResult handleMenuLogic() override;//Metoda wykonujaca odpowiednie dzialanie w zaleznosci od wybranej opcji
 	void Draw() override;//Metoda wyswietlajaca informacje na ekranie
-	string getUsername();
 private:
 	//|-----Zmienne------------------------------------------------------------------------------------------|
 	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea; //przechowanie prostokatow przyciskow
 	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition;//przechowanie pozycji x i y przyciskow
 	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize;// przechowanie rozmiaru czcionki poszczegolnych elementow
 	bool isSignupAreaActive;//zmienna do sprawdzenia czy wyswietla sie przycisk SignUp
-	string username;//zmienna do przechowywania wpisywanej nazwy uzytkownika
-	string password;//zmienna do przechowywania wpisywanego hasla uzytkownika
 	bool userExist;
 	int error;//zmienna do przechowywania typu bledu, ktory nalezy wyswietlic
 	enum errorType {NO_ERROR, REGEX_ERROR, PASSWORD_ERROR, USERNAME_ERROR, IN_USE_ERROR };//typy bledow
 	atomic<bool> showError;//zmienna, ktora aktywuje wyswietlanie bledu jezeli taki istnieje
 	long long errorDurationTime;//zmienna przechowujaca dlugosc wyswietlania bledu na ekranie
 	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };//typ przycisnietego przycisku
+	int setAction;
 	//|-----Metody-------------------------------------------------------------------------------------------|
 	void setFontSizes();//Ustawianie rozmiaru czcionek poszczegolnych napisow
 	void setBarAreas();//Ustawianie rozmiarow poszczegolnych napisow
@@ -101,7 +100,7 @@ class MainMenu : public Menu
 public:
 	MainMenu();
 	~MainMenu();
-	void handleMainMenuLogic(int& setAction, CurrentState& gameState, bool& shouldEnd);//Ustawianie kolejnego etapu programu
+	MenuResult handleMenuLogic() override;//Ustawianie kolejnego etapu programu
 	void Draw() override;//Metoda wyswietalajaca informacje na ekranie
 private:
 	//|---Zmienne------------------------------------------------------------------------------------|
@@ -109,6 +108,7 @@ private:
 	float buttonsFontSize;
 	map<string, ButtonData>Buttons;//Mapa przyciskow - nazwy, rectangle i position (ButtonData)
 	vector<string> ButtonNames;//Vector przechowujacy nazwy przyciskow
+	int setAction;
 	//|---Metody-------------------------------------------------------------------------------------|
 	void setButtonsPosition();//Ustawianie pozycji przyciskow na ekranie
 	int isButtonClicked();//Sprawdzanie, ktory przycisk zostal wcisniety
@@ -119,7 +119,7 @@ public:
 	CharacterSelectionMenu();
 	~CharacterSelectionMenu();
 	int getPageNumber();//Metoda zwracajaca numer aktualnej strony (czyli ktora postac jest aktualnie wybrana)
-	void isButtonClicked(CurrentState& gameState);//Metoda wykonujaca odpowiednie dzialania na podstawie kliknietego przycisku
+	MenuResult handleMenuLogic() override;
 	void Draw() override;//Metoda wyświetlająca na ekranie
 private:
 	//|---Zmienne---------------------------------------------------------------------------------|
@@ -142,6 +142,7 @@ public:
 	RulesMenu();
 	~RulesMenu();
 	void Draw() override;
+	MenuResult handleMenuLogic() override;
 private:
 };
 class UnlockedItemsMenu : public Menu
@@ -150,6 +151,7 @@ public:
 	UnlockedItemsMenu();
 	~UnlockedItemsMenu();
 	void Draw() override;
+	MenuResult handleMenuLogic() override;
 private:
 };
 class HighestScoreMenu : public Menu
@@ -159,6 +161,7 @@ public:
 	~HighestScoreMenu();
 	void Draw() override;	
 	void handleScoresMenuLogic();
+	MenuResult handleMenuLogic() override;
 private:
 	Rectangle prievousPageButton;
 	Rectangle nextPageButton;
@@ -180,7 +183,7 @@ public:
 	AfterGameMenu();
 	~AfterGameMenu();
 	void Draw() override;
-	void isButtonClicked(CurrentState& gameState);
+	MenuResult handleMenuLogic() override;
 	void updatePlayerScoreInDataBase(int playerScore, string username);
 private:
 	enum Pressed {NOTHING, NEWGAME_BUTTON, MAINMENU_BUTTON, EXIT_BUTTON};

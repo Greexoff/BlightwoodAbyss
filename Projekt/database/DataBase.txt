@@ -1,4 +1,4 @@
-Greexoff,passy,Highest Score: 008800,
+Greexoff,passy,Highest Score: 012100,
 NewPlayer1,NewPassword,Highest Score: 122422,
 NewPlayer2,NewPassword,Highest Score: 100422,
 NewPlayer3,NewPassword,Highest Score: 212422,
@@ -13,3 +13,17 @@ NewPlayer11,NewPassword,Highest Score: 001232,
 NowyTEST,NoweHas,Highest Score: 001300,
 NewTEST,newpass,Highest Score: 001200,
 NOWY,CHLOP,Highest Score: 001200,
+
+FRESH,DUDE,Highest Score: 000000,
+
+FreshDude,Dude,Highest Score: 000000,
+
+AnotherDude,yupers,Highest Score: 000000,
+
+NjuTy,NjuTy,Highest Score: 000000,
+
+NewTS,tsaw,Highest Score: 000000,
+
+LASTone,onetwo,Highest Score: 000000,
+
+aaaas,asdas,Highest Score: 000000,

@@ -6,6 +6,7 @@ import <regex>;
 import <fstream>;
 import <filesystem>;
 using namespace std;
+namespace fs = filesystem;
 
 export struct characterStats {
     int playerHealth;
@@ -16,8 +17,29 @@ export struct characterStats {
     float tearRate;
     float imageScale;
 };
-
-export namespace CharacterData {
-    void LoadStatsOnce();
-    const map<string, characterStats>& GetAllStats();
-}
+export struct enemyStats
+{
+    int enemyHealth;
+    int maxEnemyHealth;
+    float enemySpeed;
+    float enemyAttackSpeed;
+    float enemyScore;
+    float imageScale;
+};
+ 
+export class CharactersData
+{
+public:
+    static CharactersData& getInstance();
+    map<string, characterStats> getCharacterStats();
+    map<string, enemyStats> getEnemyStats();
+private:
+    CharactersData();
+    CharactersData(const CharactersData&) = delete;
+    void operator=(const CharactersData&) = delete;
+    fs::path DataPath;
+    map<string, characterStats> CharacterStats;
+    map<string, enemyStats> EnemyStats;
+    void LoadCharacterStats();
+    void LoadEnemyStats();
+};

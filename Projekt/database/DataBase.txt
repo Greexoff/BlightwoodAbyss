@@ -1,4 +1,4 @@
-Greexoff,passy,Highest Score: 028700,
+Greexoff,passy,Highest Score: 134600,
 NewPlayer1,NewPassword,Highest Score: 122422,
 NewPlayer2,NewPassword,Highest Score: 100422,
 NewPlayer3,NewPassword,Highest Score: 212422,

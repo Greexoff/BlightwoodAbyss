@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+import CharacterStats;
 
 
 using namespace std;
@@ -23,16 +24,13 @@ public:
 	virtual int getEnemyScore();
 	virtual void CheckOutofTheBorder();
 	virtual Vector2 getEnemyPosition(float divideBy);
+	virtual void loadEnemyStats();
 protected:
 	vector<Texture2D> loadImages;
 	Texture2D image;
 	Vector2 position;
-	float imageScale;
-	int enemyHealth;
-	float enemySpeed;
-	int enemyAttackSpeed;
-	int enemyScore;
-	int enemyMaxHealth;
+	enemyStats stats;
+	string enemyName;
 private:
 };
 class Monster1 : public Enemy

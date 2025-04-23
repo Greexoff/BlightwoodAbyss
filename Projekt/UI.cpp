@@ -50,7 +50,7 @@ void GameUI::DrawCharacterStatsInGame(float PlayerSpeed, float TearSpeed, float 
 void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position)
 {
 	float gap = 30;
-	map<string, characterStats>stats = CharacterData::GetAllStats();
+	map<string, characterStats>stats = CharactersData::getInstance().getCharacterStats();
 	string characterName;
 	switch (pageNumber)
 	{

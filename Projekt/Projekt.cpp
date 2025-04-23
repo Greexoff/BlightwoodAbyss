@@ -27,7 +27,6 @@ int main()
 	SetTargetFPS(60);
 
 	DrawLoadingStartBackground();
-	CharacterData::LoadStatsOnce();
 
 	Game* game = nullptr;
 	Menu::setSelectedMenu(make_unique <StartingMenu>());
@@ -77,7 +76,6 @@ int main()
 		}
 		EndDrawing();
 	}
-	delete Menu::getSelectedMenu();
 	CloseWindow();
 }
 /*|---TODO-----------------------------------------------------------------------|
@@ -90,7 +88,6 @@ int main()
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
-* !ladowanie statystyk potworow z pliku tekstowego
 */
 
 /*|---Rzeczy-z-Labow------------------------------------------------------------|

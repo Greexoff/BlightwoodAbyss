@@ -37,7 +37,6 @@ protected:
 	Texture2D image;
 	Vector2 position;
 	double lastTearTime;
-	float imageScale;
 };
 class FirstCharacter : public Character
 {

@@ -8,66 +8,51 @@ Enemy::~Enemy()
 }
 Monster1::Monster1(Vector2 position, Texture2D loadedImage)//Tank
 {
+	enemyName = "Monster1";
 	image = loadedImage;
 	this->position = position;
-	enemyMaxHealth = enemyHealth=4;
-	enemySpeed = 1;
-	enemyAttackSpeed = 0;
-	enemyScore = 300;
-	imageScale = 1;
+	loadEnemyStats();
 }
 Monster1::~Monster1() {}
 
 Monster2::Monster2(Vector2 position, Texture2D loadedImage)//Szybki 
 {
+	enemyName = "Monster2";
 	image = loadedImage;
 	this->position = position;
-	enemyMaxHealth = enemyHealth = 1;
-	enemySpeed = 2.5;
-	enemyAttackSpeed = 0;
-	enemyScore = 100;
-	imageScale = 1.05;
+	loadEnemyStats();
 }
 Monster2::~Monster2() {}
 
 Monster3::Monster3(Vector2 position, Texture2D loadedImage)//Strzelajacy
 {
+	enemyName = "Monster3";
 	image = loadedImage;
 	this->position = position;
-	enemyMaxHealth = enemyHealth = 2;
-	enemySpeed = 0;
-	enemyAttackSpeed = 5;
-	enemyScore = 200;
-	imageScale = 0.8;
+	loadEnemyStats();
 }
 Monster3::~Monster3() {}
 
 Monster4::Monster4(Vector2 position, Texture2D loadedImage)//Strzelajacy Mini-Boss
 {
+	enemyName = "Monster4";
 	image = loadedImage;
 	this->position = position;
-	enemyMaxHealth = enemyHealth = 10;
-	enemySpeed = 0.5;
-	enemyAttackSpeed = 3;
-	enemyScore = 400;
-	imageScale = 1.4;
+	loadEnemyStats();
 }
 Monster4::~Monster4() {}
 
 Monster5::Monster5(Vector2 position, Texture2D loadedImage)//Boss
 {
+	enemyName = "Monster5";
 	image = loadedImage;
 	this->position = position;
-	enemyMaxHealth = enemyHealth = 50;
-	enemySpeed = 0.2;
-	enemyAttackSpeed = 8;
-	enemyScore = 800;
-	imageScale = 1.6;
+	loadEnemyStats();
 }
 Monster5::~Monster5() {}
 //|---------------------------------------------------------------------------------------|
 void Enemy::Draw() {
-	DrawTextureEx(image, position, 0, imageScale, WHITE);
+	DrawTextureEx(image, position, 0, stats.imageScale, WHITE);
 }	
 void Enemy::Update(Vector2 PlayerPosition) {
 	Vector2 dir = {0,0};
@@ -79,17 +64,17 @@ void Enemy::Update(Vector2 PlayerPosition) {
 		dir.x = dx / length;
 		dir.y = dy / length;
 	}
-	position.x += dir.x * enemySpeed;
-	position.y += dir.y * enemySpeed;
+	position.x += dir.x * stats.enemySpeed;
+	position.y += dir.y * stats.enemySpeed;
 	
 }	
 void Enemy::UpdateColl(Vector2 Direction)
 {
-	position.x += enemySpeed*Direction.x;
-	position.y += enemySpeed*Direction.y;
-	if (position.y > GetScreenHeight()-250 - image.height*imageScale)
+	position.x += stats.enemySpeed *Direction.x;
+	position.y += stats.enemySpeed *Direction.y;
+	if (position.y > GetScreenHeight()-250 - image.height*stats.imageScale)
 	{
-		position.y = GetScreenHeight() - 250 - image.height * imageScale;
+		position.y = GetScreenHeight() - 250 - image.height * stats.imageScale;
 	}
 	if (position.y < 250)
 	{
@@ -99,14 +84,14 @@ void Enemy::UpdateColl(Vector2 Direction)
 	{
 		position.x = 250;
 	}
-	if (position.x > GetScreenWidth()-250 - image.width * imageScale)
+	if (position.x > GetScreenWidth()-250 - image.width * stats.imageScale)
 	{
-		position.x = GetScreenWidth() - 250 - image.width * imageScale;
+		position.x = GetScreenWidth() - 250 - image.width * stats.imageScale;
 	}
 }
 Rectangle Enemy::getEnemyRect()
 {
-	return { position.x,position.y,(((float)image.width - 5 )*imageScale),(((float)image.height - 5)*imageScale)};
+	return { position.x,position.y,(((float)image.width - 5 )* stats.imageScale),(((float)image.height - 5)* stats.imageScale)};
 }
 Vector2 Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 {
@@ -129,40 +114,40 @@ Vector2 Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 }
 int Enemy::getEnemyHealth()
 {
-	return enemyHealth;
+	return stats.enemyHealth;
 }
 int Enemy::setEnemyHealth(int playerDamage)
 {
-	return enemyHealth-=playerDamage;
+	return stats.enemyHealth-=playerDamage;
 }
 float Enemy::getEnemySpeed()
 {
-	return enemySpeed;
+	return stats.enemySpeed;
 }
 void Enemy::DrawEnemyHealthBar()
 {
-	float healthBarWidth = image.width*imageScale;
+	float healthBarWidth = image.width* stats.imageScale;
 	float healthBarHeight = 10;
 
 	Vector2 healthBarPos = { position.x ,position.y - 15 };
-	float healthPercent = (float)enemyHealth / enemyMaxHealth;
+	float healthPercent = (float)stats.enemyHealth / stats.maxEnemyHealth;
 	float currentHealthWidth = (float)((healthBarWidth-10) * healthPercent);
 	DrawRectangle(healthBarPos.x, healthBarPos.y, healthBarWidth, healthBarHeight, BLACK);
 	DrawRectangle(healthBarPos.x+5, healthBarPos.y+2.5, currentHealthWidth, (healthBarHeight/2), RED);
 }
 int Enemy::getEnemyAttackSpeed()
 {
-	return enemyAttackSpeed;
+	return stats.enemyAttackSpeed;
 }
 int Enemy::getEnemyScore()
 {
-	return enemyScore;
+	return stats.enemyScore;
 }
 void Enemy::CheckOutofTheBorder()
 {
-	if (position.y > GetScreenHeight() - 250 -image.height*imageScale)
+	if (position.y > GetScreenHeight() - 250 -image.height* stats.imageScale)
 	{
-		position.y = GetScreenHeight() - 250-image.height * imageScale;
+		position.y = GetScreenHeight() - 250-image.height * stats.imageScale;
 	}
 	if (position.y < 250)
 	{
@@ -172,12 +157,22 @@ void Enemy::CheckOutofTheBorder()
 	{
 		position.x = 250;
 	}
-	if (position.x > GetScreenWidth() - 250-image.height * imageScale)
+	if (position.x > GetScreenWidth() - 250-image.height * stats.imageScale)
 	{
-		position.x = GetScreenWidth() - 250-image.height * imageScale;
+		position.x = GetScreenWidth() - 250-image.height * stats.imageScale;
 	}
 }
 Vector2 Enemy::getEnemyPosition(float divideBy)
 {
-	return { position.x+(image.width*imageScale/divideBy),position.y+(image.height*imageScale/divideBy) };
+	return { position.x+(image.width* stats.imageScale /divideBy),position.y+(image.height* stats.imageScale /divideBy) };
+}
+void Enemy::loadEnemyStats()
+{
+	for (const auto& [Name, enemyStats] : CharactersData::getInstance().getEnemyStats())
+	{
+		if (Name == enemyName)
+		{
+			stats = enemyStats;
+		}
+	}
 }

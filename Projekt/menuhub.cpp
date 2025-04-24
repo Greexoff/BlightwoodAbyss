@@ -194,6 +194,14 @@ bool LoginMenu::checkIsPlayerInDataBase()
 			userExist = true;
 			if (password == match[2])
 			{
+				//JAKIES GOWNO DO LADOWANIA VALUE TRINKETOW
+			/*int iterator = 0;//zamienic 0 na pierwszy potrzebny match 
+				for (const auto& i : jakasZmiennaKtoraPrzechowujeIloscTrinketow)
+				{
+					int tmpIt = iterator;
+					UserInfo::GetInstance().addUserItems(match[tmpIt].str(), stob(match[tmpIt++]));
+					iterator++;
+				}*/
 				return true;
 			}
 			return false;

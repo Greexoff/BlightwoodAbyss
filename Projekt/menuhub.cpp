@@ -48,7 +48,7 @@ StartingMenu::~StartingMenu()
 void StartingMenu::Draw()
 {
 	DrawTexture(BackgroundTexture, 0, 0, WHITE);
-	GameUI::GetInstance().DrawTextOnBar(ScreenBar, titleFontSize, titleName, ScreenBar.y+200);
+	GameUI::GetInstance().DrawTextOnBar(ScreenBar, titleFontSize, titleName, ScreenBar.y+GetScreenHeight()*0.2);
 }
 MenuResult StartingMenu::handleMenuLogic()
 {
@@ -88,10 +88,10 @@ void LoginMenu::setFontSizes()
 }
 void LoginMenu::setXYofTexts()
 {
-	ConfirmPosition = { 575,850 };
-	UsernamePosition = { 450,76 };
-	PasswordPosition = { 450,420 };
-	SignupPosition = { 1095,855 };
+	ConfirmPosition = { (float)(GetScreenWidth()*0.374),(float)(GetScreenHeight()*0.835)};
+	UsernamePosition = {(float)(GetScreenWidth()*0.29),(float)(GetScreenHeight()*0.074)};
+	PasswordPosition = {(float)(GetScreenWidth()*0.29),(float)(GetScreenHeight()*0.416)};
+	SignupPosition = { (float)(GetScreenWidth()*0.71),(float)(GetScreenHeight()*0.835)};
 }
 void LoginMenu::setBarAreas()
 {
@@ -126,7 +126,6 @@ int LoginMenu::isButtonClicked()
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_UsernameBarArea))
 	{
-		cout << "press bar" << endl;
 		return USERNAME_BAR;
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_PasswordBarArea))

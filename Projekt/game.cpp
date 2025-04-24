@@ -103,7 +103,7 @@ void Game::Draw() {
 		DrawCountdownToNewWave();
 	}
 	DrawScoreAndWaveNumber();
-	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 50, GetScreenHeight() / 4 + 180, 30);
+	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), GetScreenWidth()*0.03, GetScreenHeight() * 0.4, 30);
 }
 void Game::InputHandle() {
 	int moveX = 0;
@@ -157,13 +157,13 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	int poolOfEnemiesTypes = 3;
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue(300,GetScreenWidth() - 300), GetRandomValue(300,GetScreenHeight() - 300) };
+		Vector2 position = { GetRandomValue(GetScreenWidth() * 0.2,GetScreenWidth() - GetScreenWidth()*0.2), GetRandomValue(GetScreenWidth() * 0.2,GetScreenHeight() - GetScreenWidth() * 0.2) };
 		enemiesy.push_back(make_shared<Monster5>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy5.png", textureType::OBJECT_TEXTURE)));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(300,GetScreenWidth() - 300), GetRandomValue(300,GetScreenHeight() - 300) };
+		Vector2 position = { GetRandomValue(GetScreenWidth() * 0.2,GetScreenWidth() - GetScreenWidth()* 0.2), GetRandomValue(GetScreenWidth() * 0.2,GetScreenHeight() - GetScreenWidth() * 0.2) };
 		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;
@@ -331,10 +331,10 @@ void Game::beginNewWave()
 	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));
 	startCountdown = false;
-	if (waveNumber < 11)
-	{
+//	if (waveNumber < 11)
+	//{
 		amountofEnemies++;
-	}
+	//}
 	proceedCreatingEnemies = true;
 	isCreatingNewWave = false;
 }
@@ -397,11 +397,11 @@ void Game::DrawCountdownToNewWave()
 	{
 		information = "BOSS FIGHT BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
 	}
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, 200);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, GetScreenHeight()*0.25);
 }
 void Game::DrawScoreAndWaveNumber()
 {
 	string keepWaveNumberText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(waveNumber, 3, "WAVE:");
 	string keepPlayerScoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerTotalScore, 6, "SCORE:");
-	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80, 135);
+	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80, GetScreenHeight()*0.12);
 }

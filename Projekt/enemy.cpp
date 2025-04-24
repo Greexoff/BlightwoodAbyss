@@ -72,21 +72,21 @@ void Enemy::UpdateColl(Vector2 Direction)
 {
 	position.x += stats.enemySpeed *Direction.x;
 	position.y += stats.enemySpeed *Direction.y;
-	if (position.y > GetScreenHeight()-250 - image.height*stats.imageScale)
+	if (position.y > GetScreenHeight()-GetScreenHeight()*0.25 - image.height * stats.imageScale)
 	{
-		position.y = GetScreenHeight() - 250 - image.height * stats.imageScale;
+		position.y = GetScreenHeight() - GetScreenHeight() * 0.25 - image.height * stats.imageScale;
 	}
-	if (position.y < 250)
+	if (position.y < GetScreenHeight() * 0.25)
 	{
-		position.y = 250;
+		position.y = GetScreenHeight() * 0.25;
 	}
-	if (position.x < 250)
+	if (position.x < GetScreenHeight() * 0.25)
 	{
-		position.x = 250;
+		position.x = GetScreenHeight() * 0.25;
 	}
-	if (position.x > GetScreenWidth()-250 - image.width * stats.imageScale)
+	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.25 - image.width * stats.imageScale)
 	{
-		position.x = GetScreenWidth() - 250 - image.width * stats.imageScale;
+		position.x = GetScreenWidth() - GetScreenHeight() * 0.25 - image.width * stats.imageScale;
 	}
 }
 Rectangle Enemy::getEnemyRect()
@@ -145,21 +145,21 @@ int Enemy::getEnemyScore()
 }
 void Enemy::CheckOutofTheBorder()
 {
-	if (position.y > GetScreenHeight() - 250 -image.height* stats.imageScale)
+	if (position.y > GetScreenHeight() - GetScreenHeight() * 0.25 -image.height* stats.imageScale)
 	{
-		position.y = GetScreenHeight() - 250-image.height * stats.imageScale;
+		position.y = GetScreenHeight() - GetScreenHeight() * 0.25 -image.height * stats.imageScale;
 	}
-	if (position.y < 250)
+	if (position.y < GetScreenHeight() * 0.25)
 	{
-		position.y = 250;
+		position.y = GetScreenHeight() * 0.25;
 	}
-	if (position.x < 250)
+	if (position.x < GetScreenHeight() * 0.25)
 	{
-		position.x = 250;
+		position.x = GetScreenHeight() * 0.25;
 	}
-	if (position.x > GetScreenWidth() - 250-image.height * stats.imageScale)
+	if (position.x > GetScreenWidth() - GetScreenHeight() * 0.25 -image.height * stats.imageScale)
 	{
-		position.x = GetScreenWidth() - 250-image.height * stats.imageScale;
+		position.x = GetScreenWidth() - GetScreenHeight() * 0.25 -image.height * stats.imageScale;
 	}
 }
 Vector2 Enemy::getEnemyPosition(float divideBy)

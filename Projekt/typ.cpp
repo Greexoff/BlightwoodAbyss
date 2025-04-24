@@ -160,3 +160,7 @@ void Character::setPlayerMaxHealth(float amount)
 {
 	stats.maxPlayerHealth += amount;
 }
+characterStats Character::getPlayerStats()
+{
+	return stats;
+}

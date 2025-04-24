@@ -126,6 +126,7 @@ int LoginMenu::isButtonClicked()
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_UsernameBarArea))
 	{
+		cout << "press bar" << endl;
 		return USERNAME_BAR;
 	}
 	if (CheckCollisionPointRec(mousePos, LoginMenu_PasswordBarArea))

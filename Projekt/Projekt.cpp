@@ -21,8 +21,8 @@ using namespace std;
 namespace fs = filesystem;
 int main()
 {
-	int Width = 1536;
-	int Height = 1024;
+	int Width = GetScreenWidth();//1536
+	int Height = GetScreenHeight();//przywrocic do 1024
 	InitWindow(Width, Height, "Survival Game");
 	SetTargetFPS(60);
 
@@ -30,16 +30,13 @@ int main()
 
 	Game* game = nullptr;
 	Menu::setSelectedMenu(make_unique <StartingMenu>());
-
-	string keepWaveNumberText = "";
-	string keepPlayerScoreText = "";
-
 	MenuResult gameState = MenuResult::CONTINUE;
 
 	while (!WindowShouldClose()&& gameState!=MenuResult::EXIT){
 		BeginDrawing();
-		if (gameState == MenuResult::CONTINUE)
+		switch (gameState)
 		{
+		case MenuResult::CONTINUE:
 			gameState = Menu::getSelectedMenu()->handleMenuLogic();
 			if (gameState == MenuResult::START_GAME)
 			{
@@ -49,16 +46,12 @@ int main()
 					game->setLastTimePlayerWasTouched();
 				}
 			}
-		}
-		if (gameState == MenuResult::START_GAME)
-		{
+			break;
+		case MenuResult::START_GAME:
 			game->InputHandle();
 			game->Update();
 			game->DrawBackground();
 			game->Draw();
-			keepWaveNumberText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->getWaveNumber(), 3, "WAVE:");
-			keepPlayerScoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(game->playerTotalScore, 6, "SCORE:");
-			GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 60, GetScreenHeight() - 30);
 			if (game->isGameOver())
 			{
 				Menu::setSelectedMenu(make_unique<AfterGameMenu>());
@@ -69,16 +62,26 @@ int main()
 				game = nullptr;
 				gameState = Menu::getSelectedMenu()->handleMenuLogic();
 			}
-		}
-		if (gameState == MenuResult::AFTER_GAME)
-		{
-			gameState = Menu::getSelectedMenu()->handleMenuLogic();
+			break;
+		case MenuResult::EXIT:
+			break;
+		case MenuResult::AFTER_GAME:
+			if (gameState == MenuResult::AFTER_GAME)
+			{
+				gameState = Menu::getSelectedMenu()->handleMenuLogic();
+			}
+			break;
+		default:
+			break;
 		}
 		EndDrawing();
 	}
 	CloseWindow();
 }
 /*|---TODO-----------------------------------------------------------------------|
+* !!!! Podmienic dzialanie regexow, zeby pobierac tez wartosci trinketow
+* !!!! Zamienic wszystkie stale liczby przy Draw na zalezne od GetScreenHeight() i GetScreenWidth() np. GetScreenHeight()*0,2 zamiast zwyklego 200
+* !!!! Wprowdzic imageScale dla wszystkich backgroundow
 * !!!/Dobrze dzialajacy  rules, collectibles 
 * !!! uporządkować pozostałe pliku h
 * !!! Sprawdzic czemu postac nie laduje sie na srodku, tylko troche na boku(pewnie image jeszcze nie jest zaladowany i dlatego)

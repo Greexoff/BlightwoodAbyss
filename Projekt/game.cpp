@@ -102,7 +102,8 @@ void Game::Draw() {
 	{
 		DrawCountdownToNewWave();
 	}
-	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerSpeed(), Player->getTearSpeed(), Player->getPlayerDamage(), Player->getTearRate(), Player->getPlayerMaxHealth(),50,50, 30);
+	DrawScoreAndWaveNumber();
+	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 50, GetScreenHeight() / 4 + 180, 30);
 }
 void Game::InputHandle() {
 	int moveX = 0;
@@ -397,4 +398,10 @@ void Game::DrawCountdownToNewWave()
 		information = "BOSS FIGHT BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
 	}
 	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, 200);
+}
+void Game::DrawScoreAndWaveNumber()
+{
+	string keepWaveNumberText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(waveNumber, 3, "WAVE:");
+	string keepPlayerScoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerTotalScore, 6, "SCORE:");
+	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80, 135);
 }

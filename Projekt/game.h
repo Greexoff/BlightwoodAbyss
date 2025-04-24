@@ -55,4 +55,5 @@ private:
 	bool startCountdown;
 	double breakStartingTime;
 	void DrawCountdownToNewWave();
+	void DrawScoreAndWaveNumber();
 };

@@ -31,6 +31,7 @@ public:
 	virtual float getPlayerDamage();
 	virtual float getTearRate();
 	virtual void loadOwnStats();
+	virtual characterStats getPlayerStats();
 protected:
 	characterStats stats;
 	string characterName;

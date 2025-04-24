@@ -23,7 +23,7 @@ public:
 	//|---Metody-----------------------------------------------------------------------------|
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);//GENERAL: Wyświetla podany tekst w danym miejscu o podanym rozmiarze w pomarańczowo-zółtym stylu
 	void DrawBlackBar(Rectangle border, unsigned char opacity);//GENERAL: Wyświetla ciemny pasek o podanych rozmiarach i przejrzystości wraz z czarną obramówką
-	void DrawCharacterStatsInGame(float PlayerSpeed, float TearSpeed, float PlayerDamage, float TearRate, int playerMaxHealth, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry
+	void DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry
 	void DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position);//CHAR_SELECT_MENU: Wyświetla domyślne statystyki postaci
 	void DrawTextOnBar(Rectangle bar, float fontSize, const  string& text, float y_position);//GENERAL: Wyświetla tekst na podanym obszarze (wyśrodkowany), zmniejszając rozmiar/ rodzielając na części jezeli wykracza 
 	void DrawData(string& name, Rectangle bar, float& fontSize);//LOGIN_MENU: Wyświetla dane wpisywane przez uzytkownika

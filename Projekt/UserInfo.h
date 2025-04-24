@@ -21,6 +21,8 @@ public:
 	void setUsername(string username);
 	string getPassword();
 	void setPassword(string password);
+	void addUserItems(string itemName, bool isItemUnlocked);
+	map<string, bool> getUserItems();
 	~UserInfo();
 private:
 	UserInfo();
@@ -29,5 +31,5 @@ private:
 	fs::path DataBase_path;
 	string username;
 	string password;
-
+	map<string, bool> UserItems;
 };

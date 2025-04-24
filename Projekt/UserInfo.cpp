@@ -1,5 +1,15 @@
 #include "UserInfo.h"
 
+bool stob(string value)
+{
+	int tmpInt = stoi(value);
+	if (tmpInt == 1)
+	{
+		return true;
+	}
+	return false;
+}
+
 UserInfo::UserInfo()
 {
 	DataBase_path = fs::current_path() / "database" / "DataBase.txt";
@@ -32,6 +42,14 @@ string UserInfo::getPassword()
 void UserInfo::setPassword(string password)
 {
 	this->password = password;
+}
+void UserInfo::addUserItems(string itemName, bool isItemUnlocked)
+{
+	UserItems.insert({ itemName,isItemUnlocked });
+}
+map<string, bool> UserInfo::getUserItems()
+{
+	return UserItems;
 }
 
 

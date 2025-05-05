@@ -47,21 +47,21 @@ void Character::movePlayer(int x, int y)
 {
 	position.x += x * stats.playerSpeed;
 	position.y += y * stats.playerSpeed;
-	if (position.y > GetScreenHeight()-170 - image.height* stats.imageScale)
+	if (position.y > GetScreenHeight()-GetScreenHeight()*0.15)
 	{
-		position.y = GetScreenHeight()-170 - image.height* stats.imageScale;
+		position.y = GetScreenHeight()- GetScreenHeight() * 0.15 ;
 	}
-	if (position.y < (190-image.height* stats.imageScale))
+	if (position.y < (GetScreenHeight() * 0.15 - image.height/2 * stats.imageScale))
 	{
-		position.y = (190 - image.height * stats.imageScale);
+		position.y = (GetScreenHeight() * 0.15 - image.height/2 * stats.imageScale);
 	}
-	if (position.x < 160)
+	if (position.x < GetScreenHeight() * 0.15)
 	{
-		position.x = 160;
+		position.x = GetScreenHeight() * 0.15;
 	}
-	if (position.x > GetScreenWidth()-160 - image.width* stats.imageScale)
+	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.15 - image.width/2 * stats.imageScale)
 	{
-		position.x = GetScreenWidth()-160 - image.width* stats.imageScale;
+		position.x = GetScreenWidth()- GetScreenHeight() * 0.15 - image.width/2 * stats.imageScale;
 	}
 }
 void Character::shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage) {

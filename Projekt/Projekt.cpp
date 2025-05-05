@@ -21,8 +21,8 @@ using namespace std;
 namespace fs = filesystem;
 int main()
 {
-	int Width = 1536;//1536
-	int Height = 1024;//przywrocic do 1024
+	int Width = GetScreenWidth();//1536;
+	int Height = GetScreenHeight();//1024;
 	InitWindow(Width, Height, "Survival Game");
 	SetTargetFPS(60);
 

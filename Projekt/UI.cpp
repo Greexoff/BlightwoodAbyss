@@ -229,7 +229,7 @@ Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, 
 		return { textPosition.x - additional_x_space,textPosition.y - additional_y_space, measurements.x + additional_x_space * 2,measurements.y + additional_y_space * 2 };
 		break;
 	case 2://Napis nad paskiem
-		return { textPosition.x - additional_x_space,textPosition.y + measurements.y, measurements.x + additional_x_space * 2,measurements.y };
+		return { textPosition.x - additional_x_space,textPosition.y + measurements.y-additional_y_space, measurements.x + additional_x_space * 2,measurements.y+additional_y_space };
 		break;
 	default:
 		return{ 0,0,0,0 };

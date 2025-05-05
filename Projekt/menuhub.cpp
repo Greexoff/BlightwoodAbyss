@@ -88,15 +88,15 @@ void LoginMenu::setFontSizes()
 }
 void LoginMenu::setXYofTexts()
 {
-	ConfirmPosition = { (float)(GetScreenWidth()*0.374),(float)(GetScreenHeight()*0.835)};
-	UsernamePosition = {(float)(GetScreenWidth()*0.29),(float)(GetScreenHeight()*0.074)};
-	PasswordPosition = {(float)(GetScreenWidth()*0.29),(float)(GetScreenHeight()*0.416)};
-	SignupPosition = { (float)(GetScreenWidth()*0.71),(float)(GetScreenHeight()*0.835)};
+	ConfirmPosition = { (float)(GetScreenWidth()*0.4),(float)(GetScreenHeight()*0.85)};
+	UsernamePosition = {(float)(GetScreenWidth()*0.3),(float)(GetScreenHeight()*0.07)};
+	PasswordPosition = {(float)(GetScreenWidth()*0.3),(float)(GetScreenHeight()*0.4)};
+	SignupPosition = { (float)(GetScreenWidth()*0.7),(float)(GetScreenHeight()*0.85)};
 }
 void LoginMenu::setBarAreas()
 {
-	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 30, 30);
-	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 30, 30);
+	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 10, 10);
+	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 10, 10);
 	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
 	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
 }
@@ -107,9 +107,9 @@ void LoginMenu::Draw()
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
 	GameUI::GetInstance().DrawTextOnBar(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition.y);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, UsernameTextFontSize, "USERNAME", GetScreenHeight() / 8);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, PasswordTextFontSize, "PASSWORD", GetScreenHeight() / 2- GetScreenHeight() / 8);
 
-	GameUI::GetInstance().DrawTextWithOutline("USERNAME", UsernamePosition, UsernameTextFontSize);
-	GameUI::GetInstance().DrawTextWithOutline("PASSWORD", PasswordPosition, PasswordTextFontSize);
 	if (isSignupAreaActive)
 	{
 		GameUI::GetInstance().DrawBlackBar(LoginMenu_SingupArea, 160);
@@ -331,7 +331,7 @@ MainMenu::MainMenu()
 	setAction = 0;
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
-	buttonsFontSize = 120;
+	buttonsFontSize = 150;
 	setButtonsPosition();
 
 }

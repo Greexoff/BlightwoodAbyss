@@ -14,16 +14,17 @@ void DrawLoadingStartBackground()
 {
 	fs::path tmpPath = fs::current_path() / "assets" / "background_loading_screen_assets" / "backgroundLOADINGSTART.png";
 	BeginDrawing();
-	DrawTextureV(LoadTexture(tmpPath.string().c_str()), {0,0}, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadTexture(tmpPath.string().c_str()), {0,0});
 	EndDrawing();
 }
 using namespace std;
 namespace fs = filesystem;
 int main()
 {
-	int Width = GetScreenWidth();//1536;
-	int Height = GetScreenHeight();//1024;
-	InitWindow(Width, Height, "Survival Game");
+	SetConfigFlags(FLAG_FULLSCREEN_MODE);
+	//int Width = GetScreenWidth();//1536;
+	//int Height = GetScreenHeight();//1024;
+	InitWindow(0, 0, "Survival Game");
 	SetTargetFPS(60);
 
 	DrawLoadingStartBackground();

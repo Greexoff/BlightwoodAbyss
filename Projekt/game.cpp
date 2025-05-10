@@ -25,7 +25,7 @@ Game::~Game() {
 }
 void Game::DrawBackground()
 {
-	DrawTexture(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE), 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE), { 0,0 });
 }
 void Game::setPlayerCharacter(int Character)
 {

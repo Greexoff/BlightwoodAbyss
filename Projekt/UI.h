@@ -21,6 +21,7 @@ public:
 	static GameUI& GetInstance();
 	~GameUI();
 	//|---Metody-----------------------------------------------------------------------------|
+	void DrawScaledBackgroundImage(Texture2D image, Vector2 position);
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);//GENERAL: Wyświetla podany tekst w danym miejscu o podanym rozmiarze w pomarańczowo-zółtym stylu
 	void DrawBlackBar(Rectangle border, unsigned char opacity);//GENERAL: Wyświetla ciemny pasek o podanych rozmiarach i przejrzystości wraz z czarną obramówką
 	void DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry
@@ -42,15 +43,12 @@ private:
 	void operator=(const GameUI&) = delete;
 	//|---Zmienne----------------------------------------------------------------------------|
 	fs::path fontPath;//Sciezka do czcionki
-	fs::path loadingScreenAssetsPath;//DO USUNIECIA JAK JUZ OGRANE LOADINGSCREEN
 	Color MyOrange;//Specjalny pomarancz do napisu
 	Color MyYellow;//Specjalna zolc do napisu
 	Font font;//Zmienna przechowujaca czcionke
-	Texture2D currentBackground;//DO USUNIECIA JAK JUZ OGRANE LOADINGSCREEN
-	map<string, Texture2D> loadedScreenTextures;//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
 	//|---Metody-----------------------------------------------------------------------------|
-	void loadTexturesIntoMap();//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
-	Texture2D passCorrectTexture(string textureName);//DO USUNIECIA JAK JUZ OGRANE LOADINGSCRREN
 	vector<string> DivideTextIntoParts(const string& text, float fontSize, float maxWidth);//Metoda rozdzielająca napis na części
+
+
 
 };

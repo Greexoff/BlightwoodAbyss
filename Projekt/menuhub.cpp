@@ -331,7 +331,7 @@ MainMenu::MainMenu()
 	setAction = 0;
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
-	buttonsFontSize = 150;
+	buttonsFontSize = 180;
 	setButtonsPosition();
 
 }
@@ -348,19 +348,20 @@ void MainMenu::Draw()
 }
 void MainMenu::setButtonsPosition()
 {
-	float spacing = GetScreenHeight() / 8;
+	float spacing = GetScreenHeight() / 7;
 	for (size_t i=0;i<ButtonNames.size();i++)
 	{
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
-		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing) - (measurements.y / 2) };
-		Rectangle rect=GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1,0, 0);
+		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing- (measurements.y/2)) };
+		Rectangle rect = { buttonPosition.x,buttonPosition.y + GetScreenHeight() * 0.01,measurements.x,measurements.y - GetScreenHeight() * 0.05 };
 		Buttons[name] = {rect, buttonPosition};
 	}
 }
 int MainMenu::isButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
+
 	if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
 	{
 		return NEWGAME_BUTTON;

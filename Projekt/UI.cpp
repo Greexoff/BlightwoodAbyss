@@ -222,7 +222,7 @@ vector<string> GameUI::DivideTextIntoParts(const string& text, float fontSize, f
 }
 Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space)
 {
-	Vector2 measurements = MeasureTextBar(fontSize, text);
+	Vector2 measurements = MeasureText(fontSize, text);
 	switch (type)
 	{
 	case 1://Napis wewnatrz

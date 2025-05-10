@@ -72,22 +72,7 @@ void Enemy::UpdateColl(Vector2 Direction)
 {
 	position.x += stats.enemySpeed *Direction.x;
 	position.y += stats.enemySpeed *Direction.y;
-	if (position.y > GetScreenHeight()-GetScreenHeight()*0.25 - image.height * stats.imageScale)
-	{
-		position.y = GetScreenHeight() - GetScreenHeight() * 0.25 - image.height * stats.imageScale;
-	}
-	if (position.y < GetScreenHeight() * 0.25)
-	{
-		position.y = GetScreenHeight() * 0.25;
-	}
-	if (position.x < GetScreenHeight() * 0.25)
-	{
-		position.x = GetScreenHeight() * 0.25;
-	}
-	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.25 - image.width * stats.imageScale)
-	{
-		position.x = GetScreenWidth() - GetScreenHeight() * 0.25 - image.width * stats.imageScale;
-	}
+	CheckOutofTheBorder();
 }
 Rectangle Enemy::getEnemyRect()
 {
@@ -162,9 +147,9 @@ void Enemy::CheckOutofTheBorder()
 		position.x = GetScreenWidth() - GetScreenHeight() * 0.25 -image.height * stats.imageScale;
 	}
 }
-Vector2 Enemy::getEnemyPosition(float divideBy)
+Vector2 Enemy::getEnemyPosition(float divideX, float divideY)
 {
-	return { position.x+(image.width* stats.imageScale /divideBy),position.y+(image.height* stats.imageScale /divideBy) };
+	return { position.x+(image.width* stats.imageScale /divideX *stats.imageScale),position.y+(image.height* stats.imageScale /divideY* stats.imageScale) };
 }
 void Enemy::loadEnemyStats()
 {

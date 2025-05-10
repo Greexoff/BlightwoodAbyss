@@ -14,7 +14,7 @@ void DrawLoadingStartBackground()
 {
 	fs::path tmpPath = fs::current_path() / "assets" / "background_loading_screen_assets" / "backgroundLOADINGSTART.png";
 	BeginDrawing();
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadTexture(tmpPath.string().c_str()), {0,0});
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadTexture(tmpPath.string().c_str()));
 	EndDrawing();
 }
 using namespace std;

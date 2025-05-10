@@ -47,26 +47,30 @@ void Character::movePlayer(int x, int y)
 {
 	position.x += x * stats.playerSpeed;
 	position.y += y * stats.playerSpeed;
-	if (position.y > GetScreenHeight()-GetScreenHeight()*0.15)
+	if (position.y > GetScreenHeight()-GetScreenHeight()*0.255)
 	{
-		position.y = GetScreenHeight()- GetScreenHeight() * 0.15 ;
+		position.y = GetScreenHeight()- GetScreenHeight() * 0.255 ;
 	}
-	if (position.y < (GetScreenHeight() * 0.15 - image.height/2 * stats.imageScale))
+	if (position.y < (GetScreenHeight() * 0.155 - image.height/2 * stats.imageScale))
 	{
-		position.y = (GetScreenHeight() * 0.15 - image.height/2 * stats.imageScale);
+		position.y = (GetScreenHeight() * 0.155 - image.height/2 * stats.imageScale);
 	}
-	if (position.x < GetScreenHeight() * 0.15)
+	if (position.x < GetScreenHeight() * 0.19)
 	{
-		position.x = GetScreenHeight() * 0.15;
+		position.x = GetScreenHeight() * 0.19;
 	}
-	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.15 - image.width/2 * stats.imageScale)
+	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.225 - image.width/2 * stats.imageScale)
 	{
-		position.x = GetScreenWidth()- GetScreenHeight() * 0.15 - image.width/2 * stats.imageScale;
+		position.x = GetScreenWidth()- GetScreenHeight() * 0.225 - image.width/2 * stats.imageScale;
 	}
 }
 void Character::shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage) {
 	if (GetTime() - lastTearTime >= stats.tearRate) {
-		tearsy.push_back(Tears({ position.x + (image.width* stats.imageScale / 4) + 5 * tearD_X, position.y + (image.height* stats.imageScale / 4) + 5 * tearD_Y }, stats.tearSpeed, tearD_X, tearD_Y, loadedImage));
+		float characterCenterX = position.x + (image.width * stats.imageScale*0.5);
+		float characterCenterY = position.y + (image.height * stats.imageScale*0.5);
+		float tearOffsetX = (loadedImage.width* 0.5);
+		float tearOffsetY = (loadedImage.height*0.5);
+		tearsy.push_back(Tears({ characterCenterX - tearOffsetX, characterCenterY - tearOffsetY },stats.tearSpeed,	tearD_X, tearD_Y,loadedImage));
 		lastTearTime = GetTime();
 	}
 }

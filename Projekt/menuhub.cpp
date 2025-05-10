@@ -47,8 +47,7 @@ StartingMenu::~StartingMenu()
 }
 void StartingMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
-	//DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	GameUI::GetInstance().DrawTextOnBar(ScreenBar, titleFontSize, titleName, ScreenBar.y+GetScreenHeight()*0.2);
 }
 MenuResult StartingMenu::handleMenuLogic()
@@ -103,8 +102,7 @@ void LoginMenu::setBarAreas()
 }
 void LoginMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
-	//DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_UsernameBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
@@ -342,7 +340,7 @@ MainMenu::~MainMenu()
 }
 void MainMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	for (const auto& [name, button_Data] : Buttons)
 	{
 		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
@@ -435,7 +433,7 @@ CharacterSelectionMenu::~CharacterSelectionMenu()
 }
 void CharacterSelectionMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	DrawPlayerCharacterImage();
 	chooseExplanationType();
 }
@@ -539,8 +537,7 @@ RulesMenu::~RulesMenu()
 }
 void RulesMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
-	//DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 }
 MenuResult RulesMenu::handleMenuLogic()
 {
@@ -582,8 +579,7 @@ HighestScoreMenu::~HighestScoreMenu()
 }
 void HighestScoreMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
-	//DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	if (isNextPageButtonVisible)
 	{
 		GameUI::GetInstance().DrawBlackBar(nextPageButton, 160);
@@ -696,8 +692,7 @@ AfterGameMenu::~AfterGameMenu()
 }
 void AfterGameMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture, { 0,0 });
-	//DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	DrawButtons();
 }
 void AfterGameMenu::setButtonPosition()

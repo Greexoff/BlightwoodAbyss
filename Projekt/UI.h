@@ -21,7 +21,7 @@ public:
 	static GameUI& GetInstance();
 	~GameUI();
 	//|---Metody-----------------------------------------------------------------------------|
-	void DrawScaledBackgroundImage(Texture2D image, Vector2 position);
+	void DrawScaledBackgroundImage(Texture2D image);
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);//GENERAL: Wyświetla podany tekst w danym miejscu o podanym rozmiarze w pomarańczowo-zółtym stylu
 	void DrawBlackBar(Rectangle border, unsigned char opacity);//GENERAL: Wyświetla ciemny pasek o podanych rozmiarach i przejrzystości wraz z czarną obramówką
 	void DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry

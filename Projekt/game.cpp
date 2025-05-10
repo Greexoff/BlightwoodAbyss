@@ -25,7 +25,7 @@ Game::~Game() {
 }
 void Game::DrawBackground()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE), { 0,0 });
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE));
 }
 void Game::setPlayerCharacter(int Character)
 {
@@ -211,15 +211,15 @@ void Game::EnemyShootTears()//Tutaj jeszcze zrobic jakas metode fabrykujaca i w 
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy3Tear.png", textureType::OBJECT_TEXTURE)));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(2.8,2.8), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy3Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(4.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy4Tear.png", textureType::OBJECT_TEXTURE)));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(3.6,3.3), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy4Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(2.0), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy5Tear.png", textureType::OBJECT_TEXTURE)));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(3.8,3.6), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy5Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			lastTearFired = GetTime();
 		}
@@ -248,7 +248,7 @@ void Game::CollisionCheck()
 						increasePlayerTotalScore((*it)->getEnemyScore());
 						if (waveNumber % 5 == 0)
 						{
-							createRandomLoot((*it)->getEnemyPosition(2.0));
+							createRandomLoot((*it)->getEnemyPosition(2.0,2.0));
 						}
 						it = enemies.erase(it);
 					}
@@ -331,10 +331,7 @@ void Game::beginNewWave()
 	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));
 	startCountdown = false;
-//	if (waveNumber < 11)
-	//{
-		amountofEnemies++;
-	//}
+	amountofEnemies++;
 	proceedCreatingEnemies = true;
 	isCreatingNewWave = false;
 }
@@ -397,11 +394,11 @@ void Game::DrawCountdownToNewWave()
 	{
 		information = "BOSS FIGHT BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
 	}
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, GetScreenHeight()*0.25);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, GetScreenHeight()*0.2);
 }
 void Game::DrawScoreAndWaveNumber()
 {
 	string keepWaveNumberText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(waveNumber, 3, "WAVE:");
 	string keepPlayerScoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerTotalScore, 6, "SCORE:");
-	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80, GetScreenHeight()*0.12);
+	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80, GetScreenHeight()*0.13);
 }

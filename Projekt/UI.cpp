@@ -17,30 +17,8 @@ GameUI::~GameUI()
 }
 
 //|---Drawing----------------------------------------------------------------------|
-void GameUI::DrawScaledBackgroundImage(Texture2D image, Vector2 position)
+void GameUI::DrawScaledBackgroundImage(Texture2D image)
 {
-	/*ClearBackground(BLACK);
-	float scaleX = (float)GetScreenWidth() / image.width;
-	float scaleY = (float)GetScreenHeight() / image.height;
-	float backgroundScale;
-	if (scaleY > scaleX)
-	{
-		backgroundScale = scaleX;
-	}
-	else
-	{
-		backgroundScale = scaleY;
-	}
-	float newWidth = image.width * backgroundScale;
-	float newHeight = image.height * backgroundScale;
-
-	float newPositionX = (float)(GetScreenWidth() - newWidth) / 2.0;
-	float newPositionY = (float)(GetScreenHeight() - newHeight) / 2.0;
-
-	Vector2 newPosition = { newPositionX, newPositionY };
-
-	DrawTextureEx(image, newPosition, 0, backgroundScale, WHITE);
-	*/
 	ClearBackground(BLACK);
 	Rectangle source = { 0,0,image.width,image.height };
 	Rectangle destination = { 0,0,GetScreenWidth(),GetScreenHeight() };

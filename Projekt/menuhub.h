@@ -57,7 +57,6 @@ public:
 private:
 	string titleName;//przechowanie nazwy gry
 	float titleFontSize;//przechowanie rozmiaru czcionki
-	Rectangle ScreenBar;//przechowanie wymiarow na ktorych mozna wyswietlic tytul gry
 };
 class LoginMenu : public Menu
 {
@@ -84,7 +83,6 @@ private:
 	//|-----Metody-------------------------------------------------------------------------------------------|
 	void setFontSizes();//Ustawianie rozmiaru czcionek poszczegolnych napisow
 	void setBarAreas();//Ustawianie rozmiarow poszczegolnych napisow
-	void setXYofTexts();//Ustawianie pozycji x i y poszczegolnych napisow na ekranie
 	void showLoginError();//Metoda pod wątek wyświetlania błędów - ustawia wyświetlanie błędu na ekranie na określony czas
 	void insertData(string& name, string type);//Ustawianie wartosci dla zmiennych username/password 
 	void ChooseErrorType();//Ustawianie napisu, który zostanie wyświetlony i wywolanie funkcji rysujacej na ekranie

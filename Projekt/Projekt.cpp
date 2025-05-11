@@ -17,14 +17,31 @@ void DrawLoadingStartBackground()
 	GameUI::GetInstance().DrawScaledBackgroundImage(LoadTexture(tmpPath.string().c_str()));
 	EndDrawing();
 }
+void ToggleFullScreenWindow(int windowWidth, int windowHeight)
+{
+	int monitor = GetCurrentMonitor();
+	if (!IsWindowFullscreen())
+	{
+		SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+		ToggleFullscreen();
+	}
+	else
+	{
+		ToggleFullscreen();
+		SetWindowSize(windowWidth, windowHeight);
+		SetWindowPosition((GetMonitorWidth(monitor)-windowWidth)/ 2, (GetMonitorHeight(monitor)-windowHeight )/ 2);
+	}
+}
 using namespace std;
 namespace fs = filesystem;
 int main()
 {
-	SetConfigFlags(FLAG_FULLSCREEN_MODE);
-	//int Width = GetScreenWidth();//1536;
-	//int Height = GetScreenHeight();//1024;
-	InitWindow(0, 0, "Survival Game");
+	int monitor = GetCurrentMonitor();
+	InitWindow(GetMonitorWidth(monitor),GetMonitorHeight(monitor), "Blightwood Abbys");
+	int WindowWidth = (int)GetMonitorWidth(monitor) * 0.66;
+	int WindowHeight = (int)GetMonitorHeight(monitor) * 0.66;
+	ToggleFullscreen();
+
 	SetTargetFPS(60);
 
 	DrawLoadingStartBackground();
@@ -34,6 +51,9 @@ int main()
 	MenuResult gameState = MenuResult::CONTINUE;
 
 	while (!WindowShouldClose()&& gameState!=MenuResult::EXIT){
+		if (IsKeyPressed(KEY_F11)) {
+			ToggleFullScreenWindow(WindowWidth, WindowHeight);
+		}
 		BeginDrawing();
 		switch (gameState)
 		{

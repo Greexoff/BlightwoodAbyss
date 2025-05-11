@@ -88,10 +88,14 @@ void LoginMenu::setFontSizes()
 }
 void LoginMenu::setXYofTexts()
 {
-	ConfirmPosition = { (float)(GetScreenWidth()*0.4),(float)(GetScreenHeight()*0.85)};
-	UsernamePosition = {(float)(GetScreenWidth()*0.3),(float)(GetScreenHeight()*0.07)};
-	PasswordPosition = {(float)(GetScreenWidth()*0.3),(float)(GetScreenHeight()*0.4)};
-	SignupPosition = { (float)(GetScreenWidth()*0.7),(float)(GetScreenHeight()*0.85)};
+	Vector2 measureConfirm= GameUI::GetInstance().MeasureText(ConfirmTextFontSize, "CONFIRM");;
+	Vector2 measureUsername = GameUI::GetInstance().MeasureText(UsernameTextFontSize, "USERNAME");
+	Vector2 measurePassword = GameUI::GetInstance().MeasureText(PasswordTextFontSize, "PASSWORD");
+	Vector2 measureSignup= GameUI::GetInstance().MeasureText(ConfirmTextFontSize, "SIGNUP");
+	ConfirmPosition = { (float)(GetScreenWidth()*0.5- measureConfirm.x*0.5),(float)(GetScreenHeight()*0.80)};
+	UsernamePosition = {(float)(GetScreenWidth()*0.5- measureUsername.x*0.5),(float)(GetScreenHeight() / 10)};
+	PasswordPosition = {(float)(GetScreenWidth()*0.5- measurePassword.x*0.5),(float)(GetScreenHeight() / 2 - GetScreenHeight() / 10)};
+	SignupPosition = { (float)(GetScreenWidth()*0.775- measureSignup.x*0.5),(float)(GetScreenHeight()*0.80)};
 }
 void LoginMenu::setBarAreas()
 {
@@ -107,8 +111,8 @@ void LoginMenu::Draw()
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
 	GameUI::GetInstance().DrawTextOnBar(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition.y);
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, UsernameTextFontSize, "USERNAME", GetScreenHeight() / 8);
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, PasswordTextFontSize, "PASSWORD", GetScreenHeight() / 2- GetScreenHeight() / 8);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, UsernameTextFontSize, "USERNAME", GetScreenHeight() / 10);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, PasswordTextFontSize, "PASSWORD", GetScreenHeight() / 2- GetScreenHeight() / 10);
 
 	if (isSignupAreaActive)
 	{
@@ -354,7 +358,7 @@ void MainMenu::setButtonsPosition()
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing- (measurements.y/2)) };
-		Rectangle rect = { buttonPosition.x,buttonPosition.y + GetScreenHeight() * 0.01,measurements.x,measurements.y - GetScreenHeight() * 0.05 };
+		Rectangle rect = { buttonPosition.x,buttonPosition.y,measurements.x,measurements.y};
 		Buttons[name] = {rect, buttonPosition};
 	}
 }

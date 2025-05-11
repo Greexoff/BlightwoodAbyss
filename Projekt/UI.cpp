@@ -167,7 +167,7 @@ void GameUI::DrawError(string information, Rectangle bar)
 	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, information.c_str());
 	float barCenterX = bar.x + bar.width / 2.0;
 	float textX = barCenterX - textSize.x / 2.0;
-	GameUI::GetInstance().DrawTextWithOutline(information.c_str(), { textX, (bar.y + bar.height + 30) }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline(information.c_str(), { textX, (float)(bar.y + bar.height + GetScreenHeight()*0.02) }, fontSize);
 }
 void GameUI::DrawGameUI(const string& text, float fontSize, float y_pos)
 {

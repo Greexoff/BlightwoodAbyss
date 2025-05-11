@@ -94,13 +94,16 @@ void LoginMenu::setXYofTexts()
 	Vector2 measureSignup= GameUI::GetInstance().MeasureText(ConfirmTextFontSize, "SIGNUP");
 	ConfirmPosition = { (float)(GetScreenWidth()*0.5- measureConfirm.x*0.5),(float)(GetScreenHeight()*0.80)};
 	UsernamePosition = {(float)(GetScreenWidth()*0.5- measureUsername.x*0.5),(float)(GetScreenHeight() / 10)};
-	PasswordPosition = {(float)(GetScreenWidth()*0.5- measurePassword.x*0.5),(float)(GetScreenHeight() / 2 - GetScreenHeight() / 10)};
+	PasswordPosition = {(float)(GetScreenWidth()*0.5- measurePassword.x*0.5),(float)(GetScreenHeight()/2 - GetScreenHeight() / 10)};
 	SignupPosition = { (float)(GetScreenWidth()*0.775- measureSignup.x*0.5),(float)(GetScreenHeight()*0.80)};
 }
 void LoginMenu::setBarAreas()
 {
 	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 10, 10);
+	PasswordPosition.y = LoginMenu_UsernameBarArea.y + LoginMenu_UsernameBarArea.height + GetScreenHeight()*0.01;
 	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 10, 10);
+	ConfirmPosition.y = LoginMenu_PasswordBarArea.y + LoginMenu_PasswordBarArea.height + GetScreenHeight() * 0.12;
+	SignupPosition.y = ConfirmPosition.y;
 	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
 	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
 }
@@ -111,8 +114,8 @@ void LoginMenu::Draw()
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
 	GameUI::GetInstance().DrawTextOnBar(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition.y);
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, UsernameTextFontSize, "USERNAME", GetScreenHeight() / 10);
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, PasswordTextFontSize, "PASSWORD", GetScreenHeight() / 2- GetScreenHeight() / 10);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, UsernameTextFontSize, "USERNAME", UsernamePosition.y-GetScreenHeight()*0.01);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, PasswordTextFontSize, "PASSWORD", PasswordPosition.y - GetScreenHeight() * 0.01);
 
 	if (isSignupAreaActive)
 	{

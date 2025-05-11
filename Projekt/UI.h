@@ -10,6 +10,7 @@
 #include <map>
 #include <thread>
 #include "Textures.h"
+#include "screenSettings.h"
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;

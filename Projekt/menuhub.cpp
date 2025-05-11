@@ -47,7 +47,7 @@ StartingMenu::~StartingMenu()
 void StartingMenu::Draw()
 {
 	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, titleFontSize, titleName, GetScreenHeight()*0.2);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, titleFontSize * ScreenSettings::GetInstance().getScreenResolutionFactor().y, titleName, GetScreenHeight()*0.3);
 }
 MenuResult StartingMenu::handleMenuLogic()
 {
@@ -65,8 +65,6 @@ LoginMenu::LoginMenu()
 	setAction = 0;
 	username = "";
 	password = "";
-	setFontSizes();
-	//setBarAreas();
 	userExist = false;
 	isSignupAreaActive = true;
 	error = errorType::NO_ERROR;
@@ -78,11 +76,12 @@ LoginMenu::~LoginMenu()
 }
 void LoginMenu::setFontSizes()
 {
-	UsernameTextFontSize = 150;
-	PasswordTextFontSize = 150;
-	ConfirmTextFontSize = 75;
-	SignupTextFontSize = 75;
-	InsertedDataFontSize = 80;
+
+	UsernameTextFontSize = 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	PasswordTextFontSize = 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	ConfirmTextFontSize = 75 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	SignupTextFontSize = 75 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	InsertedDataFontSize = 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 }
 void LoginMenu::setBarAreas()
 {
@@ -104,6 +103,7 @@ void LoginMenu::setBarAreas()
 }
 void LoginMenu::Draw()
 {
+	setFontSizes();
 	setBarAreas();
 	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_UsernameBarArea, 160);

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include "screenSettings.h"
 using namespace std;
 namespace fs = filesystem;
 

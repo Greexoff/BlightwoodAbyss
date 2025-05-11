@@ -138,6 +138,7 @@
     <ClCompile Include="items.cpp" />
     <ClCompile Include="menuhub.cpp" />
     <ClCompile Include="Projekt.cpp" />
+    <ClCompile Include="screenSettings.cpp" />
     <ClCompile Include="tears.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="typ.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="items.h" />
     <ClInclude Include="menuhub.h" />
+    <ClInclude Include="screenSettings.h" />
     <ClInclude Include="tears.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="typ.h" />

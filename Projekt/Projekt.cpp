@@ -8,6 +8,7 @@
 #include "menuhub.h"
 #include "UI.h"
 #include "UserInfo.h"
+#include "screenSettings.h"
 import CharacterStats;
 
 void DrawLoadingStartBackground()
@@ -24,12 +25,14 @@ void ToggleFullScreenWindow(int windowWidth, int windowHeight)
 	{
 		SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
 		ToggleFullscreen();
+		ScreenSettings::GetInstance().setResolutionFactor(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
 	}
 	else
 	{
 		ToggleFullscreen();
 		SetWindowSize(windowWidth, windowHeight);
 		SetWindowPosition((GetMonitorWidth(monitor)-windowWidth)/ 2, (GetMonitorHeight(monitor)-windowHeight )/ 2);
+		ScreenSettings::GetInstance().setResolutionFactor(windowWidth, windowHeight);
 	}
 }
 using namespace std;

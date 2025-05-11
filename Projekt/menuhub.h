@@ -12,6 +12,7 @@
 #include "UI.h"
 #include "Textures.h"
 #include "UserInfo.h"
+#include "screenSettings.h"
 import CharacterStats;
 using namespace std;
 namespace fs = filesystem;

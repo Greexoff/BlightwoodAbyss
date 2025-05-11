@@ -37,7 +37,7 @@ void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fon
 	}
 	int shadowSize = (int)(fontSize / 50.0+0.5);
 	Vector2 shadowPos = { position.x + shadowSize, position.y - shadowSize };
-	DrawTextEx(font, text.c_str(), shadowPos, fontSize, spacing, MyYellow);
+	DrawTextEx(font, text.c_str(), shadowPos, fontSize , spacing, MyYellow);
 	DrawTextEx(font, text.c_str(), position, fontSize, spacing, MyOrange);
 }
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
@@ -127,8 +127,8 @@ void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, fl
 }
 void GameUI::DrawData(string& name, Rectangle bar, float& fontSize)
 {
-	int maxFontSize = 80;
-	int minFontSize = 40;
+	int maxFontSize = 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	int minFontSize = 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	int spacing = 2;
 	int position = 0;
 	position = bar.y + (bar.height / 2);
@@ -162,7 +162,7 @@ void GameUI::DrawData(string& name, Rectangle bar, float& fontSize)
 }
 void GameUI::DrawError(string information, Rectangle bar)
 {
-	float fontSize = 50;
+	float fontSize = 50 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	float spacing = 2;
 	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, information.c_str());
 	float barCenterX = bar.x + bar.width / 2.0;

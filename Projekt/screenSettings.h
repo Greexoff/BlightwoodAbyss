@@ -21,7 +21,15 @@ public:
 	float Clamp(float value, float min, float max);
 	void updateCamera(Vector2 playerPosition);
 	Camera2D& getCamera();
+	Vector2 getMinMapLimit();
+	Vector2 getMaxMapLimit();
+	float getBackgroundScale();
+	Vector2 getMinMapWalls();
+	Vector2 getMaxMapWalls();
 private:
+	void setMapLimit(Vector2& mapLimit);
+	float backgroundScale;
+	Vector2 maxMapLimit, minMapLimit, minMapWalls,maxMapWalls;
 	Vector2 resolutionFactor;
 	Vector2 baseResolution;
 	Camera2D camera;
@@ -29,4 +37,5 @@ private:
 	ScreenSettings(const ScreenSettings&) = delete;
 	void operator=(const ScreenSettings&) = delete;
 	void setBaseResolution();
+	void setMapWalls();
 };

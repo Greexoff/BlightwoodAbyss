@@ -72,7 +72,6 @@ void Enemy::UpdateColl(Vector2 Direction)
 {
 	position.x += stats.enemySpeed *Direction.x;
 	position.y += stats.enemySpeed *Direction.y;
-	CheckOutofTheBorder();
 }
 Rectangle Enemy::getEnemyRect()
 {
@@ -89,10 +88,20 @@ Vector2 Enemy::getCollisionSide(Rectangle enemy1, Rectangle enemy2)
 		float wy = totalWidth * dy;
 		float hx = totalHeight * dx;
 		if (wy > hx) {
-			return (wy > -hx) ? Directions = {0, 1} : Directions = {-1,0};
+			if (wy > -hx) {
+				Directions = { 0, 1 };
+			}
+			else {
+				Directions = { -1, 0 };
+			}
 		}
 		else {
-			return (wy > -hx) ? Directions = {1, 0} : Directions = {0, -1};
+			if (wy > -hx) {
+				Directions = { 1, 0 };
+			}
+			else {
+				Directions = { 0, -1 };
+			}
 		}
 	}
 	return Directions;
@@ -128,25 +137,7 @@ int Enemy::getEnemyScore()
 {
 	return stats.enemyScore;
 }
-void Enemy::CheckOutofTheBorder()
-{
-	if (position.y > GetScreenHeight() - GetScreenHeight() * 0.25 -image.height* stats.imageScale)
-	{
-		position.y = GetScreenHeight() - GetScreenHeight() * 0.25 -image.height * stats.imageScale;
-	}
-	if (position.y < GetScreenHeight() * 0.25)
-	{
-		position.y = GetScreenHeight() * 0.25;
-	}
-	if (position.x < GetScreenHeight() * 0.25)
-	{
-		position.x = GetScreenHeight() * 0.25;
-	}
-	if (position.x > GetScreenWidth() - GetScreenHeight() * 0.25 -image.height * stats.imageScale)
-	{
-		position.x = GetScreenWidth() - GetScreenHeight() * 0.25 -image.height * stats.imageScale;
-	}
-}
+
 Vector2 Enemy::getEnemyPosition(float divideX, float divideY)
 {
 	return { position.x+(image.width* stats.imageScale /divideX *stats.imageScale),position.y+(image.height* stats.imageScale /divideY* stats.imageScale) };

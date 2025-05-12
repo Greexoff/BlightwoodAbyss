@@ -11,13 +11,6 @@
 #include "screenSettings.h"
 import CharacterStats;
 
-void DrawLoadingStartBackground()
-{
-	fs::path tmpPath = fs::current_path() / "assets" / "background_loading_screen_assets" / "backgroundLOADINGSTART.png";
-	BeginDrawing();
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadTexture(tmpPath.string().c_str()));
-	EndDrawing();
-}
 void ToggleFullScreenWindow(int windowWidth, int windowHeight)
 {
 	int monitor = GetCurrentMonitor();
@@ -45,9 +38,6 @@ int main()
 	int WindowHeight = (int)GetMonitorHeight(monitor) * 0.66;
 	ToggleFullscreen();
 	SetTargetFPS(60);
-
-	DrawLoadingStartBackground();
-
 	Game* game = nullptr;
 	Menu::setSelectedMenu(make_unique <StartingMenu>());
 	MenuResult gameState = MenuResult::CONTINUE;

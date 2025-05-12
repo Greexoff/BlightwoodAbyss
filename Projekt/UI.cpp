@@ -45,14 +45,15 @@ void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 	DrawRectangleRec(borders, { 0,0,0,opacity });
 	DrawRectangleLinesEx(borders, 10, BLACK);
 }
-void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize)//to jakos lepiej zrobic
+void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize)
 {
-	GameUI::GetInstance().DrawTextWithOutline("CHARACTER STATS:",{ x_pos,starting_y_pos }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("MAX HEALTH: " + ConvertToString(playerStats.maxPlayerHealth, 0), { x_pos,starting_y_pos + (fontSize) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("DAMAGE: " + ConvertToString(playerStats.playerDamage,2), { x_pos,starting_y_pos + (fontSize *2)}, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("SPEED: " + ConvertToString(playerStats.playerSpeed, 2), { x_pos,starting_y_pos + (fontSize *3) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("TEAR RATE: " + ConvertToString(playerStats.tearRate, 2), { x_pos,starting_y_pos + (fontSize *4) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("TEAR SPEED: " + ConvertToString(playerStats.tearSpeed, 2), { x_pos,starting_y_pos + (fontSize *5) }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Character Stats:",{ x_pos,starting_y_pos }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Current Health: " + ConvertToString(playerStats.playerHealth, 0), { x_pos,starting_y_pos + (fontSize) }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Max Health: " + ConvertToString(playerStats.maxPlayerHealth, 0), { x_pos,starting_y_pos + (fontSize*2) }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Damage: " + ConvertToString(playerStats.playerDamage,2), { x_pos,starting_y_pos + (fontSize *3)}, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Speed: " + ConvertToString(playerStats.playerSpeed, 2), { x_pos,starting_y_pos + (fontSize *4) }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Tear Rate: " + ConvertToString(playerStats.tearRate, 2), { x_pos,starting_y_pos + (fontSize *5) }, fontSize);
+	GameUI::GetInstance().DrawTextWithOutline("Tear Speed: " + ConvertToString(playerStats.tearSpeed, 2), { x_pos,starting_y_pos + (fontSize *6) }, fontSize);
 }
 void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position)
 {

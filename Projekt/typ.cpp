@@ -37,8 +37,8 @@ ThirdCharacter::~ThirdCharacter()
 
 void Character::setPlayerStartingPosition()
 {
-	position.x = (GetScreenWidth() - image.width* stats.imageScale) / 2;
-	position.y = (GetScreenHeight() - image.height* stats.imageScale) / 2;
+	position.x = (ScreenSettings::GetInstance().getMaxMapLimit().x - image.width * stats.imageScale) / 2;
+	position.y = (ScreenSettings::GetInstance().getMaxMapLimit().y - image.height* stats.imageScale) / 2;
 }
 void Character::Draw() {
 	DrawTextureEx(image, position,0, stats.imageScale, WHITE);
@@ -48,29 +48,13 @@ void Character::movePlayer(int x, int y, Vector2 minMapLimit, Vector2 maxMapLimi
 	position.x += x * stats.playerSpeed;
 	position.y += y * stats.playerSpeed;
 
-	float playerWidth = (image.width / 2) * stats.imageScale;
-	float playerHeight = (image.height / 2) * stats.imageScale;
+	float playerWidth = image.width * stats.imageScale;
+	float playerHeight = image.height * stats.imageScale;
+	Vector2 minLimit = { ScreenSettings::GetInstance().getMinMapWalls().x,ScreenSettings::GetInstance().getMinMapWalls().y };
+	Vector2 maxLimit = { ScreenSettings::GetInstance().getMaxMapWalls().x,ScreenSettings::GetInstance().getMaxMapWalls().y };
 
-	position.x = ScreenSettings::GetInstance().Clamp(position.x, minMapLimit.x + playerWidth, maxMapLimit.x - playerWidth);
-	position.y = ScreenSettings::GetInstance().Clamp(position.y, minMapLimit.y + playerHeight,  maxMapLimit.y- playerHeight);
-
-	/*
-	if (position.y > GetScreenHeight()-GetScreenHeight()*0.255)
-	{
-		position.y = GetScreenHeight()- GetScreenHeight() * 0.255 ;
-	}
-	if (position.y < (GetScreenHeight() * 0.155 - image.height/2 * stats.imageScale))
-	{
-		position.y = (GetScreenHeight() * 0.155 - image.height/2 * stats.imageScale);
-	}
-	if (position.x < GetScreenHeight() * 0.19)
-	{
-		position.x = GetScreenHeight() * 0.19;
-	}
-	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.225 - image.width/2 * stats.imageScale)
-	{
-		position.x = GetScreenWidth()- GetScreenHeight() * 0.225 - image.width/2 * stats.imageScale;
-	}*/
+	position.x = ScreenSettings::GetInstance().Clamp(position.x, minLimit.x, maxLimit.x - playerWidth);
+	position.y = ScreenSettings::GetInstance().Clamp(position.y, minLimit.y-(playerHeight * 0.5), maxLimit.y- playerHeight);
 }
 void Character::shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage) {
 	if (GetTime() - lastTearTime >= stats.tearRate) {

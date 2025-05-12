@@ -30,6 +30,7 @@ public:
 	int getWaveNumber();
 private:
 	Vector2 minMapLimit, maxMapLimit;
+	float backgroundScale;
 	unique_ptr<Character> Player;
 	string playerTearType;
 	unique_ptr<Items> Loot;
@@ -58,4 +59,6 @@ private:
 	double breakStartingTime;
 	void DrawCountdownToNewWave();
 	void DrawScoreAndWaveNumber();
+	Vector2 getRandomPosition(Texture2D texture);
+	shared_ptr<Enemy> createEnemyBasedOnType(int type);
 };

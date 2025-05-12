@@ -6,8 +6,8 @@
 using namespace std;
 
 Game::Game() {
-	minMapLimit = { 0,0 };
-	maxMapLimit = { 2000,1500 };
+	minMapLimit = ScreenSettings::GetInstance().getMinMapLimit();
+	maxMapLimit = ScreenSettings::GetInstance().getMaxMapLimit();
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
@@ -28,8 +28,7 @@ Game::~Game() {
 void Game::DrawBackground()
 {
 	ClearBackground(BLACK);
-	DrawTextureEx(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE), { 0,0 }, 0, 1.5, WHITE);
-//	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE));
+	DrawTextureEx(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE),minMapLimit, 0, ScreenSettings::GetInstance().getBackgroundScale(), WHITE);
 }
 void Game::setPlayerCharacter(int Character)
 {
@@ -111,7 +110,7 @@ void Game::Draw() {
 		DrawCountdownToNewWave();
 	}
 	DrawScoreAndWaveNumber();
-	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), GetScreenWidth()*0.03, GetScreenHeight() * 0.4, 30);
+	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10, GetScreenHeight() * 0.4, 39*ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 }
 void Game::InputHandle() {
 	int moveX = 0;
@@ -159,55 +158,80 @@ void Game::DeleteInactiveTears()
 		}
 	}
 }
+Vector2 Game::getRandomPosition(Texture2D texture)
+{
+	Vector2 minLimit = ScreenSettings::GetInstance().getMinMapWalls();
+	Vector2 maxLimit = ScreenSettings::GetInstance().getMaxMapWalls();
+
+	int minX = static_cast<int>(minLimit.x + texture.width);
+	int maxX = static_cast<int>(maxLimit.x - texture.width);
+	int minY = static_cast<int>(minLimit.y + texture.height);
+	int maxY = static_cast<int>(maxLimit.y - texture.height);
+	Vector2 randomPos = { GetRandomValue(minX, maxX),GetRandomValue(minY, maxY) };
+
+	return randomPos;
+}
+shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
+{
+	string textureName = "Enemy" + to_string(type) + ".png";
+	Texture2D texture = LoadingTextures::GetInstance().passCorrectTexture(textureName, textureType::OBJECT_TEXTURE);
+	Vector2 position = getRandomPosition(texture);
+	switch (type) {
+	case 1:
+		return make_shared<Monster1>(position, texture);
+		break;
+	case 2:
+		return make_shared<Monster2>(position, texture);
+		break;
+	case 3:
+		return make_shared<Monster3>(position, texture);
+		break;
+	case 4:
+		return make_shared<Monster4>(position, texture);
+		break;
+	case 5:
+		return make_shared<Monster5>(position, texture);
+		break;
+	default:
+		return nullptr;
+		break;
+	}
+}
 vector <shared_ptr<Enemy>> Game::CreateEnemy()
 {
-	vector<shared_ptr<Enemy>> enemiesy;
-	int poolOfEnemiesTypes = 3;
+	vector<shared_ptr<Enemy>> enemies;
+
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue((int)minMapLimit.x+250,(int)maxMapLimit.x-250), GetRandomValue((int)minMapLimit.y + 250,(int)maxMapLimit.y - 250)};
-		enemiesy.push_back(make_shared<Monster5>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy5.png", textureType::OBJECT_TEXTURE)));
-		return enemiesy;
+		enemies.push_back(createEnemyBasedOnType(5));
+		return enemies;
 	}
-	int amountOfMiniBoss=0;
-	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue((int)minMapLimit.x + 250,(int)maxMapLimit.x - 250), GetRandomValue((int)minMapLimit.y + 250,(int)maxMapLimit.y - 250) };
-		if (waveNumber >= 5 && amountOfMiniBoss==0)
+
+	int poolOfEnemiesTypes = 3;
+	int amountOfMiniBoss = 0;
+
+	for (int i = 0; i < amountofEnemies; ++i) {
+		if (waveNumber >= 5 && amountOfMiniBoss == 0)
 		{
 			poolOfEnemiesTypes = 4;
 		}
-		if (amountOfMiniBoss >= 3)
+		if (amountOfMiniBoss >= 6)
 		{
 			poolOfEnemiesTypes = 3;
 		}
 		int type = GetRandomValue(1, poolOfEnemiesTypes);
-		switch (type) {
-		case 1:
-			enemiesy.push_back(make_shared<Monster1>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy1.png", textureType::OBJECT_TEXTURE)));
-			break;
-		case 2:
-			enemiesy.push_back(make_shared<Monster2>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy2.png", textureType::OBJECT_TEXTURE)));
-			break;
-		case 3:
-			enemiesy.push_back(make_shared<Monster3>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy3.png", textureType::OBJECT_TEXTURE)));
-			break;
-		case 4:
-			enemiesy.push_back(make_shared<Monster4>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy4.png", textureType::OBJECT_TEXTURE)));
+		if (type == 4)
+		{
 			amountOfMiniBoss++;
-			break;
-		default:
-			break;
 		}
-
+		enemies.push_back(createEnemyBasedOnType(type));
 	}
-	return enemiesy;
+	return enemies;
 }
 void Game::MoveEnemies()
 {
 	for (auto& enemy : enemies) {
-		if (!dynamic_pointer_cast<Monster3>(enemy)) {
-			enemy->Update(Player->GetXYPlayerPoint());
-		}
+		enemy->Update(Player->GetXYPlayerPoint());
 	}
 }
 void Game::EnemyShootTears()//Tutaj jeszcze zrobic jakas metode fabrykujaca i w tym getEnemyPosition zmienic dzialanie tego, tak zeby te strzaly lecialy fajnie ze srodka
@@ -339,7 +363,10 @@ void Game::beginNewWave()
 	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));
 	startCountdown = false;
-	amountofEnemies++;
+	if (amountofEnemies < 20)
+	{
+		amountofEnemies++;
+	}
 	proceedCreatingEnemies = true;
 	isCreatingNewWave = false;
 }
@@ -402,11 +429,11 @@ void Game::DrawCountdownToNewWave()
 	{
 		information = "BOSS FIGHT BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
 	}
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80,information, GetScreenHeight()*0.2);
+	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() / 2 }, 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,information, GetScreenHeight()*0.2);
 }
 void Game::DrawScoreAndWaveNumber()
 {
 	string keepWaveNumberText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(waveNumber, 3, "WAVE:");
 	string keepPlayerScoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerTotalScore, 6, "SCORE:");
-	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80, GetScreenHeight()*0.13);
+	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, GetScreenHeight()*0.13);
 }

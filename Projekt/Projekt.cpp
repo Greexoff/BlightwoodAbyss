@@ -92,14 +92,9 @@ int main()
 }
 /*|---TODO-----------------------------------------------------------------------|
 * !!!! Podmienic dzialanie regexow, zeby pobierac tez wartosci trinketow
-* !!!! Zamienic wszystkie stale liczby przy Draw na zalezne od GetScreenHeight() i GetScreenWidth() np. GetScreenHeight()*0,2 zamiast zwyklego 200
-* !!!! Wprowdzic imageScale dla wszystkich backgroundow
 * !!!/Dobrze dzialajacy  rules, collectibles 
 * !!! uporządkować pozostałe pliku h
-* !!! Sprawdzic czemu postac nie laduje sie na srodku, tylko troche na boku(pewnie image jeszcze nie jest zaladowany i dlatego)
 * !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
-* !!!Metody fabrykujace, zmienic dzialanie gdzie startuja tearsy przy tworzeniu - da sie w paru miejscach wyjebac casy chyba
-* !!sprobowac zrobic ten setw na tych napisach w highest scores
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?

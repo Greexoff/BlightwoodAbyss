@@ -354,10 +354,11 @@ void MainMenu::setButtonsPosition()
 	float spacing = GetScreenHeight() / 7;
 	for (size_t i=0;i<ButtonNames.size();i++)
 	{
+		float fontSize = buttonsFontSize * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		const string& name = ButtonNames[i];
-		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
+		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(fontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing- (measurements.y/2)) };
-		Rectangle rect = { buttonPosition.x,buttonPosition.y,measurements.x,measurements.y};
+		Rectangle rect = { buttonPosition.x,buttonPosition.y+GetScreenHeight()*0.03,measurements.x,measurements.y-GetScreenHeight()*0.05};
 		Buttons[name] = {rect, buttonPosition};
 	}
 }

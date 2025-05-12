@@ -43,10 +43,18 @@ void Character::setPlayerStartingPosition()
 void Character::Draw() {
 	DrawTextureEx(image, position,0, stats.imageScale, WHITE);
 }
-void Character::movePlayer(int x, int y)
+void Character::movePlayer(int x, int y, Vector2 minMapLimit, Vector2 maxMapLimit)
 {
 	position.x += x * stats.playerSpeed;
 	position.y += y * stats.playerSpeed;
+
+	float playerWidth = (image.width / 2) * stats.imageScale;
+	float playerHeight = (image.height / 2) * stats.imageScale;
+
+	position.x = ScreenSettings::GetInstance().Clamp(position.x, minMapLimit.x + playerWidth, maxMapLimit.x - playerWidth);
+	position.y = ScreenSettings::GetInstance().Clamp(position.y, minMapLimit.y + playerHeight,  maxMapLimit.y- playerHeight);
+
+	/*
 	if (position.y > GetScreenHeight()-GetScreenHeight()*0.255)
 	{
 		position.y = GetScreenHeight()- GetScreenHeight() * 0.255 ;
@@ -62,7 +70,7 @@ void Character::movePlayer(int x, int y)
 	if (position.x > GetScreenWidth()- GetScreenHeight() * 0.225 - image.width/2 * stats.imageScale)
 	{
 		position.x = GetScreenWidth()- GetScreenHeight() * 0.225 - image.width/2 * stats.imageScale;
-	}
+	}*/
 }
 void Character::shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage) {
 	if (GetTime() - lastTearTime >= stats.tearRate) {

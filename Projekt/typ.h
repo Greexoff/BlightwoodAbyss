@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include "screenSettings.h"
 import CharacterStats;
 using namespace std;
 class Character {
@@ -12,7 +13,7 @@ public:
 	virtual ~Character();
 	virtual void Draw();
 	virtual void DrawPlayerHealthBar();
-	virtual void movePlayer(int x, int y);
+	virtual void movePlayer(int x, int y, Vector2 minMapLimit, Vector2 maxMapLimit);
 	virtual void shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage);
 	vector<Tears> tearsy;
 	virtual Rectangle getPlayerRect();

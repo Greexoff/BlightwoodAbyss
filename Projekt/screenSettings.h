@@ -18,9 +18,15 @@ public:
 	Vector2 getScreenResolutionFactor();
 	void setResolutionFactor(int windowWidth, int windowHeight);
 	~ScreenSettings();
+	float Clamp(float value, float min, float max);
+	void updateCamera(Vector2 playerPosition);
+	Camera2D& getCamera();
 private:
 	Vector2 resolutionFactor;
+	Vector2 baseResolution;
+	Camera2D camera;
 	ScreenSettings();
 	ScreenSettings(const ScreenSettings&) = delete;
 	void operator=(const ScreenSettings&) = delete;
+	void setBaseResolution();
 };

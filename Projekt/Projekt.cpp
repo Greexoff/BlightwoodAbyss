@@ -44,7 +44,6 @@ int main()
 	int WindowWidth = (int)GetMonitorWidth(monitor) * 0.66;
 	int WindowHeight = (int)GetMonitorHeight(monitor) * 0.66;
 	ToggleFullscreen();
-
 	SetTargetFPS(60);
 
 	DrawLoadingStartBackground();
@@ -74,7 +73,6 @@ int main()
 		case MenuResult::START_GAME:
 			game->InputHandle();
 			game->Update();
-			game->DrawBackground();
 			game->Draw();
 			if (game->isGameOver())
 			{

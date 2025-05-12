@@ -34,20 +34,26 @@ void enemyTears::Draw() {
 		DrawTextureV(image, position, WHITE);
 	}
 }
-void Tears::UpdatePosition() {
+void Tears::UpdatePosition(Vector2 minMapLimit, Vector2 maxMapLimit) {
 		position.y += tearSpeed*tearDirection_Y;
 		position.x += tearSpeed * tearDirection_X;
 		if (active) {
-			if (position.y > GetScreenHeight() || position.y < 0 || position.x > GetScreenWidth() || position.x < 0)
+			if (position.y > maxMapLimit.y || position.y < minMapLimit.y || position.x > maxMapLimit.x || position.x < minMapLimit.x)
 			{
 				active = false;
 			}
 		}
 }
-void enemyTears::UpdatePosition(Vector2 Playerpos)
+void enemyTears::UpdatePosition(Vector2 Playerpos, Vector2 minMapLimit, Vector2 maxMapLimit)
 {	
 	position.x += TearsDirection.x * speed;
 	position.y += TearsDirection.y * speed;
+	if (active) {
+		if (position.y > maxMapLimit.y || position.y < minMapLimit.y || position.x > maxMapLimit.x || position.x < minMapLimit.x)
+		{
+			active = false;
+		}
+	}
 }
 Rectangle Tears::getTearRect()
 {

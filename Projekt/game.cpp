@@ -6,6 +6,8 @@
 using namespace std;
 
 Game::Game() {
+	minMapLimit = { 0,0 };
+	maxMapLimit = { 2000,1500 };
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
@@ -25,7 +27,9 @@ Game::~Game() {
 }
 void Game::DrawBackground()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE));
+	ClearBackground(BLACK);
+	DrawTextureEx(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE), { 0,0 }, 0, 1.5, WHITE);
+//	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOG.png", textureType::BACKGROUND_TEXTURE));
 }
 void Game::setPlayerCharacter(int Character)
 {
@@ -50,6 +54,7 @@ void Game::setPlayerCharacter(int Character)
 	}
 }
 void Game::Update() {
+	ScreenSettings::GetInstance().updateCamera(Player->GetXYPlayerPoint());
 	if (proceedCreatingEnemies)
 	{
 		disablePlayerTears();
@@ -59,13 +64,13 @@ void Game::Update() {
 	}
 	for (auto & tears : Player->tearsy)
 	{		
-		tears.UpdatePosition();
+		tears.UpdatePosition(minMapLimit, maxMapLimit);
 	}
 	MoveEnemies();
 	EnemyShootTears();
 	for (auto& enTears : EnemyTears)
 	{
-		enTears.UpdatePosition(Player->GetXYPlayerPoint());
+		enTears.UpdatePosition(Player->GetXYPlayerPoint(), minMapLimit, maxMapLimit);
 	}
 	CollisionCheck();
 	DeleteInactiveTears();
@@ -77,6 +82,8 @@ void Game::Update() {
 	}
 }
 void Game::Draw() {
+	BeginMode2D(ScreenSettings::GetInstance().getCamera());
+	DrawBackground();
 	if (Loot != nullptr)
 	{
 		Loot->DrawItems();
@@ -98,6 +105,7 @@ void Game::Draw() {
 	{
 		enemTears.Draw();
 	}
+	EndMode2D();
 	if (startCountdown)
 	{
 		DrawCountdownToNewWave();
@@ -112,7 +120,7 @@ void Game::InputHandle() {
 	if (IsKeyDown(KEY_D)){moveX = 1;}
 	if (IsKeyDown(KEY_W)){moveY = -1;}
 	if (IsKeyDown(KEY_S)){moveY = 1;}
-	Player->movePlayer(moveX, moveY);
+	Player->movePlayer(moveX, moveY, minMapLimit, maxMapLimit);
 	if (IsKeyDown(KEY_UP)) {
 		Player->shootTears(0, -1, LoadingTextures::GetInstance().passCorrectTexture(playerTearType, textureType::OBJECT_TEXTURE));
 	}
@@ -157,13 +165,13 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	int poolOfEnemiesTypes = 3;
 	if (waveNumber % 5 == 0)
 	{
-		Vector2 position = { GetRandomValue(GetScreenWidth() * 0.2,GetScreenWidth() - GetScreenWidth()*0.2), GetRandomValue(GetScreenWidth() * 0.2,GetScreenHeight() - GetScreenWidth() * 0.2) };
+		Vector2 position = { GetRandomValue((int)minMapLimit.x+250,(int)maxMapLimit.x-250), GetRandomValue((int)minMapLimit.y + 250,(int)maxMapLimit.y - 250)};
 		enemiesy.push_back(make_shared<Monster5>(position, LoadingTextures::GetInstance().passCorrectTexture("Enemy5.png", textureType::OBJECT_TEXTURE)));
 		return enemiesy;
 	}
 	int amountOfMiniBoss=0;
 	for (int i = 0; i < amountofEnemies; i++) {
-		Vector2 position = { GetRandomValue(GetScreenWidth() * 0.2,GetScreenWidth() - GetScreenWidth()* 0.2), GetRandomValue(GetScreenWidth() * 0.2,GetScreenHeight() - GetScreenWidth() * 0.2) };
+		Vector2 position = { GetRandomValue((int)minMapLimit.x + 250,(int)maxMapLimit.x - 250), GetRandomValue((int)minMapLimit.y + 250,(int)maxMapLimit.y - 250) };
 		if (waveNumber >= 5 && amountOfMiniBoss==0)
 		{
 			poolOfEnemiesTypes = 4;

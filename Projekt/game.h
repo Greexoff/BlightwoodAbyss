@@ -29,6 +29,7 @@ public:
 	void setLastTimePlayerWasTouched();
 	int getWaveNumber();
 private:
+	Vector2 minMapLimit, maxMapLimit;
 	unique_ptr<Character> Player;
 	string playerTearType;
 	unique_ptr<Items> Loot;

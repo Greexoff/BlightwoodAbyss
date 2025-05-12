@@ -66,12 +66,30 @@ void Enemy::Update(Vector2 PlayerPosition) {
 	}
 	position.x += dir.x * stats.enemySpeed;
 	position.y += dir.y * stats.enemySpeed;
+
+	float enemyWidth = image.width * stats.imageScale;
+	float enemyHeight = image.height * stats.imageScale;
+
+	Vector2 minLimit = { ScreenSettings::GetInstance().getMinMapWalls().x,ScreenSettings::GetInstance().getMinMapWalls().y };
+	Vector2 maxLimit = { ScreenSettings::GetInstance().getMaxMapWalls().x,ScreenSettings::GetInstance().getMaxMapWalls().y };
+
+	position.x = ScreenSettings::GetInstance().Clamp(position.x, minLimit.x, maxLimit.x - enemyWidth);
+	position.y = ScreenSettings::GetInstance().Clamp(position.y, minLimit.y - (enemyHeight * 0.5), maxLimit.y - enemyHeight);
 	
 }	
 void Enemy::UpdateColl(Vector2 Direction)
 {
 	position.x += stats.enemySpeed *Direction.x;
 	position.y += stats.enemySpeed *Direction.y;
+
+	float enemyWidth = image.width * stats.imageScale;
+	float enemyHeight = image.height * stats.imageScale;
+
+	Vector2 minLimit = { ScreenSettings::GetInstance().getMinMapWalls().x,ScreenSettings::GetInstance().getMinMapWalls().y };
+	Vector2 maxLimit = { ScreenSettings::GetInstance().getMaxMapWalls().x,ScreenSettings::GetInstance().getMaxMapWalls().y };
+
+	position.x = ScreenSettings::GetInstance().Clamp(position.x, minLimit.x, maxLimit.x - enemyWidth);
+	position.y = ScreenSettings::GetInstance().Clamp(position.y, minLimit.y - (enemyHeight * 0.5), maxLimit.y - enemyHeight);
 }
 Rectangle Enemy::getEnemyRect()
 {
@@ -138,9 +156,13 @@ int Enemy::getEnemyScore()
 	return stats.enemyScore;
 }
 
-Vector2 Enemy::getEnemyPosition(float divideX, float divideY)
+Vector2 Enemy::getEnemyShootingPosition(float divideX, float divideY)
 {
 	return { position.x+(image.width* stats.imageScale /divideX *stats.imageScale),position.y+(image.height* stats.imageScale /divideY* stats.imageScale) };
+}
+Vector2 Enemy::getEnemyPosition()
+{
+	return { position.x + (image.width * stats.imageScale / 2),position.y + (image.height * stats.imageScale / 2) };
 }
 void Enemy::loadEnemyStats()
 {

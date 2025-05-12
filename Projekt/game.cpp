@@ -234,7 +234,7 @@ void Game::MoveEnemies()
 		enemy->Update(Player->GetXYPlayerPoint());
 	}
 }
-void Game::EnemyShootTears()//Tutaj jeszcze zrobic jakas metode fabrykujaca i w tym getEnemyPosition zmienic dzialanie tego, tak zeby te strzaly lecialy fajnie ze srodka
+void Game::EnemyShootTears()
 {
 	if (!enemies.empty()) {
 		if (GetTime() - lastTearFired >= enemyShootingGap)
@@ -243,15 +243,15 @@ void Game::EnemyShootTears()//Tutaj jeszcze zrobic jakas metode fabrykujaca i w 
 			shared_ptr <Enemy> enem = enemies[randomInd];
 			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(2.8,2.8), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy3Tear.png", textureType::OBJECT_TEXTURE)));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyShootingPosition(2.8,2.8), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy3Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(3.6,3.3), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy4Tear.png", textureType::OBJECT_TEXTURE)));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyShootingPosition(4.1,3.8), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy4Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
 			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyPosition(3.8,3.6), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy5Tear.png", textureType::OBJECT_TEXTURE)));
+				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyShootingPosition(4.5,4.25), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy5Tear.png", textureType::OBJECT_TEXTURE)));
 			}
 			lastTearFired = GetTime();
 		}
@@ -280,7 +280,7 @@ void Game::CollisionCheck()
 						increasePlayerTotalScore((*it)->getEnemyScore());
 						if (waveNumber % 5 == 0)
 						{
-							createRandomLoot((*it)->getEnemyPosition(2.0,2.0));
+							createRandomLoot((*it)->getEnemyPosition());
 						}
 						it = enemies.erase(it);
 					}

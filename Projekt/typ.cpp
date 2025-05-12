@@ -83,7 +83,7 @@ void Character::DrawPlayerHealthBar()
 }
 Vector2 Character::GetXYPlayerPoint()
 {
-	return { (position.x + (image.width* stats.imageScale / 4)),(position.y + (image.width* stats.imageScale / 4)) };
+	return { (position.x + (image.width* stats.imageScale / 2)),(position.y + (image.height* stats.imageScale / 2)) };
 }
 void Character::loadOwnStats()
 {

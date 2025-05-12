@@ -2,3 +2,5 @@ Greexoff,Beka3,Highest Score: 182800, DamageTrinket: 1, HealthTrinket: 1, SpeedT
 Greexoff2,passy,Highest Score: 000123, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 0, TearSpeedTrinket: 0,
 NewPlayer1,NewPassword,Highest Score: 122422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 NewPlayer2,NewPassword,Highest Score: 100422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
+
+NowyTypPodTesty,JakiesHaslo,Highest Score: 051100,

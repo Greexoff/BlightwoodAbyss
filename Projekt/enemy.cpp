@@ -56,8 +56,8 @@ void Enemy::Draw() {
 }	
 void Enemy::Update(Vector2 PlayerPosition) {
 	Vector2 dir = {0,0};
-	float dx = PlayerPosition.x - position.x;
-	float dy = PlayerPosition.y - position.y; 
+	float dx = PlayerPosition.x - getEnemyPosition().x;
+	float dy = PlayerPosition.y - getEnemyPosition().y; 
 	float length = sqrt(dx * dx + dy * dy);
 
 	if (length != 0) {

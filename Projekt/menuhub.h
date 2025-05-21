@@ -104,7 +104,7 @@ public:
 private:
 	//|---Zmienne------------------------------------------------------------------------------------|
 	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };//typy przyciskow
-	float buttonsFontSize;
+	float buttonsFontSize, baseButtonsFontSize;
 	map<string, ButtonData>Buttons;//Mapa przyciskow - nazwy, rectangle i position (ButtonData)
 	vector<string> ButtonNames;//Vector przechowujacy nazwy przyciskow
 	int setAction;
@@ -122,8 +122,6 @@ public:
 	void Draw() override;//Metoda wyświetlająca na ekranie
 private:
 	//|---Zmienne---------------------------------------------------------------------------------|
-	fs::path CharImagePath;
-	map<string,Texture2D> CharacterImages;
 	enum CommentType{NOTHING, SWITCH_CHARACTER, SELECT_CHARACTER, STATS_CHARACTER, RETURN_BUTTON};
 	Rectangle ArrowArea, ConfirmArea, CharacterInformationArea, ReturnArea;//Przechowanie polozen przyciskow, ktore wykonuja dane funkcje (+wyswietlaja informacje)
 	Rectangle SmallerCommentsBar, BiggerCommentsBar;//Przechowanie rozmiarow tla na ktorym wyswietlane sa comments (bigger dla statystyk postaci)
@@ -159,7 +157,6 @@ public:
 	HighestScoreMenu();
 	~HighestScoreMenu();
 	void Draw() override;	
-	void handleScoresMenuLogic();
 	MenuResult handleMenuLogic() override;
 private:
 	Rectangle prievousPageButton;

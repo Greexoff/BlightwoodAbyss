@@ -334,9 +334,9 @@ MainMenu::MainMenu()
 	setAction = 0;
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
-	buttonsFontSize = 180;
 	setButtonsPosition();
-
+	baseButtonsFontSize = 180;
+	buttonsFontSize = baseButtonsFontSize;
 }
 MainMenu::~MainMenu()
 {
@@ -344,19 +344,21 @@ MainMenu::~MainMenu()
 void MainMenu::Draw()
 {
 	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	
 	for (const auto& [name, button_Data] : Buttons)
 	{
 		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
 	}
+	buttonsFontSize = baseButtonsFontSize;
 }
 void MainMenu::setButtonsPosition()
 {
+	buttonsFontSize *= ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	float spacing = GetScreenHeight() / 7;
 	for (size_t i=0;i<ButtonNames.size();i++)
 	{
-		float fontSize = buttonsFontSize * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		const string& name = ButtonNames[i];
-		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(fontSize, ButtonNames[i].c_str());
+		Vector2 measurements = GameUI::GetInstance().MeasureText(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing- (measurements.y/2)) };
 		Rectangle rect = { buttonPosition.x,buttonPosition.y+GetScreenHeight()*0.03,measurements.x,measurements.y-GetScreenHeight()*0.05};
 		Buttons[name] = {rect, buttonPosition};
@@ -390,6 +392,7 @@ int MainMenu::isButtonClicked()
 }
 MenuResult MainMenu::handleMenuLogic()
 {
+	setButtonsPosition();
 	Draw();
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{

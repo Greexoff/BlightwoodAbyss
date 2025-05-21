@@ -27,7 +27,6 @@ public:
 	virtual Vector2 getEnemyPosition();
 	virtual void loadEnemyStats();
 protected:
-	vector<Texture2D> loadImages;
 	Texture2D image;
 	Vector2 position;
 	enemyStats stats;

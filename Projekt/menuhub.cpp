@@ -360,7 +360,7 @@ void MainMenu::setButtonsPosition()
 		const string& name = ButtonNames[i];
 		Vector2 measurements = GameUI::GetInstance().MeasureText(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i *spacing- (measurements.y/2)) };
-		Rectangle rect = { buttonPosition.x,buttonPosition.y+GetScreenHeight()*0.03,measurements.x,measurements.y-GetScreenHeight()*0.05};
+		Rectangle rect = { buttonPosition.x,buttonPosition.y+GetScreenHeight()*0.03,measurements.x,measurements.y-GetScreenHeight()*0.055};
 		Buttons[name] = {rect, buttonPosition};
 	}
 }
@@ -690,7 +690,8 @@ AfterGameMenu::AfterGameMenu()
 {
 	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "MAIN MENU","EXIT" };
-	buttonsFontSize = 120;
+	baseButtonsFontSize = 180;
+	buttonsFontSize = baseButtonsFontSize;
 	setButtonPosition();
 }
 AfterGameMenu::~AfterGameMenu()
@@ -704,13 +705,14 @@ void AfterGameMenu::Draw()
 }
 void AfterGameMenu::setButtonPosition()
 {
-	float spacing = GetScreenHeight() / 8;
+	buttonsFontSize *= ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float spacing = GetScreenHeight() / 7;
 	for (size_t i = 0; i < ButtonNames.size(); i++)
 	{
 		const string& name = ButtonNames[i];
-		Vector2 measurements = GameUI::GetInstance().MeasureTextBar(buttonsFontSize, ButtonNames[i].c_str());
+		Vector2 measurements = GameUI::GetInstance().MeasureText(buttonsFontSize, ButtonNames[i].c_str());
 		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i * spacing) - (measurements.y / 2) };
-		Rectangle rect = GameUI::GetInstance().setBarArea(buttonsFontSize, ButtonNames[i], buttonPosition, 1, 0, 0);
+		Rectangle rect = { buttonPosition.x,buttonPosition.y + GetScreenHeight() * 0.03,measurements.x,measurements.y - GetScreenHeight() * 0.055 };
 		Buttons[name] = { rect, buttonPosition };
 	}
 }
@@ -720,9 +722,11 @@ void AfterGameMenu::DrawButtons()
 	{
 		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
 	}
+	buttonsFontSize = baseButtonsFontSize;
 }
 MenuResult AfterGameMenu::handleMenuLogic()
 {
+	setButtonPosition();
 	Draw();
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 		Vector2 mousePos = GetMousePosition();

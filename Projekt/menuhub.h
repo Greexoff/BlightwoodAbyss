@@ -185,7 +185,7 @@ private:
 	enum Pressed {NOTHING, NEWGAME_BUTTON, MAINMENU_BUTTON, EXIT_BUTTON};
 	map<string, ButtonData>Buttons;
 	vector<string> ButtonNames;
-	float buttonsFontSize;
+	float buttonsFontSize, baseButtonsFontSize;
 	void setButtonPosition();
 	void DrawButtons();
 	bool isNewScoreHigher(int DataBaseScore, int currentScore);

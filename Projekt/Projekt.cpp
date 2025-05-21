@@ -99,10 +99,3 @@ int main()
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?
 */
-
-/*|---Rzeczy-z-Labow------------------------------------------------------------|
-* <thread> wątek do zastopowania nowej fali i obslugi bledow w LoginMenu
-* <regex> logowanie sie do gierki
-* <filesystem> ladowanie tekstur
-* <module> strukutra CharacterStats
-*/

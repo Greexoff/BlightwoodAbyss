@@ -11,21 +11,27 @@
 #include "screenSettings.h"
 import CharacterStats;
 
-void ToggleFullScreenWindow(int windowWidth, int windowHeight)
+void ToggleFullScreenWindow()
 {
 	int monitor = GetCurrentMonitor();
-	if (!IsWindowFullscreen())
+	Vector2 mousePos = GetMousePosition();
+	if (IsWindowFullscreen())
 	{
-		SetWindowSize(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+		int windowWidth = (int)GetMonitorWidth(monitor) * 0.66;
+		int windowHeight = (int)GetMonitorHeight(monitor) * 0.66;
 		ToggleFullscreen();
-		ScreenSettings::GetInstance().setResolutionFactor(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+		SetWindowSize(windowWidth, windowHeight);
+		SetWindowPosition((GetMonitorWidth(monitor) - windowWidth) / 2, (GetMonitorHeight(monitor) - windowHeight) / 2);
+		ScreenSettings::GetInstance().setResolutionFactor(windowWidth, windowHeight);
+		SetMousePosition(mousePos.x * ScreenSettings::GetInstance().getScreenResolutionFactor().x, mousePos.y * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	
 	}
 	else
 	{
 		ToggleFullscreen();
-		SetWindowSize(windowWidth, windowHeight);
-		SetWindowPosition((GetMonitorWidth(monitor)-windowWidth)/ 2, (GetMonitorHeight(monitor)-windowHeight )/ 2);
-		ScreenSettings::GetInstance().setResolutionFactor(windowWidth, windowHeight);
+		SetWindowSize(ScreenSettings::GetInstance().getBaseResolution().x, ScreenSettings::GetInstance().getBaseResolution().y);
+		SetMousePosition(mousePos.x / ScreenSettings::GetInstance().getScreenResolutionFactor().x, mousePos.y / ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+		ScreenSettings::GetInstance().setResolutionFactor(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
 	}
 }
 using namespace std;
@@ -34,8 +40,6 @@ int main()
 {
 	int monitor = GetCurrentMonitor();
 	InitWindow(GetMonitorWidth(monitor),GetMonitorHeight(monitor), "Blightwood Abbys");
-	int WindowWidth = (int)GetMonitorWidth(monitor) * 0.66;
-	int WindowHeight = (int)GetMonitorHeight(monitor) * 0.66;
 	ToggleFullscreen();
 	SetTargetFPS(60);
 	Game* game = nullptr;
@@ -44,7 +48,7 @@ int main()
 
 	while (!WindowShouldClose()&& gameState!=MenuResult::EXIT){
 		if (IsKeyPressed(KEY_F11)) {
-			ToggleFullScreenWindow(WindowWidth, WindowHeight);
+			ToggleFullScreenWindow();
 		}
 		BeginDrawing();
 		switch (gameState)

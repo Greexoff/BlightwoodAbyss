@@ -57,7 +57,7 @@ void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, f
 }
 void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position)
 {
-	float gap = 30;
+	float gap = fontSize;
 	map<string, characterStats>stats = CharactersData::getInstance().getCharacterStats();
 	string characterName;
 	switch (pageNumber)
@@ -90,7 +90,7 @@ void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, fl
 {
 	float barBorders = 10;
 	float lineWidthScale = 0.9;
-	float minFontSize = 30;
+	float minFontSize = 10;
 	float gap = 2;
 
 	vector<string> lines;

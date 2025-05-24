@@ -128,10 +128,13 @@ private:
 	int pageNumber;//Przechowanie strony na której jest gracz (czyli identyfikacja, która postać jest wybrana)
 	int leftSidePageLimit;//Przechowanie limitu lewostronnego
 	int rightSidePageLimit;//Przechowanie limitu prawostronnego
+	Texture2D characterTexture;
+	float textureScale;
 	//|---Metody----------------------------------------------------------------------------------|
 	void DrawComments(CommentType type);//Metoda wyświetlająca wlasciwe informacje w zaleznosci od typu komentarza
 	void chooseExplanationType();//Metoda wybierajaca typ komentarza na podstawie polozenia kursora
 	void DrawPlayerCharacterImage();
+	void setAreas();
 };
 class RulesMenu : public Menu
 {

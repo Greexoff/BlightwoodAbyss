@@ -26,6 +26,7 @@ public:
 	float getBackgroundScale();
 	Vector2 getMinMapWalls();
 	Vector2 getMaxMapWalls();
+	Vector2 getBaseResolution();
 private:
 	void setMapLimit(Vector2& mapLimit);
 	float backgroundScale;

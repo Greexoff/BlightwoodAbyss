@@ -21,6 +21,10 @@ ScreenSettings& ScreenSettings::GetInstance()
 ScreenSettings::~ScreenSettings()
 {
 }
+Vector2 ScreenSettings::getBaseResolution()
+{
+	return baseResolution;
+}
 Vector2 ScreenSettings::getScreenResolutionFactor()
 {
 	return resolutionFactor;
@@ -31,6 +35,7 @@ void ScreenSettings::setResolutionFactor(int windowWidth, int windowHeight)
 	Vector2 sourceResolution = { GetMonitorWidth(monitor),GetMonitorHeight(monitor)};
 	resolutionFactor.x = windowWidth / sourceResolution.x;
 	resolutionFactor.y = windowHeight / sourceResolution.y;
+
 }
 float ScreenSettings::Clamp(float value, float min, float max)
 {
@@ -46,7 +51,8 @@ float ScreenSettings::Clamp(float value, float min, float max)
 }
 void ScreenSettings::setBaseResolution()
 {
-	baseResolution = { 1920,1080 };
+	int monitor = GetCurrentMonitor();
+	baseResolution = { (float)GetMonitorWidth(monitor),(float)GetMonitorHeight(monitor)};
 }
 void ScreenSettings::updateCamera(Vector2 playerPosition)
 {

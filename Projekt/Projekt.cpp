@@ -7,7 +7,6 @@
 #include "game.h"
 #include "menuhub.h"
 #include "UI.h"
-#include "UserInfo.h"
 #include "screenSettings.h"
 import CharacterStats;
 
@@ -42,27 +41,17 @@ int main()
 			}
 			break;
 		case MenuResult::START_GAME:
-			game->InputHandle();
 			game->Update();
 			game->Draw();
-			if (game->isGameOver())
+			if (game->isPostTabClosed())
 			{
-				Menu::setSelectedMenu(make_unique<AfterGameMenu>());
-				if (auto* agm = dynamic_cast<AfterGameMenu*>(Menu::getSelectedMenu())) {
-					agm->updatePlayerScoreInDataBase(game->playerTotalScore, UserInfo::GetInstance().getUsername());
-				}
+				Menu::setSelectedMenu(make_unique<MainMenu>());
 				delete game;
 				game = nullptr;
 				gameState = Menu::getSelectedMenu()->handleMenuLogic();
 			}
 			break;
 		case MenuResult::EXIT:
-			break;
-		case MenuResult::AFTER_GAME:
-			if (gameState == MenuResult::AFTER_GAME)
-			{
-				gameState = Menu::getSelectedMenu()->handleMenuLogic();
-			}
 			break;
 		default:
 			break;

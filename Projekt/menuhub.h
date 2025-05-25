@@ -22,7 +22,6 @@ enum class MenuResult
 	CONTINUE,
 	START_GAME,
 	EXIT,
-	AFTER_GAME,
 };
 struct ButtonData
 {
@@ -173,21 +172,4 @@ private:
 	void DrawPlayersScores();
 	void ArrowClicked(Rectangle bar, int action, bool visibility);
 	void setButtonVisibility(bool& visibility, int extremePageNumber);
-};
-class AfterGameMenu : public Menu
-{
-public:
-	AfterGameMenu();
-	~AfterGameMenu();
-	void Draw() override;
-	MenuResult handleMenuLogic() override;
-	void updatePlayerScoreInDataBase(int playerScore, string username);
-private:
-	enum Pressed {NOTHING, NEWGAME_BUTTON, MAINMENU_BUTTON, EXIT_BUTTON};
-	map<string, ButtonData>Buttons;
-	vector<string> ButtonNames;
-	float buttonsFontSize, baseButtonsFontSize;
-	void setButtonPosition();
-	void DrawButtons();
-	bool isNewScoreHigher(int DataBaseScore, int currentScore);
 };

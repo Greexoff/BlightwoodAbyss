@@ -40,7 +40,7 @@ StartingMenu::~StartingMenu()
 void StartingMenu::Draw()
 {
 	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
-	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, titleFontSize * ScreenSettings::GetInstance().getScreenResolutionFactor().y, titleName, GetScreenHeight()*0.3);
+	GameUI::GetInstance().DrawTextOnBar({ (float)GetScreenWidth()*0.2f,0,(float)GetScreenWidth()*0.6f,(float)GetScreenHeight() }, titleFontSize * ScreenSettings::GetInstance().getScreenResolutionFactor().y, titleName, GetScreenHeight()*0.3);
 }
 MenuResult StartingMenu::handleMenuLogic()
 {
@@ -87,16 +87,15 @@ void LoginMenu::setBarAreas()
 	ConfirmPosition = { (float)(GetScreenWidth() * 0.5 - measureConfirm.x * 0.5),0};
 	PasswordPosition = { (float)(GetScreenWidth() * 0.5 - measurePassword.x * 0.5),0};
 	SignupPosition = { (float)(GetScreenWidth() * 0.775 - measureSignup.x * 0.5),0};
-	ReturnPosition= { (float)(GetScreenWidth() * 0.225 - measureReturn.x * 0.5),0 };
-	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 10, 10);
+	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 10*ScreenSettings::GetInstance().getScreenResolutionFactor().x, 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	PasswordPosition.y = LoginMenu_UsernameBarArea.y + LoginMenu_UsernameBarArea.height + GetScreenHeight()*0.01;
-	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 10, 10);
+	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	ConfirmPosition.y = LoginMenu_PasswordBarArea.y + LoginMenu_PasswordBarArea.height + GetScreenHeight() * 0.125;
 	SignupPosition.y = ConfirmPosition.y;
-	ReturnPosition.y = SignupPosition.y;
-	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
-	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
-	ReturnToPrieviousMenuButton = GameUI::GetInstance().setBarArea(ReturnButtonFontSize, "RETURN", ReturnPosition, 1, 30, 30);
+	ReturnPosition = SignupPosition;
+	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	ReturnToPrieviousMenuButton = GameUI::GetInstance().setBarArea(ReturnButtonFontSize, "RETURN", ReturnPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 }
 void LoginMenu::Draw()
 {
@@ -318,7 +317,7 @@ MenuResult LoginMenu::handleMenuLogic()
 void LoginMenu::showLoginError()
 {
 	showError = true;
-	std::this_thread::sleep_for(std::chrono::seconds(errorDurationTime));
+	this_thread::sleep_for(chrono::seconds(errorDurationTime));
 	showError = false;
 }
 void LoginMenu::ChooseErrorType()
@@ -452,8 +451,8 @@ void CharacterSelectionMenu::setAreas()
 	ArrowArea = { 1429 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,510 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1659 - 1428) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(656 - 510) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
 	CharacterInformationArea = { 332 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,228 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(526 - 332) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(444 - 228) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
 	ReturnArea = { 0 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,0 * ScreenSettings::GetInstance().getScreenResolutionFactor().y ,200 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,200 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
-	SmallerCommentsBar = { 1304 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,115 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,500 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,350 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
-	BiggerCommentsBar = { 1304 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,115 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,500 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,550 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	SmallerCommentsBar = { 1304 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,115 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,500 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,300 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	BiggerCommentsBar = { 1304 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,115 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,500 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,530 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
 }
 void CharacterSelectionMenu::DrawComments(CommentType type)
 {
@@ -693,103 +692,4 @@ MenuResult HighestScoreMenu::handleMenuLogic()
 	}
 	ReturnToMenu();
 	return MenuResult::CONTINUE;
-}
-
-AfterGameMenu::AfterGameMenu()
-{
-	ButtonNames = { "NEW GAME", "MAIN MENU","EXIT" };
-	baseButtonsFontSize = 180;
-	buttonsFontSize = baseButtonsFontSize;
-	setButtonPosition();
-}
-AfterGameMenu::~AfterGameMenu()
-{
-
-}
-void AfterGameMenu::Draw() 
-{
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundMAIN.png", textureType::BACKGROUND_TEXTURE));
-	DrawButtons();
-}
-void AfterGameMenu::setButtonPosition()
-{
-	buttonsFontSize *= ScreenSettings::GetInstance().getScreenResolutionFactor().y;
-	float spacing = GetScreenHeight() / 7;
-	for (size_t i = 0; i < ButtonNames.size(); i++)
-	{
-		const string& name = ButtonNames[i];
-		Vector2 measurements = GameUI::GetInstance().MeasureText(buttonsFontSize, ButtonNames[i].c_str());
-		Vector2 buttonPosition = { (GetScreenWidth() / 2) - (measurements.x / 2),(GetScreenHeight() / 6 + i * spacing) - (measurements.y / 2) };
-		Rectangle rect = { buttonPosition.x,buttonPosition.y + GetScreenHeight() * 0.03,measurements.x,measurements.y - GetScreenHeight() * 0.055 };
-		Buttons[name] = { rect, buttonPosition };
-	}
-}
-void AfterGameMenu::DrawButtons()
-{
-	for (const auto& [name, button_Data] : Buttons)
-	{
-		GameUI::GetInstance().DrawTextWithOutline(name, button_Data.position, buttonsFontSize);
-	}
-	buttonsFontSize = baseButtonsFontSize;
-}
-MenuResult AfterGameMenu::handleMenuLogic()
-{
-	setButtonPosition();
-	Draw();
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		Vector2 mousePos = GetMousePosition();
-		if (CheckCollisionPointRec(mousePos, Buttons["NEW GAME"].rectangle))
-		{
-			Menu::setSelectedMenu(make_unique<CharacterSelectionMenu>());
-			return MenuResult::CONTINUE;
-		}
-		if (CheckCollisionPointRec(mousePos, Buttons["MAIN MENU"].rectangle))
-		{
-			Menu::setSelectedMenu(make_unique<MainMenu>());
-			return MenuResult::CONTINUE;
-		}
-		if (CheckCollisionPointRec(mousePos, Buttons["EXIT"].rectangle))
-		{
-			return MenuResult::EXIT;
-		}
-	}
-	return MenuResult::AFTER_GAME;
-}
-void AfterGameMenu::updatePlayerScoreInDataBase(int playerScore, string username)
-{
-	ifstream DataBase(data_basePath);
-	ofstream UpdatedDataBase("temp.txt");
-	if (!DataBase.is_open() || !UpdatedDataBase.is_open()) 
-	{
-		return;
-	}
-
-	regex usersScoresRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),(.*))");
-	smatch match;
-	string line;
-
-	while (getline(DataBase, line))
-	{
-		if (regex_match(line, match, usersScoresRegex) && match[1] == username)
-		{
-			if (isNewScoreHigher(stoi(match[3]), playerScore))
-			{
-				string newScore = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerScore, 6, "");
-				line = match[1].str() + "," + match[2].str() + ",Highest Score: " + newScore + "," + match[4].str();
-			}
-		}
-		UpdatedDataBase << line<<"\n";
-	}
-	DataBase.close();
-	UpdatedDataBase.close();
-	fs::remove(data_basePath);
-	fs::rename("temp.txt", data_basePath.c_str());
-}
-bool AfterGameMenu::isNewScoreHigher(int DataBaseScore, int currentScore)
-{
-	if (currentScore > DataBaseScore)
-	{
-		return true;
-	}
-	return false;
 }

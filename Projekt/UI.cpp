@@ -41,8 +41,8 @@ void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fon
 }
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
-	DrawRectangleRec(borders, { 0,0,0,opacity });
-	DrawRectangleLinesEx(borders, 10, BLACK);
+	DrawRectangleRounded(borders, 0.25, 16, { 0,0,0,opacity });
+	DrawRectangleRoundedLinesEx(borders, 0.25, 16, 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, BLACK);
 }
 void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize)
 {
@@ -129,20 +129,18 @@ void GameUI::DrawData(string& name, Rectangle bar, float& fontSize)
 {
 	int maxFontSize = 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	int minFontSize = 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
-	int spacing = 2;
-	int position = 0;
-	position = bar.y + (bar.height / 2);
-	float barBorder = 30;
+	int spacing = 2 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	int position = bar.y + (bar.height / 2);
+	float barBorder = 20 * ScreenSettings::GetInstance().getScreenResolutionFactor().x;
 	float textStartX = bar.x + barBorder;
 	float maxTextEndX = bar.x + bar.width - barBorder;
-	bar.x = textStartX;
 	Vector2 textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());
 	while ((textStartX + textSize.x > maxTextEndX) && fontSize > minFontSize)
 	{
 		fontSize -= 1;
 		textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());
 	}
-	while (fontSize == minFontSize && (textStartX + textSize.x > maxTextEndX) && !name.empty())
+	while ((textStartX + textSize.x > maxTextEndX) && !name.empty())
 	{
 		name.pop_back();
 		textSize = GameUI::GetInstance().MeasureText(fontSize, name.c_str());

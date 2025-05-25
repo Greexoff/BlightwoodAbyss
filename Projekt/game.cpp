@@ -21,6 +21,9 @@ Game::Game() {
 	enemies = CreateEnemy();
 	startCountdown = false;
 	breakStartingTime = 0;
+	wasDatabaseUpdated = false;
+	isNewScoreHigher = false;
+	postTabClosed = false;
 }
 Game::~Game() {
 	enemies.clear();	
@@ -54,31 +57,35 @@ void Game::setPlayerCharacter(int Character)
 }
 void Game::Update() {
 	ScreenSettings::GetInstance().updateCamera(Player->GetXYPlayerPoint());
-	if (proceedCreatingEnemies)
+	if (!isGameOver())
 	{
-		disablePlayerTears();
-		enemies = CreateEnemy();
-		lastTimePlayerWasTouched = GetTime();
-		proceedCreatingEnemies = false;
+		InputHandle();
+		if (proceedCreatingEnemies)
+		{
+			disablePlayerTears();
+			enemies = CreateEnemy();
+			lastTimePlayerWasTouched = GetTime();
+			proceedCreatingEnemies = false;
+		}
+		MoveEnemies();
+		EnemyShootTears();
+		CollisionCheck();
+		if (enemies.empty() && !isCreatingNewWave)
+		{
+			isCreatingNewWave = true;
+			thread t(&Game::beginNewWave, this);
+			t.detach();
+		}
 	}
-	for (auto & tears : Player->tearsy)
-	{		
+	for (auto& tears : Player->tearsy)
+	{
 		tears.UpdatePosition(minMapLimit, maxMapLimit);
 	}
-	MoveEnemies();
-	EnemyShootTears();
 	for (auto& enTears : EnemyTears)
 	{
 		enTears.UpdatePosition(Player->GetXYPlayerPoint(), minMapLimit, maxMapLimit);
 	}
-	CollisionCheck();
 	DeleteInactiveTears();
-	if (enemies.empty() && !isCreatingNewWave)
-	{
-		isCreatingNewWave = true;
-		thread t(&Game::beginNewWave,this);
-		t.detach();
-	}
 }
 void Game::Draw() {
 	BeginMode2D(ScreenSettings::GetInstance().getCamera());
@@ -87,30 +94,40 @@ void Game::Draw() {
 	{
 		Loot->DrawItems();
 	}
-	Player->DrawPlayerHealthBar();
-	Player->Draw();	
-	for (auto& tears : Player->tearsy) {
-		tears.Draw();
-	}
 	for (auto& enemy : enemies)
 	{
 		enemy->Draw();
-	}
-	for (auto& enemy : enemies)
-	{
-		enemy->DrawEnemyHealthBar();
 	}
 	for (auto& enemTears : EnemyTears)
 	{
 		enemTears.Draw();
 	}
-	EndMode2D();
-	if (startCountdown)
+	if (!isGameOver())
 	{
-		DrawCountdownToNewWave();
+		Player->DrawPlayerHealthBar();
+		Player->Draw();
+		for (auto& tears : Player->tearsy) {
+			tears.Draw();
+		}
+		for (auto& enemy : enemies)
+		{
+			enemy->DrawEnemyHealthBar();
+		}
+		EndMode2D();
+		if (startCountdown)
+		{
+			DrawCountdownToNewWave();
+		}
+		DrawScoreAndWaveNumber();
+		GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10, GetScreenHeight() * 0.4, 39 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	}
-	DrawScoreAndWaveNumber();
-	GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10, GetScreenHeight() * 0.4, 39*ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	else
+	{
+		EndMode2D();
+		handlePostGameTab();
+	}
+	
+	
 }
 void Game::InputHandle() {
 	int moveX = 0;
@@ -297,6 +314,21 @@ void Game::CollisionCheck()
 
 			}
 		}
+		for (size_t i = 0; i < enemies.size(); i++)
+		{
+			for (size_t j = i + 1; j < enemies.size(); j++)
+			{
+				if ((CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))) {
+					if (!dynamic_pointer_cast<Monster3>(enemies[i]))
+					{
+						enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+					}
+					if (!dynamic_pointer_cast<Monster3>(enemies[j])) {
+						enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
+					}
+				}
+			}
+		}
 		auto it = enemies.begin();
 		while (it != enemies.end())
 		{
@@ -311,33 +343,15 @@ void Game::CollisionCheck()
 				++it;
 			}
 		}
-	}
-	for (auto& enemTear : EnemyTears)
-	{
-		if (CheckCollisionRecs(enemTear.getTearRect(), Player->getPlayerRect()))
+		for (auto& enemTear : EnemyTears)
 		{
-			if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
-				Player->setPlayerHealth(-1);
-				lastTimePlayerWasTouched = GetTime();
-			}
-			enemTear.active = false;
-		}
-	}
-	for (size_t i = 0; i < enemies.size(); i++)
-	{
-		for (size_t j = i + 1; j < enemies.size(); j++)
-		{
-			if ((CheckCollisionRecs(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()))) {
-				if (!dynamic_pointer_cast<Monster3>(enemies[i]) || !dynamic_pointer_cast<Monster3>(enemies[j]))
-				{
-					enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
-				//	continue;
-				//	enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+			if (CheckCollisionRecs(enemTear.getTearRect(), Player->getPlayerRect()))
+			{
+				if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
+					Player->setPlayerHealth(-1);
+					lastTimePlayerWasTouched = GetTime();
 				}
-				/*if (!dynamic_pointer_cast<Monster3>(enemies[j])) {
-						enemies[j]->UpdateColl(enemies[j]->getCollisionSide(enemies[j]->getEnemyRect(), enemies[i]->getEnemyRect()));
-				}*/
-				//enemies[i]->UpdateColl(enemies[i]->getCollisionSide(enemies[i]->getEnemyRect(), enemies[j]->getEnemyRect()));
+				enemTear.active = false;
 			}
 		}
 	}
@@ -436,4 +450,73 @@ void Game::DrawScoreAndWaveNumber()
 	string keepWaveNumberText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(waveNumber, 3, "WAVE:");
 	string keepPlayerScoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerTotalScore, 6, "SCORE:");
 	GameUI::GetInstance().DrawGameUI(keepPlayerScoreText + " " + keepWaveNumberText, 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, GetScreenHeight()*0.13);
+}
+void Game::handlePostGameTab()
+{
+	if (!wasDatabaseUpdated)
+	{
+		isNewScoreHigher = updatePlayerScoreInDataBase(playerTotalScore, UserInfo::GetInstance().getUsername(), wasDatabaseUpdated);
+	}
+	Rectangle borders = { GetScreenWidth() * 0.2,GetScreenHeight() * 0.2,GetScreenWidth() * 0.6,GetScreenHeight() * 0.6 };
+	GameUI::GetInstance().DrawBlackBar(borders, 100);
+	GameUI::GetInstance().DrawTextOnBar(borders, 150* ScreenSettings::GetInstance().getScreenResolutionFactor().y, "GAME OVER!", borders.y + (30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+	GameUI::GetInstance().DrawTextOnBar(borders, 75 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, "YOUR SCORE:", borders.y + (200 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+	string scoreText = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerTotalScore, 6, "");
+	GameUI::GetInstance().DrawTextOnBar(borders, 75 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, scoreText, borders.y + (280 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+	if (isNewScoreHigher)
+	{
+		GameUI::GetInstance().DrawTextOnBar(borders, 100 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, "NEW PERSONAL BEST!", borders.y + (360 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+	}
+	Vector2 measureReturnText = GameUI::GetInstance().MeasureText(80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, "RETURN TO MENU");
+	Rectangle returnButton =GameUI::GetInstance().setBarArea(80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, "RETURN TO MENU", { (borders.x+(borders.width*0.5f))-(measureReturnText.x*0.5f), borders.y + (500 * ScreenSettings::GetInstance().getScreenResolutionFactor().y)}, 1, 10, 10);
+	GameUI::GetInstance().DrawBlackBar(returnButton, 100);
+	GameUI::GetInstance().DrawTextOnBar(returnButton, 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, "RETURN TO MENU", returnButton.y+(10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+	Vector2 mousePos = GetMousePosition();
+	if (CheckCollisionPointRec(mousePos, returnButton) && IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+	{
+		postTabClosed = true;
+	}
+
+}
+bool Game::isPostTabClosed()
+{
+	return postTabClosed;
+}
+bool Game::updatePlayerScoreInDataBase(int playerScore, string username, bool& flag)
+{
+	flag = true;
+	bool isHigher = true;
+	ifstream DataBase(data_basePath);
+	ofstream UpdatedDataBase("temp.txt");
+	if (!DataBase.is_open() || !UpdatedDataBase.is_open())
+	{
+		return false;
+	}
+
+	regex usersScoresRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),(.*))");
+	smatch match;
+	string line;
+
+	while (getline(DataBase, line))
+	{
+		if (regex_match(line, match, usersScoresRegex) && match[1] == username)
+		{
+			if (stoi(match[3])<playerScore)
+			{
+				isHigher = true;
+				string newScore = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerScore, 6, "");
+				line = match[1].str() + "," + match[2].str() + ",Highest Score: " + newScore + "," + match[4].str();
+			}
+			else
+			{
+				isHigher = false;
+			}
+		}
+		UpdatedDataBase << line << "\n";
+	}
+	DataBase.close();
+	UpdatedDataBase.close();
+	fs::remove(data_basePath);
+	fs::rename("temp.txt", data_basePath.c_str());
+	return isHigher;
 }

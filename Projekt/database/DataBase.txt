@@ -1,6 +1,32 @@
-Greexoff,Beka3,Highest Score: 182800, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
+Greexoff,Beka3,Highest Score: 008900, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 Greexoff2,passy,Highest Score: 000123, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 0, TearSpeedTrinket: 0,
 NewPlayer1,NewPassword,Highest Score: 122422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 NewPlayer2,NewPassword,Highest Score: 100422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 
 NowyTypPodTesty,JakiesHaslo,Highest Score: 051100,
+
+NewCharacter,YUPs,Highest Score: 000000,
+
+NewAccount,yupp,Highest Score: 000300,
+
+Cotojest,omegalul,Highest Score: 000200,
+
+nowychlop,asdas,Highest Score: 000200,
+
+asdasd,asdasda,Highest Score: 000300,
+
+asdasdda,asdasdadas,Highest Score: 000000,
+
+asdsadadasdasd,asdasdadsd,Highest Score: 000300,
+
+NOWAPROBA,adasdaadasdd,Highest Score: 000200,
+
+adasdasdasda,asdasdadas,Highest Score: 000300,
+
+adasdada,sadasdsad,Highest Score: 000100,
+
+awwwwww,awwwwww,Highest Score: 000900,
+
+aawwwsw,dwsw,Highest Score: 000500,
+
+asasasas,asasas,Highest Score: 000200,

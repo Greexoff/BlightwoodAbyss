@@ -11,6 +11,7 @@
 #include <iostream>
 #include <memory>
 #include <thread>
+#include "UserInfo.h"
 #include "screenSettings.h"
 using namespace std;
 namespace fs = filesystem;
@@ -23,12 +24,19 @@ public:
 	void Update();
 	void DrawBackground();
 	void InputHandle();
-	bool isGameOver();
 	int playerTotalScore;
 	void setPlayerCharacter(int Character);
 	void setLastTimePlayerWasTouched();
 	int getWaveNumber();
+	bool isPostTabClosed();
 private:
+	bool postTabClosed;
+	bool isNewScoreHigher;
+	bool wasDatabaseUpdated;
+	bool updatePlayerScoreInDataBase(int playerScore, string username, bool& flag);
+	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";
+	void handlePostGameTab();
+	bool isGameOver();
 	Vector2 minMapLimit, maxMapLimit;
 	float backgroundScale;
 	unique_ptr<Character> Player;

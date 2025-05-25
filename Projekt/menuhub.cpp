@@ -102,7 +102,7 @@ void LoginMenu::Draw()
 {
 	setFontSizes();
 	setBarAreas();
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundLOGIN.png", textureType::BACKGROUND_TEXTURE));
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_UsernameBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
@@ -349,7 +349,7 @@ MainMenu::~MainMenu()
 }
 void MainMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundMAIN.png", textureType::BACKGROUND_TEXTURE));
 	
 	for (const auto& [name, button_Data] : Buttons)
 	{
@@ -708,7 +708,7 @@ AfterGameMenu::~AfterGameMenu()
 }
 void AfterGameMenu::Draw() 
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundMAIN.png", textureType::BACKGROUND_TEXTURE));
 	DrawButtons();
 }
 void AfterGameMenu::setButtonPosition()

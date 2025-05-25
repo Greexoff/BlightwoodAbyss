@@ -6,49 +6,49 @@ Items::~Items()
 {
 
 }
-DamageTrinket::DamageTrinket(Texture2D loadedImage, Vector2 enemyPos)
+DamageTrinket::DamageTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	image = loadedImage;
+	image = &loadedImage;
 	setPosition(enemyPos);
 }
 DamageTrinket::~DamageTrinket() {}
-TearRateTrinket::TearRateTrinket(Texture2D loadedImage, Vector2 enemyPos)
+TearRateTrinket::TearRateTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	image = loadedImage;
+	image = &loadedImage;
 	setPosition(enemyPos);
 }
 TearRateTrinket::~TearRateTrinket() {}
-SpeedTrinket::SpeedTrinket(Texture2D loadedImage, Vector2 enemyPos)
+SpeedTrinket::SpeedTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	image = loadedImage;
+	image = &loadedImage;
 	setPosition(enemyPos);
 }
 SpeedTrinket::~SpeedTrinket() {}
-HealthTrinket::HealthTrinket(Texture2D loadedImage, Vector2 enemyPos)
+HealthTrinket::HealthTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	image = loadedImage;
+	image = &loadedImage;
 	setPosition(enemyPos);
 }
 HealthTrinket::~HealthTrinket() {}
-TearSpeedTrinket::TearSpeedTrinket(Texture2D loadedImage, Vector2 enemyPos)
+TearSpeedTrinket::TearSpeedTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	image = loadedImage;
+	image = &loadedImage;
 	setPosition(enemyPos);
 }
 TearSpeedTrinket::~TearSpeedTrinket() {}
 
 void Items::DrawItems()
 {
-	DrawTextureV(image, position, WHITE);
+	DrawTextureV(*image, position, WHITE);
 }
 void Items::setPosition(Vector2 enemyPos)
 {
-	position.x = enemyPos.x - 3 * (image.width / 4);
-	position.y = enemyPos.y - 3 * (image.height / 4);
+	position.x = enemyPos.x - 3 * (image->width / 4);
+	position.y = enemyPos.y - 3 * (image->height / 4);
 }
 Rectangle Items::getItemRect()
 {
-	return {position.x,position.y,(float)image.width,(float)image.height };
+	return {position.x,position.y,(float)image->width,(float)image->height };
 }
 void DamageTrinket::applyEffect(Character* player)
 {

@@ -22,7 +22,7 @@ public:
 	static GameUI& GetInstance();
 	~GameUI();
 	//|---Metody-----------------------------------------------------------------------------|
-	void DrawScaledBackgroundImage(Texture2D image);
+	void DrawScaledBackgroundImage(Texture2D& image);
 	void DrawTextWithOutline(const string& text, Vector2 position, float fontSize);//GENERAL: Wyświetla podany tekst w danym miejscu o podanym rozmiarze w pomarańczowo-zółtym stylu
 	void DrawBlackBar(Rectangle border, unsigned char opacity);//GENERAL: Wyświetla ciemny pasek o podanych rozmiarach i przejrzystości wraz z czarną obramówką
 	void DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry
@@ -46,7 +46,7 @@ private:
 	fs::path fontPath;//Sciezka do czcionki
 	Color MyOrange;//Specjalny pomarancz do napisu
 	Color MyYellow;//Specjalna zolc do napisu
-	Font font;//Zmienna przechowujaca czcionke
+	Font *font=nullptr;//Zmienna przechowujaca czcionke
 	//|---Metody-----------------------------------------------------------------------------|
 	vector<string> DivideTextIntoParts(const string& text, float fontSize, float maxWidth);//Metoda rozdzielająca napis na części
 

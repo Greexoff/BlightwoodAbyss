@@ -27,6 +27,7 @@ public:
 	Vector2 getMinMapWalls();
 	Vector2 getMaxMapWalls();
 	Vector2 getBaseResolution();
+	void ToggleFullScreenWindow();
 private:
 	void setMapLimit(Vector2& mapLimit);
 	float backgroundScale;

@@ -158,7 +158,7 @@ void Game::DeleteInactiveTears()
 		}
 	}
 }
-Vector2 Game::getRandomPosition(Texture2D texture)
+Vector2 Game::getRandomPosition(Texture2D& texture)
 {
 	Vector2 minLimit = ScreenSettings::GetInstance().getMinMapWalls();
 	Vector2 maxLimit = ScreenSettings::GetInstance().getMaxMapWalls();
@@ -174,7 +174,7 @@ Vector2 Game::getRandomPosition(Texture2D texture)
 shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
 {
 	string textureName = "Enemy" + to_string(type) + ".png";
-	Texture2D texture = LoadingTextures::GetInstance().passCorrectTexture(textureName, textureType::OBJECT_TEXTURE);
+	Texture2D& texture = LoadingTextures::GetInstance().passCorrectTexture(textureName, textureType::OBJECT_TEXTURE);
 	Vector2 position = getRandomPosition(texture);
 	switch (type) {
 	case 1:

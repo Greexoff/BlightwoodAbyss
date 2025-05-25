@@ -42,8 +42,9 @@ void LoadingTextures::unloadTextures(map<string, Texture2D>& mapTextures)
 	{
 		UnloadTexture(i.second);
 	}
+	mapTextures.clear();
 }
-Texture2D LoadingTextures::passCorrectTexture(string textureName, textureType typeOfTexture)
+Texture2D& LoadingTextures::passCorrectTexture(string textureName, textureType typeOfTexture)
 {
 	map<string, Texture2D>* selectedMap = nullptr;
 	switch (typeOfTexture)
@@ -67,9 +68,10 @@ Texture2D LoadingTextures::passCorrectTexture(string textureName, textureType ty
 			}
 		}
 	}
-	return Texture2D{};
+	static Texture2D missingTexture{};
+	return missingTexture;
 }
-Font LoadingTextures::getFont()
+Font& LoadingTextures::getFont()
 {
 	return font;
 }

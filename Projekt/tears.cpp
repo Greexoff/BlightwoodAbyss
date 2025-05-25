@@ -1,9 +1,9 @@
 #include "tears.h"
 #include <cmath>
 
-Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirection_Y, Texture2D loadedImage)
+Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirection_Y, Texture2D& loadedImage)
 {
-	image = loadedImage;
+	image = &loadedImage;
 	this->position = position;
 	this->tearSpeed = tearSpeed;
 	this->tearDirection_X = tearDirection_X;
@@ -14,8 +14,8 @@ Tears::Tears(Vector2 position, int tearSpeed, int tearDirection_X, int tearDirec
 Tears::~Tears()
 {
 }
-enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos, Texture2D loadedImage) : Tears(position, speed, directionX, directionY, loadedImage) {
-	image = loadedImage;
+enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos, Texture2D& loadedImage) : Tears(position, speed, directionX, directionY, loadedImage) {
+	image = &loadedImage;
 	this->position = position;
 	this->speed = speed;
 	active = true;
@@ -26,12 +26,12 @@ enemyTears::enemyTears(Vector2 position, int speed, Vector2 Playerpos, Texture2D
 }
 void Tears::Draw() {
 	if (active) {
-		DrawTextureV(image, position, WHITE);
+		DrawTextureV(*image, position, WHITE);
 	}
 }
 void enemyTears::Draw() {
 	if (active) {
-		DrawTextureV(image, position, WHITE);
+		DrawTextureV(*image, position, WHITE);
 	}
 }
 void Tears::UpdatePosition(Vector2 minMapLimit, Vector2 maxMapLimit) {
@@ -57,5 +57,5 @@ void enemyTears::UpdatePosition(Vector2 Playerpos, Vector2 minMapLimit, Vector2 
 }
 Rectangle Tears::getTearRect()
 {
-	return { position.x,position.y,(float)image.width,(float)image.height };
+	return { position.x,position.y,(float)image->width,(float)image->height };
 }

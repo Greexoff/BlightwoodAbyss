@@ -108,3 +108,26 @@ Vector2 ScreenSettings::getMaxMapWalls()
 {
 	return maxMapWalls;
 }
+void ScreenSettings::ToggleFullScreenWindow()
+{
+	int monitor = GetCurrentMonitor();
+	Vector2 mousePos = GetMousePosition();
+	if (IsWindowFullscreen())
+	{
+		int windowWidth = (int)GetMonitorWidth(monitor) * 0.66;
+		int windowHeight = (int)GetMonitorHeight(monitor) * 0.66;
+		ToggleFullscreen();
+		SetWindowSize(windowWidth, windowHeight);
+		SetWindowPosition((GetMonitorWidth(monitor) - windowWidth) / 2, (GetMonitorHeight(monitor) - windowHeight) / 2);
+		setResolutionFactor(windowWidth, windowHeight);
+		SetMousePosition(mousePos.x * resolutionFactor.x, mousePos.y * resolutionFactor.y);
+
+	}
+	else
+	{
+		ToggleFullscreen();
+		SetWindowSize(baseResolution.x, baseResolution.y);
+		SetMousePosition(mousePos.x / resolutionFactor.x, mousePos.y / resolutionFactor.y);
+		setResolutionFactor(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+	}
+}

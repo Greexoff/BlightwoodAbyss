@@ -34,7 +34,6 @@ class Menu
 {
 public:
 	virtual void Draw()=0;
-	virtual void LoadTextures(Texture2D correctTexture);
 	virtual bool isReturnButtonClicked();
 	virtual void ReturnToMenu();
 	virtual MenuResult handleMenuLogic()=0;
@@ -43,10 +42,10 @@ public:
 	static void setSelectedMenu(unique_ptr<Menu> newMenu);
 protected:
 	static unique_ptr<Menu> selectedMenu;
-	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";//sciezka do bazy danych
-	Texture2D BackgroundTexture; 
-	Rectangle ReturnToPrieviousMenuButton = { 292,810,488-292,1005 - 810 };
-	Rectangle ReturnToMenuCommentBar = {50,50,300,300};
+	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";
+	Rectangle ReturnToPrieviousMenuButton;
+	Vector2 ReturnPosition;
+	float ReturnButtonFontSize;
 };
 class StartingMenu : public Menu
 {
@@ -128,7 +127,6 @@ private:
 	int pageNumber;//Przechowanie strony na której jest gracz (czyli identyfikacja, która postać jest wybrana)
 	int leftSidePageLimit;//Przechowanie limitu lewostronnego
 	int rightSidePageLimit;//Przechowanie limitu prawostronnego
-	Texture2D characterTexture;
 	float textureScale;
 	//|---Metody----------------------------------------------------------------------------------|
 	void DrawComments(CommentType type);//Metoda wyświetlająca wlasciwe informacje w zaleznosci od typu komentarza

@@ -4,7 +4,7 @@ GameUI:: GameUI()
 {
 	MyOrange = { 255,110,37,255};
 	MyYellow = { 218,208,0,255 };
-	font = LoadingTextures::GetInstance().getFont();
+	font = &LoadingTextures::GetInstance().getFont();
 }
 GameUI& GameUI::GetInstance()
 {
@@ -13,11 +13,10 @@ GameUI& GameUI::GetInstance()
 }
 GameUI::~GameUI()
 {
-	UnloadFont(font);
 }
 
 //|---Drawing----------------------------------------------------------------------|
-void GameUI::DrawScaledBackgroundImage(Texture2D image)
+void GameUI::DrawScaledBackgroundImage(Texture2D& image)
 {
 	ClearBackground(BLACK);
 	Rectangle source = { 0,0,image.width,image.height };
@@ -31,14 +30,14 @@ void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fon
 		for (float dy = -outlineSize; dy <= outlineSize; dy++) {
 			if (dx != 0 || dy != 0) {
 				Vector2 offsetPos = { position.x + dx, position.y + dy };
-				DrawTextEx(font, text.c_str(), offsetPos, fontSize, spacing, BLACK);
+				DrawTextEx(*font, text.c_str(), offsetPos, fontSize, spacing, BLACK);
 			}
 		}
 	}
 	int shadowSize = (int)(fontSize / 50.0+0.5);
 	Vector2 shadowPos = { position.x + shadowSize, position.y - shadowSize };
-	DrawTextEx(font, text.c_str(), shadowPos, fontSize , spacing, MyYellow);
-	DrawTextEx(font, text.c_str(), position, fontSize, spacing, MyOrange);
+	DrawTextEx(*font, text.c_str(), shadowPos, fontSize , spacing, MyYellow);
+	DrawTextEx(*font, text.c_str(), position, fontSize, spacing, MyOrange);
 }
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
@@ -246,17 +245,17 @@ Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, 
 }
 Vector2 GameUI::MeasureTextBar(float& fontSize, string text)
 {
-	Vector2 measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+	Vector2 measurements = MeasureTextEx(*font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 	while (measurements.x + 30 > GetScreenWidth() || measurements.y + 30 > GetScreenHeight())
 	{
 		fontSize -= 1;
-		measurements = MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+		measurements = MeasureTextEx(*font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 	}
 	return measurements;
 }
 Vector2 GameUI::MeasureText(float fontSize, string text)
 {
-	return MeasureTextEx(font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
+	return MeasureTextEx(*font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
 }
 string GameUI::CreateTextWithLeadingZerosGameUI(int number, int amountOfZeros, const string& text)
 {

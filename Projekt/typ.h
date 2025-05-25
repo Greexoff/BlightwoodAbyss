@@ -14,7 +14,7 @@ public:
 	virtual void Draw();
 	virtual void DrawPlayerHealthBar();
 	virtual void movePlayer(int x, int y, Vector2 minMapLimit, Vector2 maxMapLimit);
-	virtual void shootTears(int tearD_X, int tearD_Y, Texture2D loadedImage);
+	virtual void shootTears(int tearD_X, int tearD_Y, Texture2D& loadedImage);
 	vector<Tears> tearsy;
 	virtual Rectangle getPlayerRect();
 	virtual	Vector2 GetXYPlayerPoint();
@@ -36,28 +36,28 @@ public:
 protected:
 	characterStats stats;
 	string characterName;
-	Texture2D image;
+	Texture2D* image=nullptr;
 	Vector2 position;
 	double lastTearTime;
 };
 class FirstCharacter : public Character
 {
 public:
-	FirstCharacter(Texture2D loadedImage);
+	FirstCharacter(Texture2D& loadedImage);
 	~FirstCharacter();
 private:
 };
 class SecondCharacter : public Character
 {
 public:
-	SecondCharacter(Texture2D loadedImage);
+	SecondCharacter(Texture2D& loadedImage);
 	~SecondCharacter();
 private:
 };
 class ThirdCharacter : public Character
 {
 public:
-	ThirdCharacter(Texture2D loadedImage);
+	ThirdCharacter(Texture2D& loadedImage);
 	~ThirdCharacter();
 private:
 };

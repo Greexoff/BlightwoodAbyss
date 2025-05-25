@@ -19,8 +19,8 @@ class LoadingTextures
 public:
 	static LoadingTextures& GetInstance();
 	~LoadingTextures();
-	Texture2D passCorrectTexture(string textureName, textureType typeOfTexture);
-	Font getFont();
+	Texture2D& passCorrectTexture(string textureName, textureType typeOfTexture);
+	Font& getFont();
 private:
 	LoadingTextures();
 	LoadingTextures(const LoadingTextures&) = delete;

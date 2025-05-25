@@ -11,29 +11,6 @@
 #include "screenSettings.h"
 import CharacterStats;
 
-void ToggleFullScreenWindow()
-{
-	int monitor = GetCurrentMonitor();
-	Vector2 mousePos = GetMousePosition();
-	if (IsWindowFullscreen())
-	{
-		int windowWidth = (int)GetMonitorWidth(monitor) * 0.66;
-		int windowHeight = (int)GetMonitorHeight(monitor) * 0.66;
-		ToggleFullscreen();
-		SetWindowSize(windowWidth, windowHeight);
-		SetWindowPosition((GetMonitorWidth(monitor) - windowWidth) / 2, (GetMonitorHeight(monitor) - windowHeight) / 2);
-		ScreenSettings::GetInstance().setResolutionFactor(windowWidth, windowHeight);
-		SetMousePosition(mousePos.x * ScreenSettings::GetInstance().getScreenResolutionFactor().x, mousePos.y * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
-	
-	}
-	else
-	{
-		ToggleFullscreen();
-		SetWindowSize(ScreenSettings::GetInstance().getBaseResolution().x, ScreenSettings::GetInstance().getBaseResolution().y);
-		SetMousePosition(mousePos.x / ScreenSettings::GetInstance().getScreenResolutionFactor().x, mousePos.y / ScreenSettings::GetInstance().getScreenResolutionFactor().y);
-		ScreenSettings::GetInstance().setResolutionFactor(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
-	}
-}
 using namespace std;
 namespace fs = filesystem;
 int main()
@@ -48,7 +25,7 @@ int main()
 
 	while (!WindowShouldClose()&& gameState!=MenuResult::EXIT){
 		if (IsKeyPressed(KEY_F11)) {
-			ToggleFullScreenWindow();
+			ScreenSettings::GetInstance().ToggleFullScreenWindow();
 		}
 		BeginDrawing();
 		switch (gameState)
@@ -97,8 +74,6 @@ int main()
 /*|---TODO-----------------------------------------------------------------------|
 * !!!! Podmienic dzialanie regexow, zeby pobierac tez wartosci trinketow
 * !!!/Dobrze dzialajacy  rules, collectibles 
-* !!! uporządkować pozostałe pliku h
-* !!!Kolizje moze zrobic na nowo zeby to lepiej dzialalo
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?

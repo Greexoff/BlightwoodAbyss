@@ -3,18 +3,13 @@
 unique_ptr<Menu> Menu::selectedMenu = nullptr;
 Menu::~Menu()
 {
+}
 
-}
-void Menu::LoadTextures(Texture2D correctTexture)
-{
-	BackgroundTexture=correctTexture;
-}
 bool Menu::isReturnButtonClicked()
 {
 	Vector2 mousePos = GetMousePosition();
 	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
 	{
-		GameUI::GetInstance().DrawReturnToMenuComment(ReturnToMenuCommentBar, 130);
 		return true;
 	}
 	return false;
@@ -25,7 +20,6 @@ void Menu::ReturnToMenu()
 		Menu::setSelectedMenu(make_unique <MainMenu>());
 	}
 }
-
 void Menu::setSelectedMenu(unique_ptr<Menu> newMenu)
 {
 	selectedMenu = move(newMenu);
@@ -37,7 +31,6 @@ Menu* Menu::getSelectedMenu()
 
 StartingMenu::StartingMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	titleFontSize = 200;
 	titleName = "BLIGHTWOOD ABBYS";
 }
@@ -46,7 +39,7 @@ StartingMenu::~StartingMenu()
 }
 void StartingMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, titleFontSize * ScreenSettings::GetInstance().getScreenResolutionFactor().y, titleName, GetScreenHeight()*0.3);
 }
 MenuResult StartingMenu::handleMenuLogic()
@@ -61,7 +54,6 @@ MenuResult StartingMenu::handleMenuLogic()
 
 LoginMenu::LoginMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	setAction = 0;
 	username = "";
 	password = "";
@@ -76,6 +68,7 @@ LoginMenu::~LoginMenu()
 }
 void LoginMenu::setFontSizes()
 {
+	ReturnButtonFontSize= 75 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	UsernameTextFontSize = 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	PasswordTextFontSize = 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	ConfirmTextFontSize = 75 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
@@ -85,7 +78,8 @@ void LoginMenu::setFontSizes()
 }
 void LoginMenu::setBarAreas()
 {
-	Vector2 measureConfirm = GameUI::GetInstance().MeasureText(ConfirmTextFontSize, "CONFIRM");;
+	Vector2 measureReturn = GameUI::GetInstance().MeasureText(ReturnButtonFontSize, "RETURN");
+	Vector2 measureConfirm = GameUI::GetInstance().MeasureText(ConfirmTextFontSize, "CONFIRM");
 	Vector2 measureUsername = GameUI::GetInstance().MeasureText(UsernameTextFontSize, "USERNAME");
 	Vector2 measurePassword = GameUI::GetInstance().MeasureText(PasswordTextFontSize, "PASSWORD");
 	Vector2 measureSignup = GameUI::GetInstance().MeasureText(ConfirmTextFontSize, "SIGNUP");
@@ -93,31 +87,37 @@ void LoginMenu::setBarAreas()
 	ConfirmPosition = { (float)(GetScreenWidth() * 0.5 - measureConfirm.x * 0.5),0};
 	PasswordPosition = { (float)(GetScreenWidth() * 0.5 - measurePassword.x * 0.5),0};
 	SignupPosition = { (float)(GetScreenWidth() * 0.775 - measureSignup.x * 0.5),0};
+	ReturnPosition= { (float)(GetScreenWidth() * 0.225 - measureReturn.x * 0.5),0 };
 	LoginMenu_UsernameBarArea=GameUI::GetInstance().setBarArea(UsernameTextFontSize, "USERNAME", UsernamePosition, 2, 10, 10);
 	PasswordPosition.y = LoginMenu_UsernameBarArea.y + LoginMenu_UsernameBarArea.height + GetScreenHeight()*0.01;
 	LoginMenu_PasswordBarArea=	GameUI::GetInstance().setBarArea(PasswordTextFontSize, "PASSWORD", PasswordPosition, 2, 10, 10);
 	ConfirmPosition.y = LoginMenu_PasswordBarArea.y + LoginMenu_PasswordBarArea.height + GetScreenHeight() * 0.125;
 	SignupPosition.y = ConfirmPosition.y;
+	ReturnPosition.y = SignupPosition.y;
 	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30, 30);
 	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30, 30);
+	ReturnToPrieviousMenuButton = GameUI::GetInstance().setBarArea(ReturnButtonFontSize, "RETURN", ReturnPosition, 1, 30, 30);
 }
 void LoginMenu::Draw()
 {
 	setFontSizes();
 	setBarAreas();
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_UsernameBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_PasswordBarArea, 160);
 	GameUI::GetInstance().DrawBlackBar(LoginMenu_ConfirmArea, 160);
 	GameUI::GetInstance().DrawTextOnBar(LoginMenu_ConfirmArea, ConfirmTextFontSize, "CONFIRM", ConfirmPosition.y);
 	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, UsernameTextFontSize, "USERNAME", UsernamePosition.y-GetScreenHeight()*0.01);
 	GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, PasswordTextFontSize, "PASSWORD", PasswordPosition.y - GetScreenHeight() * 0.01);
-
 	if (isSignupAreaActive)
 	{
 		GameUI::GetInstance().DrawBlackBar(LoginMenu_SingupArea, 160);
 		GameUI::GetInstance().DrawTextOnBar(LoginMenu_SingupArea, SignupTextFontSize, "SIGNUP", SignupPosition.y);
-
+	}
+	else
+	{
+		GameUI::GetInstance().DrawBlackBar(ReturnToPrieviousMenuButton, 160);
+		GameUI::GetInstance().DrawTextOnBar(ReturnToPrieviousMenuButton, ReturnButtonFontSize, "RETURN", ReturnPosition.y);
 	}
 }
 int LoginMenu::isButtonClicked()
@@ -139,6 +139,13 @@ int LoginMenu::isButtonClicked()
 	{
 		return SIGNUP_BAR;
 	}
+	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
+	{
+		clearUsernameandPassword();
+		isSignupAreaActive = true;
+		return NOTHING;
+	}
+
 	return NOTHING;
 }
 void LoginMenu::insertData(string& name, string type)
@@ -332,7 +339,6 @@ void LoginMenu::ChooseErrorType()
 MainMenu::MainMenu()
 {
 	setAction = 0;
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "GAME RULES", "COLLECTION","HIGHEST SCORES","EXIT" };
 	setButtonsPosition();
 	baseButtonsFontSize = 180;
@@ -343,7 +349,7 @@ MainMenu::~MainMenu()
 }
 void MainMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	
 	for (const auto& [name, button_Data] : Buttons)
 	{
@@ -424,8 +430,6 @@ MenuResult MainMenu::handleMenuLogic()
 
 CharacterSelectionMenu::CharacterSelectionMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundCHAR.png", textureType::BACKGROUND_TEXTURE));
-	characterTexture = LoadingTextures::GetInstance().passCorrectTexture("FirstCharacter.png", textureType::OBJECT_TEXTURE);
 	setAreas();
 	pageNumber = 0;
 	leftSidePageLimit = -1;
@@ -436,12 +440,13 @@ CharacterSelectionMenu::~CharacterSelectionMenu()
 }
 void CharacterSelectionMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundCHAR.png", textureType::BACKGROUND_TEXTURE));
 	DrawPlayerCharacterImage();
 	chooseExplanationType();
 }
 void CharacterSelectionMenu::setAreas()
 {
+	Texture2D& characterTexture = LoadingTextures::GetInstance().passCorrectTexture("FirstCharacter.png", textureType::OBJECT_TEXTURE);
 	textureScale = 2.5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	ConfirmArea = { 882 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,508 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(characterTexture.width*textureScale),(characterTexture.height*textureScale)};
 	ArrowArea = { 1429 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,510 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1659 - 1428) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(656 - 510) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
@@ -544,14 +549,13 @@ MenuResult CharacterSelectionMenu::handleMenuLogic()
 
 RulesMenu::RulesMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 }
 RulesMenu::~RulesMenu()
 {
 }
 void RulesMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 }
 MenuResult RulesMenu::handleMenuLogic()
 {
@@ -562,14 +566,13 @@ MenuResult RulesMenu::handleMenuLogic()
 
 UnlockedItemsMenu::UnlockedItemsMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 }
 UnlockedItemsMenu::~UnlockedItemsMenu()
 {
 }
 void UnlockedItemsMenu::Draw()
 {
-	DrawTexture(BackgroundTexture, 0, 0, WHITE);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 }
 MenuResult UnlockedItemsMenu::handleMenuLogic()
 {
@@ -580,7 +583,6 @@ MenuResult UnlockedItemsMenu::handleMenuLogic()
 
 HighestScoreMenu::HighestScoreMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 	currentPageNumber = maxPageNumber = minPageNumber = 1;
 	prievousPageButton = {1083,862,1218-1083,1001-862};
 	nextPageButton = { 1256,862,1391-1256 ,1001 - 862 };
@@ -593,7 +595,7 @@ HighestScoreMenu::~HighestScoreMenu()
 }
 void HighestScoreMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
 	if (isNextPageButtonVisible)
 	{
 		GameUI::GetInstance().DrawBlackBar(nextPageButton, 160);
@@ -695,7 +697,6 @@ MenuResult HighestScoreMenu::handleMenuLogic()
 
 AfterGameMenu::AfterGameMenu()
 {
-	LoadTextures(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	ButtonNames = { "NEW GAME", "MAIN MENU","EXIT" };
 	baseButtonsFontSize = 180;
 	buttonsFontSize = baseButtonsFontSize;
@@ -707,7 +708,7 @@ AfterGameMenu::~AfterGameMenu()
 }
 void AfterGameMenu::Draw() 
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(BackgroundTexture);
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundSTARTING.png", textureType::BACKGROUND_TEXTURE));
 	DrawButtons();
 }
 void AfterGameMenu::setButtonPosition()

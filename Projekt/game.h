@@ -59,6 +59,6 @@ private:
 	double breakStartingTime;
 	void DrawCountdownToNewWave();
 	void DrawScoreAndWaveNumber();
-	Vector2 getRandomPosition(Texture2D texture);
+	Vector2 getRandomPosition(Texture2D& texture);
 	shared_ptr<Enemy> createEnemyBasedOnType(int type);
 };

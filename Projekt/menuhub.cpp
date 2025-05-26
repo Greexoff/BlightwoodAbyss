@@ -557,11 +557,11 @@ void CharacterSelectionMenu::Draw()
 void CharacterSelectionMenu::setAreas()
 {
 	Texture2D& characterTexture = LoadingTextures::GetInstance().passCorrectTexture("FirstCharacter.png", textureType::OBJECT_TEXTURE);
-	textureScale = 2.5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
-	ConfirmArea = { 882 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,508 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(characterTexture.width*textureScale),(characterTexture.height*textureScale)};
-	ArrowArea = { 1429 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,510 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1659 - 1428) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(656 - 510) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
-	CharacterInformationArea = { 332 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,228 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(526 - 332) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(444 - 228) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
-	ReturnArea = { 0 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,0 * ScreenSettings::GetInstance().getScreenResolutionFactor().y ,200 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,200 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	textureScale = 2.8 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	ConfirmArea = { 894 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,584 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(characterTexture.width*textureScale),(characterTexture.height*textureScale)};
+	ArrowArea = { 1028 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,363 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1247 - 1028) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(497 - 363) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	CharacterInformationArea = { 320 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,225 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(593 - 320) * ScreenSettings::GetInstance().getScreenResolutionFactor().x,(464 - 225) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	ReturnArea = { 1404 * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,320 * ScreenSettings::GetInstance().getScreenResolutionFactor().y ,(1700 - 1404)* ScreenSettings::GetInstance().getScreenResolutionFactor().x ,(777 - 320)* ScreenSettings::GetInstance().getScreenResolutionFactor().y};
 	SmallerCommentsBar = { 1304 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,115 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,500 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,300 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
 	BiggerCommentsBar = { 1304 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,115 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,500 * ScreenSettings::GetInstance().getScreenResolutionFactor().x,530 * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
 }
@@ -570,23 +570,17 @@ void CharacterSelectionMenu::DrawComments(CommentType type)
 	switch (type)
 	{
 	case SWITCH_CHARACTER:
-		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 62*ScreenSettings::GetInstance().getScreenResolutionFactor().y, "SWITCH CHARACTER", SmallerCommentsBar.y+ (25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
-		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 40* ScreenSettings::GetInstance().getScreenResolutionFactor().y, "CLICK THIS BUTTON TO CHANGE THE CHARACTER YOU WANT TO PLAY AS", SmallerCommentsBar.y+(150*ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+		GameUI::GetInstance().DrawComments("SWITCH CHARACTER", "CLICK THIS BUTTON TO CHANGE THE CHARACTER YOU WANT TO PLAY AS", SmallerCommentsBar);
 		break;
 	case SELECT_CHARACTER:
-		GameUI::GetInstance().DrawBlackBar(SmallerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 62* ScreenSettings::GetInstance().getScreenResolutionFactor().y, "SELECT CHARACTER", SmallerCommentsBar.y + (25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
-		GameUI::GetInstance().DrawTextOnBar(SmallerCommentsBar, 40* ScreenSettings::GetInstance().getScreenResolutionFactor().y, "CLICK THIS BUTTON TO SELECT THE CHARACTER AND START A NEW GAME", SmallerCommentsBar.y + (150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+		GameUI::GetInstance().DrawComments("SELECT CHARACTER", "CLICK THIS BUTTON TO SELECT THE CHARACTER AND START A NEW GAME", SmallerCommentsBar);
 		break;
 	case STATS_CHARACTER:
-		GameUI::GetInstance().DrawBlackBar(BiggerCommentsBar, 180);
-		GameUI::GetInstance().DrawTextOnBar(BiggerCommentsBar, 62* ScreenSettings::GetInstance().getScreenResolutionFactor().y, "CHARACTER STATS", BiggerCommentsBar.y + (25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
-		GameUI::GetInstance().DrawTextOnBar(BiggerCommentsBar, 40* ScreenSettings::GetInstance().getScreenResolutionFactor().y, "STATS OF SELECTED CHARACTER ARE SHOWN BELOW", BiggerCommentsBar.y + (150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+		GameUI::GetInstance().DrawComments("CHARACTER STATS", "STATS OF SELECTED CHARACTER ARE SHOWN BELOW", BiggerCommentsBar);
 		GameUI::GetInstance().DrawCharacterStatsInMenu(pageNumber, BiggerCommentsBar, 40*ScreenSettings::GetInstance().getScreenResolutionFactor().x, BiggerCommentsBar.y+(300 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
 		break;
 	case RETURN_BUTTON:
-		GameUI::GetInstance().DrawReturnToMenuComment(SmallerCommentsBar, 180);
+		GameUI::GetInstance().DrawComments("RETURN TO MENU", "CLICK THIS BUTTON TO RETURN TO MAIN MENU", SmallerCommentsBar);
 		break;
 	default:
 		break;
@@ -755,7 +749,6 @@ void HighestScoreMenu::DrawPlayersScores()
 		gap += 100 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	}
 }
-
 MenuResult HighestScoreMenu::handleMenuLogic()
 {
 	if (!areUsersLoadedIntoVector)

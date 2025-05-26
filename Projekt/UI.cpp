@@ -39,6 +39,12 @@ void GameUI::DrawTextWithOutline(const string& text, Vector2 position, float fon
 	DrawTextEx(*font, text.c_str(), shadowPos, fontSize , spacing, MyYellow);
 	DrawTextEx(*font, text.c_str(), position, fontSize, spacing, MyOrange);
 }
+void GameUI::DrawComments(string comment1, string comment2, Rectangle bar)
+{
+	GameUI::GetInstance().DrawBlackBar(bar, 180);
+	GameUI::GetInstance().DrawTextOnBar(bar, 62 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, comment1, bar.y + (25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+	GameUI::GetInstance().DrawTextOnBar(bar, 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, comment2, bar.y + (150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
+}
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
 	DrawRectangleRounded(borders, 0.25, 16, { 0,0,0,opacity });
@@ -173,12 +179,7 @@ void GameUI::DrawGameUI(const string& text, float fontSize, float y_pos)
 	Vector2 ui_pos = { (float)GetScreenWidth() / 2 - measurements.x / 2, y_pos-measurements.y };
 	GameUI::DrawTextWithOutline(text, ui_pos, fontSize);
 }
-void GameUI::DrawReturnToMenuComment(Rectangle bar, float opacity)
-{
-	GameUI::GetInstance().DrawBlackBar(bar, opacity);
-	GameUI::GetInstance().DrawTextOnBar(bar, 55, "RETURN TO MAIN MENU", bar.y + 20);
-	GameUI::GetInstance().DrawTextOnBar(bar, 30, "CLICK THIS BUTTON TO RETURN BACK TO MAIN MENU", bar.y + 150);
-}
+
 //|---Inne-------------------------------------------------------------------------|
 string GameUI::ConvertToString(float number, int prec)
 {

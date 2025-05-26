@@ -16,7 +16,7 @@ int main()
 {
 	int monitor = GetCurrentMonitor();
 	InitWindow(GetMonitorWidth(monitor),GetMonitorHeight(monitor), "Blightwood Abbys");
-	ToggleFullscreen();
+	ScreenSettings::GetInstance().ToggleFullScreenWindow();
 	SetTargetFPS(60);
 	Game* game = nullptr;
 	Menu::setSelectedMenu(make_unique <StartingMenu>());

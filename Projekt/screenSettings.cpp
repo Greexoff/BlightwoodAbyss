@@ -31,8 +31,7 @@ Vector2 ScreenSettings::getScreenResolutionFactor()
 }
 void ScreenSettings::setResolutionFactor(int windowWidth, int windowHeight)
 {
-	int monitor = GetCurrentMonitor();
-	Vector2 sourceResolution = { GetMonitorWidth(monitor),GetMonitorHeight(monitor)};
+	Vector2 sourceResolution = { 1920,1080};
 	resolutionFactor.x = windowWidth / sourceResolution.x;
 	resolutionFactor.y = windowHeight / sourceResolution.y;
 
@@ -128,6 +127,6 @@ void ScreenSettings::ToggleFullScreenWindow()
 		ToggleFullscreen();
 		SetWindowSize(baseResolution.x, baseResolution.y);
 		SetMousePosition(mousePos.x / resolutionFactor.x, mousePos.y / resolutionFactor.y);
-		setResolutionFactor(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+		setResolutionFactor(baseResolution.x, baseResolution.y);
 	}
 }

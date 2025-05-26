@@ -28,23 +28,44 @@ struct ButtonData
 	Rectangle rectangle;
 	Vector2 position;
 };
-
+enum class ButtonType
+{
+	RETURN_BUTTON,
+	LEFT_ARROW_BUTTON,
+	RIGHT_ARROW_BUTTON,
+};
+enum class Page
+{
+	LEFT_SIDE_LIMIT,
+	RIGHT_SIDE_LIMIT,
+	CURRENT_PAGE,
+};
 class Menu
 {
 public:
-	virtual void Draw()=0;
-	virtual bool isReturnButtonClicked();
-	virtual void ReturnToMenu();
 	virtual MenuResult handleMenuLogic()=0;
 	virtual ~Menu();
 	static Menu* getSelectedMenu();
 	static void setSelectedMenu(unique_ptr<Menu> newMenu);
 protected:
+	virtual void Draw() = 0;
 	static unique_ptr<Menu> selectedMenu;
 	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";
-	Rectangle ReturnToPrieviousMenuButton;
-	Vector2 ReturnPosition;
-	float ReturnButtonFontSize;
+	virtual void setButtonsAreas(Rectangle retButton, Rectangle leftArrow, Rectangle rightArrow);
+	virtual void CheckCollisions();
+	virtual Rectangle getButtonArea(ButtonType type);
+	virtual void drawMenuElements();
+	virtual void switchPage(int number);
+	virtual void setAmountOfPages(int number);
+	virtual void setButtonVisibility();
+	virtual int getPage(Page type);
+	virtual bool getButtonVisibility(Page type);
+	virtual void setMenuElements();
+private:
+	Rectangle ReturnButton, LeftArrow, RightArrow;
+	bool isRightArrowVisible = false;
+	bool isLeftArrowVisible= false;
+	int pageNumber = 1, LeftSidePageLimit=1, RightSidePageLimit=1;
 };
 class StartingMenu : public Menu
 {
@@ -68,9 +89,9 @@ public:
 private:
 	//|-----Zmienne------------------------------------------------------------------------------------------|
 	string username, password;
-	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea; //przechowanie prostokatow przyciskow
-	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition;//przechowanie pozycji x i y przyciskow
-	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize;// przechowanie rozmiaru czcionki poszczegolnych elementow
+	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea, ReturnButtonArea; //przechowanie prostokatow przyciskow
+	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition, ReturnPosition;//przechowanie pozycji x i y przyciskow
+	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize, ReturnButtonFontSize;// przechowanie rozmiaru czcionki poszczegolnych elementow
 	bool isSignupAreaActive;//zmienna do sprawdzenia czy wyswietla sie przycisk SignUp
 	bool userExist;
 	int error;//zmienna do przechowywania typu bledu, ktory nalezy wyswietlic
@@ -159,17 +180,8 @@ public:
 	void Draw() override;	
 	MenuResult handleMenuLogic() override;
 private:
-	Rectangle prievousPageButton;
-	Rectangle nextPageButton;
 	vector<pair<string, int>>UsersScores;
-	bool isNextPageButtonVisible;
-	bool isPrievousPageButtonVisible;
-	int maxPageNumber;
-	int minPageNumber;
-	int currentPageNumber;
 	bool areUsersLoadedIntoVector;
 	void LoadUsersScoresIntoVector();
 	void DrawPlayersScores();
-	void ArrowClicked(Rectangle bar, int action, bool visibility);
-	void setButtonVisibility(bool& visibility, int extremePageNumber);
 };

@@ -5,20 +5,113 @@ Menu::~Menu()
 {
 }
 
-bool Menu::isReturnButtonClicked()
+void Menu::setButtonsAreas(Rectangle retButton, Rectangle leftArrow, Rectangle rightArrow)
 {
-	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
-	{
-		return true;
-	}
-	return false;
+	LeftArrow = leftArrow;
+	RightArrow = rightArrow;
+	ReturnButton = retButton;
 }
-void Menu::ReturnToMenu()
+void Menu::setAmountOfPages(int number)
 {
-	if (isReturnButtonClicked() && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		Menu::setSelectedMenu(make_unique <MainMenu>());
+	LeftSidePageLimit = 1;
+	RightSidePageLimit=number;
+}
+void Menu::switchPage(int number)
+{
+	pageNumber += number;
+}
+void Menu::setButtonVisibility()
+{
+	if (LeftSidePageLimit == RightSidePageLimit)
+	{
+		isLeftArrowVisible = false;
+		isRightArrowVisible = false;
 	}
+	else
+	{
+		isLeftArrowVisible = (pageNumber != LeftSidePageLimit);
+		isRightArrowVisible = (pageNumber != RightSidePageLimit);
+	}
+}
+bool Menu::getButtonVisibility(Page type)
+{
+	switch (type)
+	{
+	case Page::LEFT_SIDE_LIMIT:
+		return isLeftArrowVisible;
+		break;
+	case Page::RIGHT_SIDE_LIMIT:
+		return isRightArrowVisible;
+		break;
+	default:
+		break;
+	}
+	return true;
+}
+int Menu::getPage(Page type)
+{
+	switch (type)
+	{
+	case Page::CURRENT_PAGE:
+		return pageNumber;
+		break;
+	case Page::LEFT_SIDE_LIMIT:
+		return LeftSidePageLimit;
+		break;
+	case Page::RIGHT_SIDE_LIMIT:
+		return RightSidePageLimit;
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+void Menu::setMenuElements()
+{
+	setButtonVisibility();
+	Rectangle returnButton = { 413 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 912 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(930 - 413) * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,(1030 - 912) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	Rectangle leftArrowButton = { 989 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 912 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1218 - 989) * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,(1030 - 912) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	Rectangle rightArrowButton = { 1277 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 912 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1506 - 1277) * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,(1030 - 912) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	if (!getButtonVisibility(Page::LEFT_SIDE_LIMIT) && !getButtonVisibility(Page::RIGHT_SIDE_LIMIT))
+	{
+		returnButton = { 701 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 912 * ScreenSettings::GetInstance().getScreenResolutionFactor().y,(1218 - 701) * ScreenSettings::GetInstance().getScreenResolutionFactor().x ,(1030 - 912) * ScreenSettings::GetInstance().getScreenResolutionFactor().y };
+	}
+
+	setButtonsAreas(returnButton, leftArrowButton, rightArrowButton);
+}
+void Menu::drawMenuElements()
+{
+	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
+	GameUI::GetInstance().DrawBlackBar(ReturnButton, 180);
+	GameUI::GetInstance().DrawTextOnBar(ReturnButton, ReturnButton.height*0.5, "RETURN", ReturnButton.y + ReturnButton.height * 0.25);
+	if (isLeftArrowVisible)
+	{
+	GameUI::GetInstance().DrawBlackBar(LeftArrow, 180);
+	GameUI::GetInstance().DrawTextOnBar(LeftArrow, LeftArrow.height * 0.5, "<", LeftArrow.y + LeftArrow.height * 0.25);
+	}
+	if (isRightArrowVisible)
+	{
+	GameUI::GetInstance().DrawBlackBar(RightArrow, 180);
+	GameUI::GetInstance().DrawTextOnBar(RightArrow, RightArrow.height*0.5, ">", RightArrow.y+RightArrow.height*0.25);
+	}
+}
+Rectangle Menu::getButtonArea(ButtonType type)
+{
+	switch (type)
+	{
+	case ButtonType::RETURN_BUTTON:
+		return ReturnButton;
+		break;
+	case ButtonType::LEFT_ARROW_BUTTON:
+		return LeftArrow;
+		break;
+	case ButtonType::RIGHT_ARROW_BUTTON:
+		return RightArrow;
+		break;
+	default:
+		break;
+	}
+	return {};
 }
 void Menu::setSelectedMenu(unique_ptr<Menu> newMenu)
 {
@@ -27,6 +120,24 @@ void Menu::setSelectedMenu(unique_ptr<Menu> newMenu)
 Menu* Menu::getSelectedMenu()
 {
 	return selectedMenu.get();
+}
+void Menu::CheckCollisions()
+{
+	Vector2 mousePos = GetMousePosition();
+	if (getButtonVisibility(Page::LEFT_SIDE_LIMIT) && CheckCollisionPointRec(mousePos, LeftArrow) && IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+	{
+		switchPage(-1);
+	}
+	if (getButtonVisibility(Page::RIGHT_SIDE_LIMIT) && CheckCollisionPointRec(mousePos, RightArrow) && IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+	{
+		switchPage(1);
+	}
+	if (CheckCollisionPointRec(mousePos, ReturnButton) && IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+	{
+		setSelectedMenu(make_unique<MainMenu>());
+		return;
+	}
+
 }
 
 StartingMenu::StartingMenu()
@@ -95,7 +206,7 @@ void LoginMenu::setBarAreas()
 	ReturnPosition = SignupPosition;
 	LoginMenu_ConfirmArea=GameUI::GetInstance().setBarArea(ConfirmTextFontSize, "CONFIRM", ConfirmPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	LoginMenu_SingupArea=GameUI::GetInstance().setBarArea(SignupTextFontSize, "SIGNUP", SignupPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
-	ReturnToPrieviousMenuButton = GameUI::GetInstance().setBarArea(ReturnButtonFontSize, "RETURN", ReturnPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	ReturnButtonArea = GameUI::GetInstance().setBarArea(ReturnButtonFontSize, "RETURN", ReturnPosition, 1, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 }
 void LoginMenu::Draw()
 {
@@ -115,8 +226,8 @@ void LoginMenu::Draw()
 	}
 	else
 	{
-		GameUI::GetInstance().DrawBlackBar(ReturnToPrieviousMenuButton, 160);
-		GameUI::GetInstance().DrawTextOnBar(ReturnToPrieviousMenuButton, ReturnButtonFontSize, "RETURN", ReturnPosition.y);
+		GameUI::GetInstance().DrawBlackBar(ReturnButtonArea, 160);
+		GameUI::GetInstance().DrawTextOnBar(ReturnButtonArea, ReturnButtonFontSize, "RETURN", ReturnPosition.y);
 	}
 }
 int LoginMenu::isButtonClicked()
@@ -138,7 +249,7 @@ int LoginMenu::isButtonClicked()
 	{
 		return SIGNUP_BAR;
 	}
-	if (CheckCollisionPointRec(mousePos, ReturnToPrieviousMenuButton))
+	if (CheckCollisionPointRec(mousePos, ReturnButtonArea))
 	{
 		clearUsernameandPassword();
 		isSignupAreaActive = true;
@@ -554,12 +665,13 @@ RulesMenu::~RulesMenu()
 }
 void RulesMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
+	drawMenuElements();
 }
 MenuResult RulesMenu::handleMenuLogic()
 {
+	setMenuElements();
 	Draw();
-	ReturnToMenu();
+	CheckCollisions();
 	return MenuResult::CONTINUE;
 }
 
@@ -571,40 +683,27 @@ UnlockedItemsMenu::~UnlockedItemsMenu()
 }
 void UnlockedItemsMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
+	drawMenuElements();
 }
 MenuResult UnlockedItemsMenu::handleMenuLogic()
 {
+	setMenuElements();
 	Draw();
-	ReturnToMenu();
+	CheckCollisions();
 	return MenuResult::CONTINUE;
 }
 
 HighestScoreMenu::HighestScoreMenu()
 {
-	currentPageNumber = maxPageNumber = minPageNumber = 1;
-	prievousPageButton = {1083,862,1218-1083,1001-862};
-	nextPageButton = { 1256,862,1391-1256 ,1001 - 862 };
 	areUsersLoadedIntoVector = false;
-	isNextPageButtonVisible = false;
-	isPrievousPageButtonVisible = false;
 }
 HighestScoreMenu::~HighestScoreMenu()
 {
 }
 void HighestScoreMenu::Draw()
 {
-	GameUI::GetInstance().DrawScaledBackgroundImage(LoadingTextures::GetInstance().passCorrectTexture("backgroundOPTIONS.png", textureType::BACKGROUND_TEXTURE));
-	if (isNextPageButtonVisible)
-	{
-		GameUI::GetInstance().DrawBlackBar(nextPageButton, 160);
-		GameUI::GetInstance().DrawTextOnBar(nextPageButton, 75, "-->",nextPageButton.y+nextPageButton.height/4);
-	}
-	if (isPrievousPageButtonVisible)
-	{
-		GameUI::GetInstance().DrawBlackBar(prievousPageButton, 160);
-		GameUI::GetInstance().DrawTextOnBar(prievousPageButton, 75, "<--", prievousPageButton.y+prievousPageButton.height/4);
-	}
+	drawMenuElements();
+	DrawPlayersScores();
 }
 void HighestScoreMenu::LoadUsersScoresIntoVector()
 {
@@ -626,70 +725,45 @@ void HighestScoreMenu::LoadUsersScoresIntoVector()
 	}
 	auto comparator = [](pair<string, int>a, pair<string, int>b) {return a.second > b.second; };
 	sort(UsersScores.begin(), UsersScores.end(),comparator);
-	if (UsersScores.size() % 10 == 0)
+	if (UsersScores.size() % 5 == 0)
 	{
-		maxPageNumber = UsersScores.size() / 10;
+		setAmountOfPages(UsersScores.size() / 5);
 	}
 	else
 	{
-		maxPageNumber = ((UsersScores.size() / 10) + 1);
+		setAmountOfPages(((UsersScores.size() / 5) + 1));
 	}
 	areUsersLoadedIntoVector = true;
 }
 void HighestScoreMenu::DrawPlayersScores()
 {
-	int iteratorLimit = currentPageNumber * 10;
-	float gap = 90;
+	int iteratorLimit = getPage(Page::CURRENT_PAGE) * 5;
+	float gap = 100 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	string convertedData;
 	int placeInList = 0;
 	int Limit = iteratorLimit;
-	if (currentPageNumber == maxPageNumber)
+	if (getPage(Page::CURRENT_PAGE) == getPage(Page::RIGHT_SIDE_LIMIT))
 	{
 		Limit = UsersScores.size();
 	}
-	for (int i = iteratorLimit - 10; i < Limit; i++)
+	for (int i = iteratorLimit - 5; i < Limit; i++)
 	{
 		placeInList = i + 1;
-		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 50, "HIGHEST SCORES", 20);
+		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 150*ScreenSettings::GetInstance().getScreenResolutionFactor().y, "HIGHEST SCORES", 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 		convertedData = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(UsersScores[i].second, 6, to_string(placeInList) + ". " + UsersScores[i].first +": ");
-		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 50, convertedData, 20 + gap);
-		gap += 90;
+		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 85 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, convertedData, 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y + gap);
+		gap += 100 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	}
 }
-void HighestScoreMenu::ArrowClicked(Rectangle bar, int action, bool visibility)
-{
-	Vector2 mousePos = GetMousePosition();
-	if (CheckCollisionPointRec(mousePos, bar)&& visibility)
-	{
-		currentPageNumber+=action;
-	}
-}
-void HighestScoreMenu::setButtonVisibility(bool& visibilty, int extremePageNumber)
-{
 
-	if (currentPageNumber ==extremePageNumber)
-	{
-		visibilty = false;
-	}
-	else
-	{
-		visibilty = true;
-	}
-}
 MenuResult HighestScoreMenu::handleMenuLogic()
 {
-	Draw();
-	setButtonVisibility(isPrievousPageButtonVisible, minPageNumber);
-	setButtonVisibility(isNextPageButtonVisible, maxPageNumber);
 	if (!areUsersLoadedIntoVector)
 	{
 		LoadUsersScoresIntoVector();
 	}
-	DrawPlayersScores();
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-		ArrowClicked(nextPageButton, 1, isNextPageButtonVisible);
-		ArrowClicked(prievousPageButton, -1, isPrievousPageButtonVisible);
-	}
-	ReturnToMenu();
+	setMenuElements();
+	Draw();
+	CheckCollisions();
 	return MenuResult::CONTINUE;
 }

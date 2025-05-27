@@ -1,6 +1,6 @@
 Enemy: enemyHealth maxEnemyHealth enemySpeed enemyAttackSpeed enemyScore imageScale
-Monster1: 4 4 2 0 300 1.1
-Monster2: 1 1 3 0 100 1.2
-Monster3: 2 2 0 5 200 0.95
-Monster4: 10 10 2 3 400 1.6
-Monster5: 50 50 2.8 8 800 2.0
+Monster1: 9 9 2 0 300 1.1
+Monster2: 1 1 4 0 100 1.2
+Monster3: 5 5 0 5 200 0.95
+Monster4: 12 12 2 3 400 1.6
+Monster5: 80 80 2.5 23 800 2.0

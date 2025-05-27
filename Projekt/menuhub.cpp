@@ -651,22 +651,144 @@ MenuResult CharacterSelectionMenu::handleMenuLogic()
 
 }
 
+
 RulesMenu::RulesMenu()
 {
+	setPagesContent();
+	int amountOfPages = GameInfoPages.size() + CharInfoPages.size() + EnemyInfoPages.size() + ItemsInfoPages.size();
+	setAmountOfPages(amountOfPages);
 }
+
 RulesMenu::~RulesMenu()
 {
+}
+void RulesMenu::setPagesContent()
+{
+	GameInfoPages = 
+	{
+		{ "GAME RULES", {
+		"THE GAME AIMS AT SURVIVING AS MANY WAVES AS POSSIBLE AND GETTING THE HIGHEST SCORE IN THE PROCESS.",
+		"BEFORE STARTING THE GAME, YOU CHOOSE ONE OF THE AVAILABLE CHARACTERS.",
+		"THE INITIAL WAVE CONTAINS 5 OPPONENTS, AND WITH EACH SUBSEQUENT WAVE THE NUMBER OF OPPONENTS INCREASES."}},
+
+		{"GAME RULES", {
+		"EVERY FIVE WAVES YOU FACE A BOSS, WHO DROPS ITEMS AFTER YOU DEFEAT HIM.",
+		"YOU CAN UNLOCK ITEMS BY COMPLETING THE QUESTS, WHICH ARE SHOWN ON THE PAGE DESCRIBING HOW EACH ITEM WORKS.",
+		"ALL CHARACTER, ENEMY AND ITEM STATS ARE AVAILABLE ON THE FOLLOWING PAGES."}}
+	};
+	CharInfoPages =
+	{
+		{"CHARACTER STATS", "FIRST CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "FirstCharacter.png", 0},
+		{"CHARACTER STATS", "SECOND CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "SecondCharacter.png", -1},
+		{"CHARACTER STATS", "THIRD CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "ThirdCharacter.png", 1},
+	};
+
+	EnemyInfoPages = 
+	{
+		{"ENEMY STATS", "FIRST ENEMY", "Monster1", { "THIS ENEMY WILL CONSTANTLY FOLLOW YOU ALTHOUGH THEY ARE RATHER SLOW.","THEY CANNOT SHOOT TEARS." }, "Enemy1.png"},
+		{"ENEMY STATS", "SECOND ENEMY", "Monster2", { "THIS ENEMY WILL FOLLOW YOU, HOWEVER THEY CAN BE DESTROYED WITH SINGLE TEAR.","THIS ONE CANNOT SHOOT TEARS."}, "Enemy2.png"},
+		{"ENEMY STATS", "THIRD ENEMY", "Monster3", { "THIS ENEMY CANNOT MOVE, HOWEVER THEY WILL SHOOT YOU FROM DISTANCE." }, "Enemy3.png"},
+		{"ENEMY STATS", "FOURTH ENEMY", "Monster4", { "THIS ENEMY WILL BOTH FOLLOW YOU AND SHOOT TEARS AT YOU.","THERE CAN ONLY BE 6 OF THEM PER WAVE."}, "Enemy4.png"},
+		{"ENEMY STATS", "FIFTH ENEMY", "Monster5", { "THIS BOSS WILL CHASE YOU AND SHOOT WITH VERY RAPID TEARS.","THEY HAVE HUGE HITBOX, SO IT WILL BE DIFFICULT TO MISS THEM." }, "Enemy5.png"},
+	};
+	ItemsInfoPages =
+	{
+		{"COLLECTIBLE ITEMS","DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5","GAP","HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png"},
+		{"COLLECTIBLE ITEMS","HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1","GAP","HOW TO UNLOCK:","SURVIVE 15 WAVES WITHOUT GETTING DAMAGE"}, "HealthTrinket.png"},
+		{"COLLECTIBLE ITEMS","SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5" ,"GAP","HOW TO UNLOCK:","LAST 1 MINUTE DURING A BOSS FIGHT"}, "SpeedTrinket.png"},
+		{"COLLECTIBLE ITEMS","TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.04 (MIN IS 0.1)","GAP","HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png"},
+		{"COLLECTIBLE ITEMS","TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 20 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png"},
+	};
 }
 void RulesMenu::Draw()
 {
 	drawMenuElements();
+	GameUI::GetInstance().DrawBlackBar(GameInfoBar, 180);
+	DrawRules(getPage(Page::CURRENT_PAGE));
 }
 MenuResult RulesMenu::handleMenuLogic()
 {
+	GameInfoBar = { GetScreenWidth() * 0.15f, GetScreenHeight() * 0.10f, GetScreenWidth() * 0.7f,GetScreenHeight() * 0.7f};
 	setMenuElements();
 	Draw();
 	CheckCollisions();
 	return MenuResult::CONTINUE;
+}
+void RulesMenu::DrawRules(int page)
+{
+
+	Rectangle imagesBar = { GameInfoBar.x,GameInfoBar.y,GameInfoBar.width * 0.4,GameInfoBar.height };
+	Rectangle paragraphsWithImagesBar = { GameInfoBar.x + (GameInfoBar.width * 0.4),GameInfoBar.y,GameInfoBar.width * 0.6,GameInfoBar.height };
+	float textureScale = 3.5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+
+	float y_pos = GameInfoBar.y + (20 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	float smallerFont = 50 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float mediumFont = 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float biggerFont = 120 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+
+	int GameInfoLimit = GameInfoPages.size();
+	int CharInfoLimit = GameInfoPages.size() + CharInfoPages.size();
+	int EnemyInfoLimit = CharInfoLimit + EnemyInfoPages.size();
+	int ItemsInfoLimit = EnemyInfoLimit + ItemsInfoPages.size();
+
+	if (page >= 1 && page <= GameInfoLimit)
+	{
+		auto& GameInfoPage = GameInfoPages[page - 1];
+		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, GameInfoPage.title, y_pos);
+		for (const auto& line : GameInfoPage.paragraphs) {
+			GameUI::GetInstance().DrawTextRules(GameInfoBar, smallerFont, line, y_pos);
+		}
+	}
+	if(page > GameInfoPages.size() && page <= CharInfoLimit)
+	{
+		auto& CharPage = CharInfoPages[page - GameInfoLimit - 1];
+
+		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, CharPage.title, y_pos);
+
+		auto& characterTexture = LoadingTextures::GetInstance().passCorrectTexture(CharPage.textureName, textureType::OBJECT_TEXTURE);
+		Vector2 characterPos = { (imagesBar.x + imagesBar.width * 0.6f) - (characterTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (characterTexture.height * textureScale * 0.5f) };
+		DrawTextureEx(characterTexture, characterPos, 0, textureScale, WHITE);
+
+		GameUI::GetInstance().DrawTextRules(paragraphsWithImagesBar, mediumFont, CharPage.characterName, y_pos);
+
+		for (const auto& line : CharPage.paragraphs) {
+			GameUI::GetInstance().DrawTextRules(paragraphsWithImagesBar, smallerFont, line, y_pos);
+		}
+
+		GameUI::GetInstance().DrawCharacterStatsInMenu(CharPage.pageNumber, paragraphsWithImagesBar, smallerFont, y_pos);
+	}
+	if (page > CharInfoLimit && page <= EnemyInfoLimit)
+	{
+		auto& EnemyPage = EnemyInfoPages[page - CharInfoLimit - 1];
+
+		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, EnemyPage.title, y_pos);
+
+		auto& enemyTexture = LoadingTextures::GetInstance().passCorrectTexture(EnemyPage.textureName, textureType::OBJECT_TEXTURE);
+		Vector2 enemyPos = { (imagesBar.x + imagesBar.width * 0.6f) - (enemyTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (enemyTexture.height * textureScale * 0.5f) };
+		DrawTextureEx(enemyTexture, enemyPos, 0, textureScale, WHITE);
+
+		GameUI::GetInstance().DrawTextRules(paragraphsWithImagesBar, mediumFont, EnemyPage.enemyDescription, y_pos);
+		for (const auto& line : EnemyPage.paragraphs) {
+			GameUI::GetInstance().DrawTextRules(paragraphsWithImagesBar, smallerFont, line, y_pos);
+		}
+
+		GameUI::GetInstance().DrawEnemyStatsInMenu(EnemyPage.enemyName, paragraphsWithImagesBar, smallerFont, y_pos);
+	}
+	if (page > EnemyInfoLimit && page <= ItemsInfoLimit)
+	{
+		auto& ItemsPage = ItemsInfoPages[page - EnemyInfoLimit - 1];
+
+		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, ItemsPage.title, y_pos);
+
+		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(ItemsPage.textureName, textureType::OBJECT_TEXTURE);
+		Vector2 itemPos = { (imagesBar.x + imagesBar.width * 0.6f) - (itemTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (itemTexture.height * textureScale * 0.5f) };
+		DrawTextureEx(itemTexture, itemPos, 0, textureScale, WHITE);
+		
+		GameUI::GetInstance().DrawTextRules(paragraphsWithImagesBar, mediumFont, ItemsPage.itemName, y_pos);
+		for (const auto& line : ItemsPage.paragraphs) {
+			GameUI::GetInstance().DrawTextRules(paragraphsWithImagesBar, smallerFont, line, y_pos);
+		}
+	}
 }
 
 UnlockedItemsMenu::UnlockedItemsMenu()

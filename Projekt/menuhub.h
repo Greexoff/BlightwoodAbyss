@@ -162,6 +162,41 @@ public:
 	void Draw() override;
 	MenuResult handleMenuLogic() override;
 private:
+	struct GameInfo
+	{
+		string title;
+		vector<string> paragraphs;
+	};
+	struct CharacterInfo
+	{
+		string title;
+		string characterName;
+		vector<string> paragraphs;
+		string textureName;
+		int pageNumber;
+	};
+	struct EnemyInfo
+	{
+		string title;
+		string enemyDescription;
+		string enemyName;
+		vector<string> paragraphs;
+		string textureName;
+	};
+	struct ItemsInfo
+	{
+		string title;
+		string itemName;
+		vector<string> paragraphs;
+		string textureName;
+	};
+	Rectangle GameInfoBar;
+	vector<GameInfo> GameInfoPages;
+	vector<CharacterInfo> CharInfoPages;
+	vector<EnemyInfo> EnemyInfoPages;
+	vector<ItemsInfo> ItemsInfoPages;
+	void DrawRules(int page);
+	void setPagesContent();
 };
 class UnlockedItemsMenu : public Menu
 {

@@ -27,10 +27,12 @@ public:
 	void DrawBlackBar(Rectangle border, unsigned char opacity);//GENERAL: Wyświetla ciemny pasek o podanych rozmiarach i przejrzystości wraz z czarną obramówką
 	void DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize);//GAME: Wyświetla aktualne statystyki gracza w trakcie gry
 	void DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position);//CHAR_SELECT_MENU: Wyświetla domyślne statystyki postaci
-	void DrawTextOnBar(Rectangle bar, float fontSize, const  string& text, float y_position);//GENERAL: Wyświetla tekst na podanym obszarze (wyśrodkowany), zmniejszając rozmiar/ rodzielając na części jezeli wykracza 
+	void DrawTextOnBar(Rectangle bar, float fontSize, const string& text, float y_position);//GENERAL: Wyświetla tekst na podanym obszarze (wyśrodkowany), zmniejszając rozmiar/ rodzielając na części jezeli wykracza 
+	void DrawTextRules(Rectangle bar, float fontSize, const string& text, float& y_position);//GENERAL: Wyświetla tekst na podanym obszarze (wyśrodkowany), zmniejszając rozmiar/ rodzielając na części jezeli wykracza 
 	void DrawData(string& name, Rectangle bar, float& fontSize);//LOGIN_MENU: Wyświetla dane wpisywane przez uzytkownika
 	void DrawError(string information, Rectangle bar);//LOGIN_MENU: Wyświetla komunikaty błędów podczas logowania/tworzenia konta
 	void DrawComments(string comment1, string comment2, Rectangle Bar);
+	void DrawEnemyStatsInMenu(string enemyName, Rectangle bar, float fontSize, float y_position);
 	void DrawGameUI(const string& text, float fontSize, float y_pos);//GAME: Wyświetla Wave+waveNumber oraz Score+score wysrodkowane wzgledem srodka ekranu
 	string CreateTextWithLeadingZerosGameUI(int number, int amountOfZeros, const string& text);//GENERAL:: Tworzy tekst wraz z liczbą z poprzedzającymi zerami np. 001234
 	Rectangle setBarArea(float fontSize, string text, Vector2 textPosition, int type, float additional_x_space, float additional_y_space);// Ustawia obszar paska wraz z dodatkową przestrzenią po bokach

@@ -1,4 +1,4 @@
-Greexoff,Beka3,Highest Score: 012600, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
+Greexoff,Beka3,Highest Score: 030100, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 Greexoff2,passy,Highest Score: 000123, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 0, TearSpeedTrinket: 0,
 NewPlayer1,NewPassword,Highest Score: 122422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 NewPlayer2,NewPassword,Highest Score: 100422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
@@ -30,3 +30,5 @@ awwwwww,awwwwww,Highest Score: 000900,
 aawwwsw,dwsw,Highest Score: 000500,
 
 asasasas,asasas,Highest Score: 000200,
+
+NowyKompik,asdsa,Highest Score: 000900,

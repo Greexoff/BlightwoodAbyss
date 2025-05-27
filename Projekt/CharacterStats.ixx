@@ -19,8 +19,8 @@ export struct characterStats {
 };
 export struct enemyStats
 {
-    int enemyHealth;
-    int maxEnemyHealth;
+    float enemyHealth;
+    float maxEnemyHealth;
     float enemySpeed;
     float enemyAttackSpeed;
     float enemyScore;

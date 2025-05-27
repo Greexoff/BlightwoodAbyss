@@ -18,7 +18,7 @@ public:
 	virtual Rectangle getEnemyRect();
 	virtual void UpdateColl(Vector2 Direction);
 	virtual Vector2 getCollisionSide(Rectangle enemy1, Rectangle enemy2);
-	virtual int setEnemyHealth(int playerDamage);
+	virtual int setEnemyHealth(float playerDamage);
 	virtual int getEnemyHealth();
 	virtual float getEnemySpeed();
 	virtual int getEnemyAttackSpeed();

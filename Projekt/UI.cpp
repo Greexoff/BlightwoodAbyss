@@ -63,6 +63,7 @@ void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, f
 void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position)
 {
 	float gap = fontSize;
+	int it = 0;
 	map<string, characterStats>stats = CharactersData::getInstance().getCharacterStats();
 	string characterName;
 	switch (pageNumber)
@@ -80,16 +81,33 @@ void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontS
 		characterName = "FirstCharacter";
 		break;
 	}
-	string maxHealthInfo = "MAX HEALTH: " + ConvertToString(stats[characterName].maxPlayerHealth, 0);
-	string DamageInfo = "DAMAGE: " + ConvertToString(stats[characterName].playerDamage, 2);
-	string SpeedInfo = "SPEED: " + ConvertToString(stats[characterName].playerSpeed, 2);
-	string TearRateInfo = "TEAR RATE: " + ConvertToString(stats[characterName].tearRate, 2);
-	string TearSpeedInfo = "TEAR SPEED: " + ConvertToString(stats[characterName].tearSpeed, 2);
-	GameUI::GetInstance().DrawTextOnBar(bar, fontSize, maxHealthInfo, y_position);
-	GameUI::GetInstance().DrawTextOnBar(bar, fontSize, DamageInfo, y_position+gap);
-	GameUI::GetInstance().DrawTextOnBar(bar, fontSize, SpeedInfo, y_position+gap*2);
-	GameUI::GetInstance().DrawTextOnBar(bar, fontSize, TearRateInfo, y_position+gap*3);
-	GameUI::GetInstance().DrawTextOnBar(bar, fontSize, TearSpeedInfo, y_position+gap*4);
+	vector<string> playerInfo;
+	playerInfo.push_back("MAX HEALTH: " + ConvertToString(stats[characterName].maxPlayerHealth, 0));
+	playerInfo.push_back("DAMAGE: " + ConvertToString(stats[characterName].playerDamage, 2));
+	playerInfo.push_back("SPEED: " + ConvertToString(stats[characterName].playerSpeed, 2));
+	playerInfo.push_back("TEAR RATE: " + ConvertToString(stats[characterName].tearRate, 2));
+	playerInfo.push_back("TEAR SPEED: " + ConvertToString(stats[characterName].tearSpeed, 2));
+	for (const auto& playerStats : playerInfo)
+	{
+		GameUI::GetInstance().DrawTextOnBar(bar, fontSize, playerStats, y_position + gap*it);
+		it++;
+	}
+}
+void GameUI::DrawEnemyStatsInMenu(string enemyName, Rectangle bar, float fontSize, float y_position)
+{
+	float gap = fontSize;
+	int it = 0;
+	map<string, enemyStats>stats = CharactersData::getInstance().getEnemyStats();
+	vector<string> enemyInfo;
+	enemyInfo.push_back("MAX HEALTH: " + ConvertToString(stats[enemyName].maxEnemyHealth, 0));
+	enemyInfo.push_back("SPEED: " + ConvertToString(stats[enemyName].enemySpeed, 2));
+	enemyInfo.push_back("TEAR SPEED: " + ConvertToString(stats[enemyName].enemyAttackSpeed, 2));
+	enemyInfo.push_back("SCORE: " + ConvertToString(stats[enemyName].enemyScore, 0));
+	for (const auto& enemyStat : enemyInfo)
+	{
+		GameUI::GetInstance().DrawTextOnBar(bar, fontSize, enemyStat, y_position + gap * it);
+		it++;
+	}
 }
 void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, float y_position)
 {
@@ -130,6 +148,53 @@ void GameUI::DrawTextOnBar(Rectangle bar, float fontSize, const string& text, fl
 		GameUI::GetInstance().DrawTextWithOutline(line, { textX, y_position }, fontSize);
 		y_position += lineHeight + gap;
 	}
+}
+void GameUI::DrawTextRules(Rectangle bar, float fontSize, const string& text, float& y_position)
+{
+	float additionalGapAtEnd = 20 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	if (text == "GAP")
+	{
+		y_position += additionalGapAtEnd;
+		return;
+	}
+	float barBorders = 10;
+	float lineWidthScale = 0.9;
+	float minFontSize = 10;
+	float gap = 2;
+
+	vector<string> lines;
+	bool textFits = false;
+	float lineHeight;
+	while (fontSize >= minFontSize)
+	{
+		float maxLineWidth = bar.width * lineWidthScale;
+		lines = GameUI::GetInstance().DivideTextIntoParts(text, fontSize, maxLineWidth);
+
+		lineHeight = GameUI::GetInstance().MeasureText(fontSize, "y").y;
+		float totalHeight = lines.size() * lineHeight + (lines.size() - 1) * 2;
+
+		if (y_position + totalHeight <= bar.y + bar.height - barBorders)
+		{
+			textFits = true;
+			break;
+		}
+
+		fontSize--;
+	}
+
+	if (!textFits)
+	{
+		float maxLineWidth = bar.width * lineWidthScale;
+		lines = GameUI::GetInstance().DivideTextIntoParts(text, fontSize, maxLineWidth);
+	}
+	for (const string& line : lines)
+	{
+		Vector2 lineSize = GameUI::GetInstance().MeasureText(fontSize, line);
+		float textX = bar.x + (bar.width - lineSize.x) / 2;
+		GameUI::GetInstance().DrawTextWithOutline(line, { textX, y_position }, fontSize);
+		y_position += lineHeight + gap;
+	}
+	y_position += additionalGapAtEnd;
 }
 void GameUI::DrawData(string& name, Rectangle bar, float& fontSize)
 {

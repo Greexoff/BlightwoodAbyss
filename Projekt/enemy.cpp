@@ -128,7 +128,7 @@ int Enemy::getEnemyHealth()
 {
 	return stats.enemyHealth;
 }
-int Enemy::setEnemyHealth(int playerDamage)
+int Enemy::setEnemyHealth(float playerDamage)
 {
 	return stats.enemyHealth-=playerDamage;
 }

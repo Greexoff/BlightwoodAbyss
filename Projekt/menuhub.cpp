@@ -712,7 +712,7 @@ void RulesMenu::setPagesContent()
 		{"ENEMIES", "FIRST ENEMY", "Monster1", { "THIS ENEMY WILL CONSTANTLY FOLLOW YOU ALTHOUGH THEY ARE RATHER SLOW.","THEY CANNOT SHOOT TEARS." }, "Enemy1.png"},
 		{"ENEMIES", "SECOND ENEMY", "Monster2", { "THIS ENEMY WILL FOLLOW YOU, HOWEVER THEY CAN BE DESTROYED WITH SINGLE TEAR.","THIS ONE CANNOT SHOOT TEARS."}, "Enemy2.png"},
 		{"ENEMIES", "THIRD ENEMY", "Monster3", { "THIS ENEMY CANNOT MOVE, HOWEVER THEY WILL SHOOT YOU FROM DISTANCE." }, "Enemy3.png"},
-		{"ENEMIES", "FOURTH ENEMY", "Monster4", { "THIS ENEMY WILL BOTH FOLLOW YOU AND SHOOT TEARS AT YOU.","THERE CAN ONLY BE 6 OF THEM PER WAVE."}, "Enemy4.png"},
+		{"ENEMIES", "GHOST", "Monster4", { "THIS ENEMY WILL BOTH FOLLOW YOU AND SHOOT TEARS AT YOU.","THERE CAN ONLY BE 6 OF THEM PER WAVE."}, "Enemy4.png"},
 		{"BOSSES", "FIFTH ENEMY", "Monster5", { "THIS BOSS WILL CHASE YOU AND SHOOT WITH VERY RAPID TEARS.","THEY HAVE HUGE HITBOX, SO IT WILL BE DIFFICULT TO MISS THEM." }, "Enemy5.png"},
 	};
 	ItemsInfoPages =
@@ -768,6 +768,7 @@ void RulesMenu::DrawRules(int page)
 		auto& CharPage = CharInfoPages[page - GameInfoLimit - 1];
 
 		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, CharPage.title, y_pos);
+		y_pos -= 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 
 		auto& characterTexture = LoadingTextures::GetInstance().passCorrectTexture(CharPage.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 characterPos = { (imagesBar.x + imagesBar.width * 0.6f) - (characterTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (characterTexture.height * textureScale * 0.5f) };
@@ -786,6 +787,7 @@ void RulesMenu::DrawRules(int page)
 		auto& EnemyPage = EnemyInfoPages[page - CharInfoLimit - 1];
 
 		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, EnemyPage.title, y_pos);
+		y_pos -= 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 
 		auto& enemyTexture = LoadingTextures::GetInstance().passCorrectTexture(EnemyPage.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 enemyPos = { (imagesBar.x + imagesBar.width * 0.6f) - (enemyTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (enemyTexture.height * textureScale * 0.5f) };
@@ -803,6 +805,7 @@ void RulesMenu::DrawRules(int page)
 		auto& ItemsPage = ItemsInfoPages[page - EnemyInfoLimit - 1];
 
 		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, ItemsPage.title, y_pos);
+		y_pos -= 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 
 		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(ItemsPage.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 itemPos = { (imagesBar.x + imagesBar.width * 0.6f) - (itemTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (itemTexture.height * textureScale * 0.5f) };

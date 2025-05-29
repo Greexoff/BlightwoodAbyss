@@ -228,6 +228,7 @@ public:
 	void Draw() override;	
 	MenuResult handleMenuLogic() override;
 private:
+	Rectangle ScoresInfoBar;
 	vector<pair<string, int>>UsersScores;
 	bool areUsersLoadedIntoVector;
 	void LoadUsersScoresIntoVector();

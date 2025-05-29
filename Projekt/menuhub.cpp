@@ -702,18 +702,18 @@ void RulesMenu::setPagesContent()
 	};
 	CharInfoPages =
 	{
-		{"CHARACTER STATS", "FIRST CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "FirstCharacter.png", 0},
-		{"CHARACTER STATS", "SECOND CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "SecondCharacter.png", -1},
-		{"CHARACTER STATS", "THIRD CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "ThirdCharacter.png", 1},
+		{"CHARACTERS", "FIRST CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "FirstCharacter.png", 0},
+		{"CHARACTERS", "SECOND CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "SecondCharacter.png", -1},
+		{"CHARACTERS", "THIRD CHARACTER", { "CHARACTER STATS ARE SHOWN BELOW:" }, "ThirdCharacter.png", 1},
 	};
 
 	EnemyInfoPages = 
 	{
-		{"ENEMY STATS", "FIRST ENEMY", "Monster1", { "THIS ENEMY WILL CONSTANTLY FOLLOW YOU ALTHOUGH THEY ARE RATHER SLOW.","THEY CANNOT SHOOT TEARS." }, "Enemy1.png"},
-		{"ENEMY STATS", "SECOND ENEMY", "Monster2", { "THIS ENEMY WILL FOLLOW YOU, HOWEVER THEY CAN BE DESTROYED WITH SINGLE TEAR.","THIS ONE CANNOT SHOOT TEARS."}, "Enemy2.png"},
-		{"ENEMY STATS", "THIRD ENEMY", "Monster3", { "THIS ENEMY CANNOT MOVE, HOWEVER THEY WILL SHOOT YOU FROM DISTANCE." }, "Enemy3.png"},
-		{"ENEMY STATS", "FOURTH ENEMY", "Monster4", { "THIS ENEMY WILL BOTH FOLLOW YOU AND SHOOT TEARS AT YOU.","THERE CAN ONLY BE 6 OF THEM PER WAVE."}, "Enemy4.png"},
-		{"ENEMY STATS", "FIFTH ENEMY", "Monster5", { "THIS BOSS WILL CHASE YOU AND SHOOT WITH VERY RAPID TEARS.","THEY HAVE HUGE HITBOX, SO IT WILL BE DIFFICULT TO MISS THEM." }, "Enemy5.png"},
+		{"ENEMIES", "FIRST ENEMY", "Monster1", { "THIS ENEMY WILL CONSTANTLY FOLLOW YOU ALTHOUGH THEY ARE RATHER SLOW.","THEY CANNOT SHOOT TEARS." }, "Enemy1.png"},
+		{"ENEMIES", "SECOND ENEMY", "Monster2", { "THIS ENEMY WILL FOLLOW YOU, HOWEVER THEY CAN BE DESTROYED WITH SINGLE TEAR.","THIS ONE CANNOT SHOOT TEARS."}, "Enemy2.png"},
+		{"ENEMIES", "THIRD ENEMY", "Monster3", { "THIS ENEMY CANNOT MOVE, HOWEVER THEY WILL SHOOT YOU FROM DISTANCE." }, "Enemy3.png"},
+		{"ENEMIES", "FOURTH ENEMY", "Monster4", { "THIS ENEMY WILL BOTH FOLLOW YOU AND SHOOT TEARS AT YOU.","THERE CAN ONLY BE 6 OF THEM PER WAVE."}, "Enemy4.png"},
+		{"BOSSES", "FIFTH ENEMY", "Monster5", { "THIS BOSS WILL CHASE YOU AND SHOOT WITH VERY RAPID TEARS.","THEY HAVE HUGE HITBOX, SO IT WILL BE DIFFICULT TO MISS THEM." }, "Enemy5.png"},
 	};
 	ItemsInfoPages =
 	{
@@ -905,6 +905,7 @@ HighestScoreMenu::~HighestScoreMenu()
 void HighestScoreMenu::Draw()
 {
 	drawMenuElements();
+	GameUI::GetInstance().DrawBlackBar(ScoresInfoBar, 180);
 	DrawPlayersScores();
 }
 void HighestScoreMenu::LoadUsersScoresIntoVector()
@@ -915,12 +916,13 @@ void HighestScoreMenu::LoadUsersScoresIntoVector()
 		return;
 	}
 	regex userRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),.*)");
+	regex defaultRegex(R"(^Username,Password,Highest Score:\s*(\d+),.*)");
 	smatch match;
 	string line;
 
 	while (getline(DataBase, line))
 	{
-		if (regex_match(line, match, userRegex))
+		if (regex_match(line, match, userRegex) && !regex_match(line,defaultRegex))
 		{
 			UsersScores.push_back({ match[1],stoi(match[3]) });
 		}
@@ -940,7 +942,7 @@ void HighestScoreMenu::LoadUsersScoresIntoVector()
 void HighestScoreMenu::DrawPlayersScores()
 {
 	int iteratorLimit = getPage(Page::CURRENT_PAGE) * 5;
-	float gap = 100 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float y_pos = ScoresInfoBar.y + (30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	string convertedData;
 	int placeInList = 0;
 	int Limit = iteratorLimit;
@@ -948,17 +950,17 @@ void HighestScoreMenu::DrawPlayersScores()
 	{
 		Limit = UsersScores.size();
 	}
+	GameUI::GetInstance().DrawTextRules(ScoresInfoBar, 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, "HIGHEST SCORES", y_pos);
 	for (int i = iteratorLimit - 5; i < Limit; i++)
 	{
-		placeInList = i + 1;
-		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 150*ScreenSettings::GetInstance().getScreenResolutionFactor().y, "HIGHEST SCORES", 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+		placeInList = i + 1;		
 		convertedData = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(UsersScores[i].second, 6, to_string(placeInList) + ". " + UsersScores[i].first +": ");
-		GameUI::GetInstance().DrawTextOnBar({ 0,0,(float)GetScreenWidth(),(float)GetScreenHeight() }, 85 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, convertedData, 150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y + gap);
-		gap += 100 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+		GameUI::GetInstance().DrawTextRules(ScoresInfoBar, 85 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, convertedData,y_pos);
 	}
 }
 MenuResult HighestScoreMenu::handleMenuLogic()
 {
+	ScoresInfoBar = { GetScreenWidth() * 0.15f, GetScreenHeight() * 0.10f, GetScreenWidth() * 0.7f,GetScreenHeight() * 0.7f };
 	if (!areUsersLoadedIntoVector)
 	{
 		LoadUsersScoresIntoVector();

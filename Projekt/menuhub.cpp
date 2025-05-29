@@ -337,7 +337,8 @@ void LoginMenu::addPlayerToDataBase()
 	if (!file.is_open()){}
 	else
 	{
-		file << endl << username << "," << password << ",Highest Score: 000000,";
+		file << endl << username << "," << password << ",Highest Score: 000000, DamageTrinket: 1";
+		UserInfo::GetInstance().addUserItems("DamageTrinket", 1);
 	}
 
 }

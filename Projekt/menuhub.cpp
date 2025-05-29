@@ -332,14 +332,36 @@ bool LoginMenu::checkIsPlayerInDataBase()
 }
 void LoginMenu::addPlayerToDataBase()
 {
-	ofstream file(data_basePath.string(), ios::app);
-	string line;
-	if (!file.is_open()){}
-	else
+	fstream file(data_basePath.string());
+	if (!file.is_open())
 	{
-		file << endl << username << "," << password << ",Highest Score: 000000, DamageTrinket: 1";
-		UserInfo::GetInstance().addUserItems("DamageTrinket", 1);
+		return;
 	}
+	regex userRegex(R"(Username,Password,Highest Score: 000000,\s*((?:\w+Trinket:\s*\d+(?:,\s*)?)+))");
+	smatch match;
+	string line;
+	while (getline(file, line))
+	{
+		if (regex_match(line, match, userRegex))
+		{
+			break;
+		}
+	}
+	regex trinketRegex(R"((\w+Trinket):\s*(\d+))");
+	string trinkets = match[1];
+	auto words_begin = sregex_iterator(trinkets.begin(), trinkets.end(), trinketRegex);
+	auto words_end = sregex_iterator();
+	for (sregex_iterator i = words_begin; i != words_end; ++i)
+	{
+		string trinketName = (*i)[1];
+		bool trinketValue = ((*i)[2]) == "1" ? true : false;
+		UserInfo::GetInstance().addUserItems(trinketName, trinketValue);
+	}
+	file.clear();
+	file.seekp(0, ios::end);
+	file << "\n" << UserInfo::GetInstance().getUsername() << "," << UserInfo::GetInstance().getPassword() << ",Highest Score: 000000, " << match[1];
+
+
 
 }
 void LoginMenu::clearUsernameandPassword()

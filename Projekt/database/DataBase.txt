@@ -1,15 +1,7 @@
+Username,Password,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+asdas,asdasd,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
 Greexoff,Beka3,Highest Score: 030100, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
-NewPlayer1,NewPassword,Highest Score: 122422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer2,NewPassword,Highest Score: 930422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer3,NewPassword,Highest Score: 000422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer4,NewPassword,Highest Score: 330422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer5,NewPassword,Highest Score: 002422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer6,NewPassword,Highest Score: 002252, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer7,NewPassword,Highest Score: 000400, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-NewPlayer8,NewPassword,Highest Score: 003400, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
-
-
-
-NoweKoncicho,asdsa,Highest Score: 000000,
-asdasd,asdasdad,Highest Score: 000000, DamageTrinket: 1
-aaswww,swws,Highest Score: 000000, DamageTrinket: 1
+NowyTypiarz,okok,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+Isworking,please,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+Kolejny,onew,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+teradziala,prosze,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,

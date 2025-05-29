@@ -58,6 +58,10 @@ bool UserInfo::getUserItemValue(string itemName)
 	}
 	return false;
 }
+map<string, bool> UserInfo::getUserItems()
+{
+	return UserItems;
+}
 
 
 

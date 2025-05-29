@@ -23,6 +23,7 @@ public:
 	void setPassword(string password);
 	void addUserItems(string itemName, bool isItemUnlocked);
 	bool getUserItemValue(string itemName);
+	map<string, bool> getUserItems();
 	~UserInfo();
 private:
 	UserInfo();

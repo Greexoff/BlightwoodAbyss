@@ -455,7 +455,7 @@ void Game::handlePostGameTab()
 {
 	if (!wasDatabaseUpdated)
 	{
-		isNewScoreHigher = updatePlayerScoreInDataBase(playerTotalScore, UserInfo::GetInstance().getUsername(), wasDatabaseUpdated);
+		isNewScoreHigher = updatePlayerInDataBase(playerTotalScore, UserInfo::GetInstance().getUsername(), wasDatabaseUpdated);
 	}
 	Rectangle borders = { GetScreenWidth() * 0.2,GetScreenHeight() * 0.2,GetScreenWidth() * 0.6,GetScreenHeight() * 0.6 };
 	GameUI::GetInstance().DrawBlackBar(borders, 100);
@@ -482,7 +482,7 @@ bool Game::isPostTabClosed()
 {
 	return postTabClosed;
 }
-bool Game::updatePlayerScoreInDataBase(int playerScore, string username, bool& flag)
+bool Game::updatePlayerInDataBase(int playerScore, string username, bool& flag)
 {
 	flag = true;
 	bool isHigher = true;
@@ -505,11 +505,15 @@ bool Game::updatePlayerScoreInDataBase(int playerScore, string username, bool& f
 			{
 				isHigher = true;
 				string newScore = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerScore, 6, "");
-				line = match[1].str() + "," + match[2].str() + ",Highest Score: " + newScore + "," + match[4].str();
+				line = match[1].str() + "," + match[2].str() + ",Highest Score: " + newScore + ", ";
 			}
 			else
 			{
 				isHigher = false;
+			}
+			for (auto [trinketName, trinketValue] : UserInfo::GetInstance().getUserItems())
+			{
+				line += trinketName + ": " + to_string(trinketValue) + ",";
 			}
 		}
 		UpdatedDataBase << line << "\n";

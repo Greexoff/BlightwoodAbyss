@@ -33,7 +33,7 @@ private:
 	bool postTabClosed;
 	bool isNewScoreHigher;
 	bool wasDatabaseUpdated;
-	bool updatePlayerScoreInDataBase(int playerScore, string username, bool& flag);
+	bool updatePlayerInDataBase(int playerScore, string username, bool& flag);
 	fs::path data_basePath = fs::current_path() / "database" / "DataBase.txt";
 	void handlePostGameTab();
 	bool isGameOver();

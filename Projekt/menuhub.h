@@ -162,6 +162,13 @@ public:
 	void Draw() override;
 	MenuResult handleMenuLogic() override;
 private:
+	struct ItemsInfo
+	{
+		string title;
+		string itemName;
+		vector<string> paragraphs;
+		string textureName;
+	};
 	struct GameInfo
 	{
 		string title;
@@ -183,13 +190,6 @@ private:
 		vector<string> paragraphs;
 		string textureName;
 	};
-	struct ItemsInfo
-	{
-		string title;
-		string itemName;
-		vector<string> paragraphs;
-		string textureName;
-	};
 	Rectangle GameInfoBar;
 	vector<GameInfo> GameInfoPages;
 	vector<CharacterInfo> CharInfoPages;
@@ -206,6 +206,19 @@ public:
 	void Draw() override;
 	MenuResult handleMenuLogic() override;
 private:
+	struct ItemsInfo
+	{
+		string itemName;
+		vector<string> paragraphs1;
+		vector<string> paragraphs2;
+		string textureName;
+		string itemNameInFile;
+	};
+	vector<ItemsInfo> ItemsInfoPages;
+	Rectangle ItemsInfoBar;
+	void DrawPage(int page);
+	void DrawLockedBar(float beginBarHeight, float endBarHeight);
+	void setPageContent();
 };
 class HighestScoreMenu : public Menu
 {

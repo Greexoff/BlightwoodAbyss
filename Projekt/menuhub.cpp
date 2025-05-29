@@ -301,7 +301,7 @@ bool LoginMenu::checkIsPlayerInDataBase()
 	{
 		return false;
 	}
-	regex userRegex(R"(^(\w+),(\w+),.*)");
+	regex userRegex(R"((\w+),(\w+),Highest Score:\s*(\d+),\s*((?:\w+Trinket:\s*\d+(?:,\s*)?)+))");
 	smatch match;
 	string line;
 	userExist = false;
@@ -313,14 +313,16 @@ bool LoginMenu::checkIsPlayerInDataBase()
 			userExist = true;
 			if (password == match[2])
 			{
-				//JAKIES GOWNO DO LADOWANIA VALUE TRINKETOW
-			/*int iterator = 0;//zamienic 0 na pierwszy potrzebny match 
-				for (const auto& i : jakasZmiennaKtoraPrzechowujeIloscTrinketow)
+				regex trinketRegex(R"((\w+Trinket):\s*(\d+))");
+				string trinkets = match[4];
+				auto words_begin = sregex_iterator(trinkets.begin(), trinkets.end(), trinketRegex);
+				auto words_end = sregex_iterator();
+				for (sregex_iterator i = words_begin; i != words_end; ++i)
 				{
-					int tmpIt = iterator;
-					UserInfo::GetInstance().addUserItems(match[tmpIt].str(), stob(match[tmpIt++]));
-					iterator++;
-				}*/
+					string trinketName = (*i)[1];
+					bool trinketValue = ((*i)[2])=="1" ? true : false;
+					UserInfo::GetInstance().addUserItems(trinketName, trinketValue);
+				}
 				return true;
 			}
 			return false;
@@ -658,7 +660,6 @@ RulesMenu::RulesMenu()
 	int amountOfPages = GameInfoPages.size() + CharInfoPages.size() + EnemyInfoPages.size() + ItemsInfoPages.size();
 	setAmountOfPages(amountOfPages);
 }
-
 RulesMenu::~RulesMenu()
 {
 }
@@ -800,14 +801,76 @@ UnlockedItemsMenu::~UnlockedItemsMenu()
 void UnlockedItemsMenu::Draw()
 {
 	drawMenuElements();
+	GameUI::GetInstance().DrawBlackBar(ItemsInfoBar, 180);
+	DrawPage(getPage(Page::CURRENT_PAGE));
+}
+void UnlockedItemsMenu::DrawPage(int Page)
+{
+	float textureScale = 4 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float y_pos = ItemsInfoBar.y + (20 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+	float addGap = 30* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float smallerFont = 60 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float biggerFont = 120 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float beginingOfBar = 0;
+	float endOfBar = 0;
+	if (Page >= 1 && Page <= ItemsInfoPages.size())
+	{
+		auto& itemPages = ItemsInfoPages[Page - 1];
+		bool unlocked = UserInfo::GetInstance().getUserItemValue(itemPages.itemNameInFile);
+		if (unlocked)
+		{
+			textureScale *= 1.5;
+		}
+
+		GameUI::GetInstance().DrawTextRules(ItemsInfoBar, biggerFont, itemPages.itemName, y_pos);
+		for (const auto& line : itemPages.paragraphs1) {
+			GameUI::GetInstance().DrawTextRules(ItemsInfoBar, smallerFont, line, y_pos);
+		}
+		beginingOfBar = y_pos;
+		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(itemPages.textureName, textureType::OBJECT_TEXTURE);
+		Vector2 itemPos = { (ItemsInfoBar.x + ItemsInfoBar.width * 0.5f) - (itemTexture.width * textureScale * 0.5f),y_pos };
+		DrawTextureEx(itemTexture, itemPos, 0, textureScale, WHITE);
+		y_pos += itemTexture.height * textureScale; 
+		endOfBar =y_pos;
+		y_pos += addGap;
+		if (!unlocked)
+		{
+			DrawLockedBar(beginingOfBar,endOfBar);
+			for (const auto& line : itemPages.paragraphs2) {
+				GameUI::GetInstance().DrawTextRules(ItemsInfoBar, smallerFont, line, y_pos);
+			}
+		}
+	}
+}
+void UnlockedItemsMenu::DrawLockedBar(float beginBarHeight, float endBarHeight)
+{
+	Rectangle LockedBar = { ItemsInfoBar.x,beginBarHeight,ItemsInfoBar.width,endBarHeight - beginBarHeight };
+	float fontSize = 300 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	GameUI::GetInstance().DrawBlackBar(LockedBar, 220);
+	GameUI::GetInstance().DrawTextOnBar(LockedBar, fontSize, "LOCKED", beginBarHeight);
+}
+void UnlockedItemsMenu::setPageContent()
+{
+	ItemsInfoPages =
+	{
+		{"DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5"},{"HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png","DamageTrinket"},
+		{"HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1"},{"HOW TO UNLOCK:","SURVIVE 15 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png","HealthTrinket"},
+		{"SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5"},{"HOW TO UNLOCK:","LAST 1 MINUTE DURING A BOSS FIGHT"}, "SpeedTrinket.png","SpeedTrinket"},
+		{"TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.04"},{"HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png" ,"TearRateTrinket"},
+		{"TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 20 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png","TearSpeedTrinket"},
+	};
 }
 MenuResult UnlockedItemsMenu::handleMenuLogic()
 {
+	ItemsInfoBar = { GetScreenWidth() * 0.15f, GetScreenHeight() * 0.10f, GetScreenWidth() * 0.7f,GetScreenHeight() * 0.7f };
+	setPageContent();
 	setMenuElements();
+	setAmountOfPages(ItemsInfoPages.size());
 	Draw();
 	CheckCollisions();
 	return MenuResult::CONTINUE;
 }
+
 
 HighestScoreMenu::HighestScoreMenu()
 {

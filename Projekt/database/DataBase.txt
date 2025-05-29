@@ -1,4 +1,4 @@
-Greexoff,Beka3,Highest Score: 030100, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
+Greexoff,Beka3,Highest Score: 030100, DamageTrinket: 0, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 NewPlayer1,NewPassword,Highest Score: 122422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 NewPlayer2,NewPassword,Highest Score: 930422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,
 NewPlayer3,NewPassword,Highest Score: 000422, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1,

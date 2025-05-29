@@ -47,9 +47,17 @@ void UserInfo::addUserItems(string itemName, bool isItemUnlocked)
 {
 	UserItems.insert({ itemName,isItemUnlocked });
 }
-map<string, bool> UserInfo::getUserItems()
+bool UserInfo::getUserItemValue(string itemName)
 {
-	return UserItems;
+	for (auto [Name, Value] : UserItems)
+	{
+		if (Name == itemName)
+		{
+			return Value;
+		}
+	}
+	return false;
 }
+
 
 

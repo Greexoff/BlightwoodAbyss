@@ -415,6 +415,10 @@ bool Game::isGameOver()
 {
 	if (Player->getPlayerHealth() == 0)
 	{
+		if (IsCursorHidden())
+		{
+			EnableCursor();
+		}
 		return true;
 	}
 	else
@@ -599,7 +603,6 @@ bool Game::updatePlayerInDataBase(int playerScore, string username, bool& flag)
 	{
 		if (regex_match(line, match, usersScoresRegex) && match[1] == username)
 		{
-			cout << "match1: " << match[1].str() << " i username: " << username << endl;
 			line.clear();
 			if (stoi(match[3])<playerScore)
 			{

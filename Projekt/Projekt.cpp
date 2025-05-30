@@ -8,8 +8,6 @@
 #include "menuhub.h"
 #include "UI.h"
 #include "screenSettings.h"
-import CharacterStats;
-
 using namespace std;
 namespace fs = filesystem;
 int main()
@@ -38,7 +36,7 @@ int main()
 					game = new Game();
 					game->setPlayerCharacter(csm->getPageNumber());
 					game->setLastTimePlayerWasTouched();
-					HideCursor();
+					DisableCursor();
 				}
 			}
 			break;

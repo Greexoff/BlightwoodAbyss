@@ -139,13 +139,13 @@ void Character::setPlayerTearSpeed(float amount)
 }
 void Character::setPlayerTearRate(float amount)
 {
-	if (stats.tearRate <= 0.1)
-	{
-		stats.tearRate -= (amount) / 2;
-	}
-	else
+	if (stats.tearRate >= 0.1)
 	{
 		stats.tearRate -= amount;
+	}
+	if (stats.tearRate <= 0.1)
+	{
+		stats.tearRate = 0.1;
 	}
 }
 void Character::setPlayerSpeed(float amount)

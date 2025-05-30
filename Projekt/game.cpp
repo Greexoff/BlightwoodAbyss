@@ -459,26 +459,50 @@ void Game::increasePlayerTotalScore(int amount)
 }
 void Game::createRandomLoot(Vector2 enemyPos)
 {
-	int type=GetRandomValue(1,5);
-	switch (type)
+	bool lootGenerated = false;
+	while (!lootGenerated)
 	{
-	case 1:
-		Loot = make_unique<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-		break;
-	case 2:
-		Loot = make_unique<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-		break;
-	case 3:
-		Loot = make_unique<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-		break;
-	case 4:
-		Loot = make_unique<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-		break;
-	case 5:
-		Loot = make_unique<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-		break;
-	default:
-		break;
+		int type = GetRandomValue(1, 5);
+		switch (type)
+		{
+		case 1:
+			if (UserInfo::GetInstance().getUserItemValue("DamageTrinket"))
+			{
+				Loot = make_unique<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				lootGenerated = true;
+			}
+			break;
+		case 2:
+			if (UserInfo::GetInstance().getUserItemValue("TearRateTrinket"))
+			{
+				Loot = make_unique<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				lootGenerated = true;
+			}
+			break;
+		case 3:
+			if (UserInfo::GetInstance().getUserItemValue("SpeedTrinket"))
+			{
+				Loot = make_unique<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				lootGenerated = true;
+			}
+			break;
+		case 4:
+			if (UserInfo::GetInstance().getUserItemValue("HealthTrinket"))
+			{
+				Loot = make_unique<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				lootGenerated = true;
+			}
+			break;
+		case 5:
+			if (UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"))
+			{
+				Loot = make_unique<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				lootGenerated = true;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 	
 }

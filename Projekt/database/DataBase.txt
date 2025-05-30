@@ -8,3 +8,10 @@ Player5,Password,Highest Score: 010323, DamageTrinket: 1, HealthTrinket: 0, Spee
 Player6,Password,Highest Score: 001000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
 Player7,Password,Highest Score: 012002, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
 Player8,Password,Highest Score: 123133, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+NoweKoncicho,sadsa,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+NoweKont,sasa,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+assa,saas,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+sadsa,asads,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
+asdasd,asdas,Highest Score: 000700, DamageTrinket: 1,HealthTrinket: 0,SpeedTrinket: 0,TearRateTrinket: 0,TearSpeedTrinket: 0,
+
+dsaas,sadsa,Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,

@@ -301,7 +301,7 @@ bool LoginMenu::checkIsPlayerInDataBase()
 	{
 		return false;
 	}
-	regex userRegex(R"((\w+),(\w+),Highest Score:\s*(\d+),\s*((?:\w+Trinket:\s*\d+(?:,\s*)?)+))");
+	regex userRegex(R"((\w+),\s*(\w+),\s*Highest Score:\s*(\d+),\s*((?:\w+Trinket:\s*\d+(?:,\s*)?)+))");
 	smatch match;
 	string line;
 	userExist = false;
@@ -337,7 +337,7 @@ void LoginMenu::addPlayerToDataBase()
 	{
 		return;
 	}
-	regex userRegex(R"(Username,Password,Highest Score: 000000,\s*((?:\w+Trinket:\s*\d+(?:,\s*)?)+))");
+	regex userRegex(R"(Username, Password, Highest Score: 000000,\s*((?:\w+Trinket:\s*\d+(?:,\s*)?)+))");
 	smatch match;
 	string line;
 	while (getline(file, line))
@@ -359,7 +359,7 @@ void LoginMenu::addPlayerToDataBase()
 	}
 	file.clear();
 	file.seekp(0, ios::end);
-	file << "\n" << UserInfo::GetInstance().getUsername() << "," << UserInfo::GetInstance().getPassword() << ",Highest Score: 000000, " << match[1];
+	file << "\n" << UserInfo::GetInstance().getUsername() << ", " << UserInfo::GetInstance().getPassword() << ", Highest Score: 000000, " << match[1];
 
 
 
@@ -918,8 +918,8 @@ void HighestScoreMenu::LoadUsersScoresIntoVector()
 	{
 		return;
 	}
-	regex userRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),.*)");
-	regex defaultRegex(R"(^Username,Password,Highest Score:\s*(\d+),.*)");
+	regex userRegex(R"(^(\w+),\s*(\w+),\s*Highest Score:\s*(\d+),.*)");
+	regex defaultRegex(R"(^Username, Password, Highest Score:\s*(\d+),.*)");
 	smatch match;
 	string line;
 

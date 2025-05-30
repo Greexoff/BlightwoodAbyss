@@ -38,6 +38,7 @@ int main()
 					game = new Game();
 					game->setPlayerCharacter(csm->getPageNumber());
 					game->setLastTimePlayerWasTouched();
+					HideCursor();
 				}
 			}
 			break;

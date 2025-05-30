@@ -48,8 +48,7 @@ private:
 	float backgroundScale;
 	unique_ptr<Character> Player;
 	string playerTearType;
-	//unique_ptr<Items> Loot;
-	void createRandomLoot(Vector2 enemyPos);
+	void createRandomLoot(Vector2 enemyPos, bool condition);
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
 	vector<shared_ptr<Enemy>> enemies;

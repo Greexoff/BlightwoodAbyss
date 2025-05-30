@@ -289,7 +289,6 @@ void Game::CollisionCheck()
 {
 	if (!items.empty())
 	{
-		//TUTAJ JESZCZE JAKAS FUNKCJA DO WYSWIETLANIA NAPISU ZE PODNIESIONO X I CO TO DAJE JAK JUZ BEDE MIAL INTERFEJS GRAFICZNY TO TA METODE NA PUBLIC  CZY CUS
 		for (auto it = items.begin(); it != items.end();)
 		{
 			if (CheckCollisionRecs(Player->getPlayerRect(), (*it)->getItemRect()))
@@ -316,10 +315,7 @@ void Game::CollisionCheck()
 					if ((*it)->getEnemyHealth() <= 0)
 					{
 						increasePlayerTotalScore((*it)->getEnemyScore());
-						//if (waveNumber % 5 == 0)
-					//	{
-							createRandomLoot((*it)->getEnemyPosition());
-						//}
+						createRandomLoot((*it)->getEnemyPosition(), waveNumber%5 ==0);
 						it = enemies.erase(it);
 					}
 					else
@@ -467,55 +463,67 @@ void Game::increasePlayerTotalScore(int amount)
 {
 	playerTotalScore += amount;
 }
-void Game::createRandomLoot(Vector2 enemyPos)
+void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 {
 	bool lootGenerated = false;
 	shared_ptr<Items> Loot;
-	while (!lootGenerated)
+	if (condition)
 	{
-		int type = GetRandomValue(1, 5);
-		switch (type)
+		while (!lootGenerated)
 		{
-		case 1:
-			if (UserInfo::GetInstance().getUserItemValue("DamageTrinket"))
+			int type = GetRandomValue(1, 5);
+			switch (type)
 			{
-				Loot = make_shared<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-				lootGenerated = true;
+			case 1:
+				if (UserInfo::GetInstance().getUserItemValue("DamageTrinket"))
+				{
+					Loot = make_shared<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+					lootGenerated = true;
+				}
+				break;
+			case 2:
+				if (UserInfo::GetInstance().getUserItemValue("TearRateTrinket"))
+				{
+					Loot = make_shared<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+					lootGenerated = true;
+				}
+				break;
+			case 3:
+				if (UserInfo::GetInstance().getUserItemValue("SpeedTrinket"))
+				{
+					Loot = make_shared<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+					lootGenerated = true;
+				}
+				break;
+			case 4:
+				if (UserInfo::GetInstance().getUserItemValue("HealthTrinket"))
+				{
+					Loot = make_shared<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+					lootGenerated = true;
+				}
+				break;
+			case 5:
+				if (UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"))
+				{
+					Loot = make_shared<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+					lootGenerated = true;
+				}
+				break;
+			default:
+				break;
 			}
-			break;
-		case 2:
-			if (UserInfo::GetInstance().getUserItemValue("TearRateTrinket"))
-			{
-				Loot = make_shared<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-				lootGenerated = true;
-			}
-			break;
-		case 3:
-			if (UserInfo::GetInstance().getUserItemValue("SpeedTrinket"))
-			{
-				Loot = make_shared<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-				lootGenerated = true;
-			}
-			break;
-		case 4:
-			if (UserInfo::GetInstance().getUserItemValue("HealthTrinket"))
-			{
-				Loot = make_shared<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-				lootGenerated = true;
-			}
-			break;
-		case 5:
-			if (UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"))
-			{
-				Loot = make_shared<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
-				lootGenerated = true;
-			}
-			break;
-		default:
-			break;
+		}
+		items.push_back(Loot);
+	}
+	else
+	{
+		int random = GetRandomValue(1, 10);
+		if (random % 5 == 0 || random % 7 == 0)
+		{
+			Loot = make_shared<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+			items.push_back(Loot);
 		}
 	}
-	items.push_back(Loot);
 }
 void Game::setLastTimePlayerWasTouched()
 {
@@ -583,7 +591,7 @@ bool Game::updatePlayerInDataBase(int playerScore, string username, bool& flag)
 		return false;
 	}
 
-	regex usersScoresRegex(R"(^(\w+),(\w+),Highest Score:\s*(\d+),(.*))");
+	regex usersScoresRegex(R"(^(\w+),\s*(\w+),\s*Highest Score:\s*(\d+),(.*))");
 	smatch match;
 	string line;
 
@@ -591,19 +599,22 @@ bool Game::updatePlayerInDataBase(int playerScore, string username, bool& flag)
 	{
 		if (regex_match(line, match, usersScoresRegex) && match[1] == username)
 		{
+			cout << "match1: " << match[1].str() << " i username: " << username << endl;
+			line.clear();
 			if (stoi(match[3])<playerScore)
 			{
 				isHigher = true;
 				string newScore = GameUI::GetInstance().CreateTextWithLeadingZerosGameUI(playerScore, 6, "");
-				line = match[1].str() + "," + match[2].str() + ",Highest Score: " + newScore + ", ";
+				line = username + ", " + match[2].str() + ", Highest Score: " + newScore + ", ";
 			}
 			else
 			{
 				isHigher = false;
+				line = username + ", " + match[2].str() + ", Highest Score: " + match[3].str() + ", ";
 			}
 			for (auto [trinketName, trinketValue] : UserInfo::GetInstance().getUserItems())
 			{
-				line += trinketName + ": " + to_string(trinketValue) + ",";
+				line += trinketName + ": " + to_string(trinketValue) + ", ";
 			}
 		}
 		UpdatedDataBase << line << "\n";

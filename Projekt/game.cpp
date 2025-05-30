@@ -440,6 +440,20 @@ void Game::beginNewWave()
 	breakStartingTime = GetTime();
 	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));
+	if (!items.empty() && waveNumber%5!=0)
+	{
+		for (auto it = items.begin(); it != items.end();)
+		{
+			if (dynamic_pointer_cast<HeartContainer>(*it))
+			{
+				it = items.erase((it));
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
 	startCountdown = false;
 	if (amountofEnemies < 20)
 	{

@@ -77,6 +77,7 @@ void SpeedTrinket::applyEffect(Character* player)
 void HealthTrinket::applyEffect(Character* player)
 {
 	player->setPlayerMaxHealth(1);
+	player->setPlayerHealth(player->getPlayerMaxHealth());
 }
 void TearSpeedTrinket::applyEffect(Character* player)
 {

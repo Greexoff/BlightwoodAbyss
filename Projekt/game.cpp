@@ -428,7 +428,6 @@ bool Game::isGameOver()
 }
 void Game::beginNewWave()
 {
-	Player->setPlayerHealth(1);
 	disableEnemyTears();
 	increasePlayerTotalScore(200 * waveNumber);
 	waveNumber++;
@@ -524,7 +523,7 @@ void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 		int random = GetRandomValue(1, 10);
 		if (random % 5 == 0 || random % 7 == 0)
 		{
-			Loot = make_shared<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+			Loot = make_shared<HeartContainer>(LoadingTextures::GetInstance().passCorrectTexture("HeartContainer.png", textureType::OBJECT_TEXTURE), enemyPos);
 			items.push_back(Loot);
 		}
 	}

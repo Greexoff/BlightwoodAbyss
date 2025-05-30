@@ -1,5 +1,5 @@
 Username, Password, Highest Score: 000000, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
-Greexoff, Beka3, Highest Score: 001100, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 0, TearRateTrinket: 1, TearSpeedTrinket: 0, 
+Greexoff, Beka3, Highest Score: 007000, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 0, TearRateTrinket: 1, TearSpeedTrinket: 0, 
 Player1, Password, Highest Score: 001600, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 1, TearSpeedTrinket: 0, 
 Player2, Password, Highest Score: 001200, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 1, TearSpeedTrinket: 0, 
 Player3, Password, Highest Score: 001600, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0, 

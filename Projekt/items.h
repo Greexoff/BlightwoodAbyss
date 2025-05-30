@@ -13,6 +13,7 @@ public:
 	virtual void applyEffect(Character* player)=0;
 	virtual void setPosition(Vector2 enemyPos);
 protected:
+	float imageScale;
 	Vector2 position;
 	Texture2D* image = nullptr;
 };
@@ -60,4 +61,12 @@ public:
 	~TearSpeedTrinket();
 private:
 
+};
+class HeartContainer : public Items
+{
+public:
+	HeartContainer(Texture2D& loadedImage, Vector2 enemyPos);
+	void applyEffect(Character* player) override;
+	~HeartContainer();
+private:
 };

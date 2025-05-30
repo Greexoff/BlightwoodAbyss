@@ -718,10 +718,10 @@ void RulesMenu::setPagesContent()
 	ItemsInfoPages =
 	{
 		{"COLLECTIBLE ITEMS","DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5","GAP","HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png"},
-		{"COLLECTIBLE ITEMS","HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1","GAP","HOW TO UNLOCK:","SURVIVE 15 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png"},
-		{"COLLECTIBLE ITEMS","SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5" ,"GAP","HOW TO UNLOCK:","LAST 1 MINUTE DURING A BOSS FIGHT"}, "SpeedTrinket.png"},
+		{"COLLECTIBLE ITEMS","HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1","GAP","HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png"},
+		{"COLLECTIBLE ITEMS","SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5" ,"GAP","HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png"},
 		{"COLLECTIBLE ITEMS","TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.04 (MIN IS 0.1)","GAP","HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png"},
-		{"COLLECTIBLE ITEMS","TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 20 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png"},
+		{"COLLECTIBLE ITEMS","TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png"},
 	};
 }
 void RulesMenu::Draw()
@@ -806,7 +806,7 @@ void RulesMenu::DrawRules(int page)
 
 		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, ItemsPage.title, y_pos);
 		y_pos -= 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
-
+		textureScale=4.5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(ItemsPage.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 itemPos = { (imagesBar.x + imagesBar.width * 0.6f) - (itemTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (itemTexture.height * textureScale * 0.5f) };
 		DrawTextureEx(itemTexture, itemPos, 0, textureScale, WHITE);
@@ -880,10 +880,10 @@ void UnlockedItemsMenu::setPageContent()
 	ItemsInfoPages =
 	{
 		{"DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5"},{"HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png","DamageTrinket"},
-		{"HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1"},{"HOW TO UNLOCK:","SURVIVE 15 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png","HealthTrinket"},
-		{"SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5"},{"HOW TO UNLOCK:","LAST 1 MINUTE DURING A BOSS FIGHT"}, "SpeedTrinket.png","SpeedTrinket"},
+		{"HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1"},{"HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png","HealthTrinket"},
+		{"SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5"},{"HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png","SpeedTrinket"},
 		{"TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.04"},{"HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png" ,"TearRateTrinket"},
-		{"TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 20 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png","TearSpeedTrinket"},
+		{"TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png","TearSpeedTrinket"},
 	};
 }
 MenuResult UnlockedItemsMenu::handleMenuLogic()

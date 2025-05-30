@@ -62,8 +62,8 @@ int main()
 	CloseWindow();
 }
 /*|---TODO-----------------------------------------------------------------------|
-* !!!!Zrobic Sprawdzac te warunki do odblokowywania przedmiotow 
-* !!!Dodac info o podnoszonym itemie 
+* !!!!Mechanizm przy spawnowaniu itemow po bosie tak zeby reagowal na to co user ma odblokowane
+* !!!Dodac info o podnoszonym itemie i o odblokowywanym itemie
 * !!Przy spawnowaniu potworow robic checking czy sie nie pojawia na graczu, albo na innym juz istniejacym potworze, jezeli tak to jeszcze raz losowanie/przesuwanie az bedzie w innej pozycji
 * !Stworzyc mechanizm, ktory ulepsza potwory po jakiejs fali
 * !Dodac jakies itemki, ktore wypadaja po mniejszych wrogach, ale daja mniejsze staty, a te dla bossa zwiekszyć?

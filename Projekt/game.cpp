@@ -8,6 +8,7 @@ using namespace std;
 Game::Game() {
 	minMapLimit = ScreenSettings::GetInstance().getMinMapLimit();
 	maxMapLimit = ScreenSettings::GetInstance().getMaxMapLimit();
+	setItemProgress();
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
@@ -72,6 +73,15 @@ void Game::Update() {
 		CollisionCheck();
 		if (enemies.empty() && !isCreatingNewWave)
 		{
+			string itemName = "TearRateTrinket";
+			if (waveNumber == 1)
+			{
+				tryUnlockItem(itemName, itemProgress[itemName], true, UnlockMethod::TIME_BASED_UNLOCK);
+			}
+			itemName = "SpeedTrinket";
+			if (waveNumber % 5 == 0) {
+				tryUnlockItem(itemName, itemProgress[itemName], false, UnlockMethod::TIME_BASED_UNLOCK);
+			}
 			isCreatingNewWave = true;
 			thread t(&Game::beginNewWave, this);
 			t.detach();
@@ -221,8 +231,8 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	if (waveNumber % 5 == 0)
 	{
 		enemies.push_back(createEnemyBasedOnType(5));
-		return enemies;
-	}
+		itemProgress["SpeedTrinket"].first = GetTime();
+		return enemies;	}
 
 	int poolOfEnemiesTypes = 3;
 	int amountOfMiniBoss = 0;
@@ -282,6 +292,7 @@ void Game::CollisionCheck()
 		//TUTAJ JESZCZE JAKAS FUNKCJA DO WYSWIETLANIA NAPISU ZE PODNIESIONO X I CO TO DAJE JAK JUZ BEDE MIAL INTERFEJS GRAFICZNY TO TA METODE NA PUBLIC  CZY CUS
 		Loot->applyEffect(Player.get());
 		Loot.reset();
+		itemProgress["TearSpeedTrinket"].first = 0;
 	}
 	if (!enemies.empty()) {
 		for (auto& tear : Player->tearsy)
@@ -337,6 +348,8 @@ void Game::CollisionCheck()
 				Player->setPlayerHealth(-1);
 
 				lastTimePlayerWasTouched = GetTime();
+				itemProgress["HealthTrinket"].first = 0;
+
 			}
 			else
 			{
@@ -350,10 +363,46 @@ void Game::CollisionCheck()
 				if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
 					Player->setPlayerHealth(-1);
 					lastTimePlayerWasTouched = GetTime();
+					itemProgress["HealthTrinket"].first = 0;
 				}
 				enemTear.active = false;
 			}
 		}
+	}
+}
+void Game::setItemProgress()
+{
+	int startingWave = 1;
+	int expectedWave_HT = 10;
+	int expectedWave_TST = 15;
+	double startingTime = GetTime();
+	double expectedTime_ST = 30.0;
+	double expectedTime_TRT = 10.0;
+	itemProgress["TearRateTrinket"] = {startingTime,expectedTime_TRT};
+	itemProgress["HealthTrinket"] = {startingWave,expectedWave_HT};
+	itemProgress["SpeedTrinket"] = {startingTime,expectedTime_ST};
+	itemProgress["TearSpeedTrinket"] = {startingWave,expectedWave_TST};
+}
+void Game::tryUnlockItem(string itemName,pair<float,float> itemConditions,bool lessThan, UnlockMethod method)
+{
+	float unlockType = 0;
+	bool UnlockCondition = lessThan;
+	switch (method)
+	{
+	case UnlockMethod::WAVES_BASED_UNLOCK:
+		unlockType = 0;
+		break;
+	case UnlockMethod::TIME_BASED_UNLOCK:
+		unlockType = GetTime();
+		break;
+	default:
+		break;
+	}
+	UnlockCondition ? UnlockCondition = (abs(unlockType - itemConditions.first )< itemConditions.second) : UnlockCondition = (abs(unlockType - itemConditions.first) > itemConditions.second);
+	if (UnlockCondition)
+	{
+		bool itemUnlocked = true;
+		UserInfo::GetInstance().updateUserItems(itemName, itemUnlocked);
 	}
 }
 bool Game::isGameOver()
@@ -373,6 +422,12 @@ void Game::beginNewWave()
 	disableEnemyTears();
 	increasePlayerTotalScore(200 * waveNumber);
 	waveNumber++;
+	string itemName = "HealthTrinket";
+	tryUnlockItem(itemName, itemProgress[itemName], false, UnlockMethod::WAVES_BASED_UNLOCK);
+	itemProgress[itemName].first++;
+	itemName="TearSpeedTrinket";
+	tryUnlockItem(itemName, itemProgress[itemName], false, UnlockMethod::WAVES_BASED_UNLOCK);
+	itemProgress[itemName].first++;
 	breakStartingTime = GetTime();
 	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));

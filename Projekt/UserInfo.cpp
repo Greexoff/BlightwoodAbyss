@@ -62,6 +62,16 @@ map<string, bool> UserInfo::getUserItems()
 {
 	return UserItems;
 }
+void UserInfo::updateUserItems(string itemName, bool value)
+{
+	for (auto& [trinketName, trinketValue] : UserItems)
+	{
+		if (trinketName == itemName)
+		{
+			trinketValue = value;
+		}
+	}
+}
 
 
 

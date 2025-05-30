@@ -15,7 +15,11 @@
 #include "screenSettings.h"
 using namespace std;
 namespace fs = filesystem;
-
+enum class UnlockMethod
+{
+	TIME_BASED_UNLOCK,
+	WAVES_BASED_UNLOCK,
+};
 class Game {
 public:
 	Game();
@@ -30,6 +34,9 @@ public:
 	int getWaveNumber();
 	bool isPostTabClosed();
 private:
+	map<string,pair<float,float>> itemProgress;
+	void tryUnlockItem(string itemName, pair<float, float> itemConditions, bool lessThan, UnlockMethod method);
+	void setItemProgress();
 	bool postTabClosed;
 	bool isNewScoreHigher;
 	bool wasDatabaseUpdated;

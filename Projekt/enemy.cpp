@@ -162,7 +162,7 @@ Vector2 Enemy::getEnemyShootingPosition(float divideX, float divideY)
 }
 Vector2 Enemy::getEnemyPosition()
 {
-	return { position.x + (image->width * stats.imageScale / 2),position.y + (image->height * stats.imageScale / 2) };
+	return { position.x + ((image->width * stats.imageScale) / 2),position.y + ((image->height * stats.imageScale) / 2) };
 }
 void Enemy::loadEnemyStats()
 {

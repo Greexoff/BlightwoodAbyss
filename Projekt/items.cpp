@@ -43,8 +43,8 @@ void Items::DrawItems()
 }
 void Items::setPosition(Vector2 enemyPos)
 {
-	position.x = enemyPos.x - 3 * (image->width / 4);
-	position.y = enemyPos.y - 3 * (image->height / 4);
+	position.x = enemyPos.x - (image->width / 2);
+	position.y = enemyPos.y - (image->height / 2);
 }
 Rectangle Items::getItemRect()
 {

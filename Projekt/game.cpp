@@ -100,9 +100,9 @@ void Game::Update() {
 void Game::Draw() {
 	BeginMode2D(ScreenSettings::GetInstance().getCamera());
 	DrawBackground();
-	if (Loot != nullptr)
+	for (auto& loot : items)
 	{
-		Loot->DrawItems();
+		loot->DrawItems();
 	}
 	for (auto& enemy : enemies)
 	{
@@ -287,12 +287,22 @@ void Game::EnemyShootTears()
 }
 void Game::CollisionCheck()
 {
-	if (Loot != nullptr && CheckCollisionRecs(Player->getPlayerRect(), Loot->getItemRect()))
+	if (!items.empty())
 	{
 		//TUTAJ JESZCZE JAKAS FUNKCJA DO WYSWIETLANIA NAPISU ZE PODNIESIONO X I CO TO DAJE JAK JUZ BEDE MIAL INTERFEJS GRAFICZNY TO TA METODE NA PUBLIC  CZY CUS
-		Loot->applyEffect(Player.get());
-		Loot.reset();
-		itemProgress["TearSpeedTrinket"].first = 0;
+		for (auto it = items.begin(); it != items.end();)
+		{
+			if (CheckCollisionRecs(Player->getPlayerRect(), (*it)->getItemRect()))
+			{
+				(*it)->applyEffect(Player.get());
+				it=items.erase((it));
+				itemProgress["TearSpeedTrinket"].first = 0;
+			}
+			else
+			{
+				++it;
+			}
+		}
 	}
 	if (!enemies.empty()) {
 		for (auto& tear : Player->tearsy)
@@ -306,10 +316,10 @@ void Game::CollisionCheck()
 					if ((*it)->getEnemyHealth() <= 0)
 					{
 						increasePlayerTotalScore((*it)->getEnemyScore());
-						if (waveNumber % 5 == 0)
-						{
+						//if (waveNumber % 5 == 0)
+					//	{
 							createRandomLoot((*it)->getEnemyPosition());
-						}
+						//}
 						it = enemies.erase(it);
 					}
 					else
@@ -460,6 +470,7 @@ void Game::increasePlayerTotalScore(int amount)
 void Game::createRandomLoot(Vector2 enemyPos)
 {
 	bool lootGenerated = false;
+	shared_ptr<Items> Loot;
 	while (!lootGenerated)
 	{
 		int type = GetRandomValue(1, 5);
@@ -468,35 +479,35 @@ void Game::createRandomLoot(Vector2 enemyPos)
 		case 1:
 			if (UserInfo::GetInstance().getUserItemValue("DamageTrinket"))
 			{
-				Loot = make_unique<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				Loot = make_shared<DamageTrinket>(LoadingTextures::GetInstance().passCorrectTexture("DamageTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 				lootGenerated = true;
 			}
 			break;
 		case 2:
 			if (UserInfo::GetInstance().getUserItemValue("TearRateTrinket"))
 			{
-				Loot = make_unique<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				Loot = make_shared<TearRateTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearRateTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 				lootGenerated = true;
 			}
 			break;
 		case 3:
 			if (UserInfo::GetInstance().getUserItemValue("SpeedTrinket"))
 			{
-				Loot = make_unique<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				Loot = make_shared<SpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("SpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 				lootGenerated = true;
 			}
 			break;
 		case 4:
 			if (UserInfo::GetInstance().getUserItemValue("HealthTrinket"))
 			{
-				Loot = make_unique<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				Loot = make_shared<HealthTrinket>(LoadingTextures::GetInstance().passCorrectTexture("HealthTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 				lootGenerated = true;
 			}
 			break;
 		case 5:
 			if (UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"))
 			{
-				Loot = make_unique<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+				Loot = make_shared<TearSpeedTrinket>(LoadingTextures::GetInstance().passCorrectTexture("TearSpeedTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
 				lootGenerated = true;
 			}
 			break;
@@ -504,7 +515,7 @@ void Game::createRandomLoot(Vector2 enemyPos)
 			break;
 		}
 	}
-	
+	items.push_back(Loot);
 }
 void Game::setLastTimePlayerWasTouched()
 {

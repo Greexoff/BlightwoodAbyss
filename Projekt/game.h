@@ -48,7 +48,7 @@ private:
 	float backgroundScale;
 	unique_ptr<Character> Player;
 	string playerTearType;
-	unique_ptr<Items> Loot;
+	//unique_ptr<Items> Loot;
 	void createRandomLoot(Vector2 enemyPos);
 	vector <shared_ptr<Enemy>> CreateEnemy();
 	void DeleteInactiveTears();
@@ -60,6 +60,7 @@ private:
 	double enemyHittingGap;
 	double lastTearFired;
 	double lastTimePlayerWasTouched;
+	vector<shared_ptr<Items>> items;
 	void CollisionCheck();
 	int amountofEnemies;
 	void beginNewWave();

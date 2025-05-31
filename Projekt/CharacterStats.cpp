@@ -56,8 +56,8 @@ void CharactersData::LoadEnemyStats() {
     while (getline(file, line)) {
         if (regex_match(line, match, r) && match[1] != "Enemy") {
             enemyStats stats;
-            stats.enemyHealth = stoi(match[2]);
-            stats.maxEnemyHealth = stoi(match[3]);
+            stats.enemyHealth = stof(match[2]);
+            stats.maxEnemyHealth = stof(match[3]);
             stats.enemySpeed = stof(match[4]);
             stats.enemyAttackSpeed = stof(match[5]);
             stats.enemyScore = stof(match[6]);

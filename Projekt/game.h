@@ -20,6 +20,13 @@ enum class UnlockMethod
 	TIME_BASED_UNLOCK,
 	WAVES_BASED_UNLOCK,
 };
+enum class ItemProgressAction
+{
+	INCREASE_VALUE,
+	SET_VALUE,
+	UPDATE_WARDEN,
+	DISPLAY_WARDEN,
+};
 class Game {
 public:
 	Game();
@@ -34,8 +41,26 @@ public:
 	int getWaveNumber();
 	bool isPostTabClosed();
 private:
-	map<string,pair<float,float>> itemProgress;
-	void tryUnlockItem(string itemName, pair<float, float> itemConditions, bool lessThan, UnlockMethod method);
+	struct unlockingItems
+	{
+		string itemName;
+		float startingCondition;
+		float endingCondition;
+		UnlockMethod method;
+		bool displayWarden;
+		bool updateWarden;
+		string itemDisplayName;
+		string itemDescription;
+	};
+	bool itemProgressDrawCountdown;
+	vector<unlockingItems> itemProgress;
+	void updateItemProgress(string itemName, float value, ItemProgressAction action);
+	void drawItemProgress();
+	bool getItemProgressWarden(string itemName, ItemProgressAction wardenType);
+	void setItemProgressWarden(string itemName, bool value, ItemProgressAction wardenType);
+	void tryUnlockItem(string itemName, bool lessThan);
+	void threadItemProgressUpdate(UnlockMethod method);
+	void threadDisableDisplayWarden(string itemName);
 	void setItemProgress();
 	bool postTabClosed;
 	bool isNewScoreHigher;

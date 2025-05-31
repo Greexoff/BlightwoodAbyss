@@ -715,20 +715,24 @@ void RulesMenu::setPagesContent()
 
 	EnemyInfoPages = 
 	{
-		{"ENEMIES", "CRAWLER", "Monster1", { "THIS ENEMY SLOWLY FOLLOWS YOU AROUND THE BASEMENT.","THEY DO NOT SHOOT TEARS." }, "Enemy1.png"},
-		{"ENEMIES", "WORM", "Monster2", { "THIS ENEMY QUICKLY FOLLOWS YOU BUT CAN BE DESTROYED WITH SINGLE TEAR.","THEY CANNOT SHOOT PROJECTILES."}, "Enemy2.png"},
-		{"ENEMIES", "WATCHER", "Monster3", { "THIS ENEMY STAYS IN PLACE AND FIRES TEARS FROM A DISTANCE." }, "Enemy3.png"},
-		{"ENEMIES", "PHANTOM", "Monster4", { "THIS ENEMY BOTH FOLLOWS YOU AND SHOOTS TEARS.","ONLY 6 OF THEM CAN APPEAR PER WAVE."}, "Enemy4.png"},
-		{"BOSSES", "RAGING GIANT", "Monster5", { "THIS BOSS AGGRESSIVELY CHASES YOU AND FIRES RAPID TEARS.","THEIR LARGE HITBOX MAKES THEM HARD TO MISS." }, "Enemy5.png"},
+		{"ENEMIES", "CRAWLER", "Monster1", { "THIS ENEMY SLOWLY FOLLOWS YOU AROUND THE BASEMENT.","THEY DO NOT SHOOT TEARS." }, "Enemy1.png",3.5},
+		{"ENEMIES", "WORM", "Monster2", { "THIS ENEMY QUICKLY FOLLOWS YOU BUT CAN BE DESTROYED WITH SINGLE TEAR.","THEY CANNOT SHOOT PROJECTILES."}, "Enemy2.png",4},
+		{"ENEMIES", "WATCHER", "Monster3", { "THIS ENEMY STAYS IN PLACE AND FIRES TEARS FROM A DISTANCE." }, "Enemy3.png",4},
+		{"ENEMIES", "PHANTOM", "Monster4", { "THIS ENEMY BOTH FOLLOWS YOU AND SHOOTS TEARS.","ONLY 6 OF THEM CAN APPEAR PER WAVE."}, "Enemy4.png",5},
+		{"BOSSES", "RAGING GIANT", "Monster5", { "THIS BOSS AGGRESSIVELY CHASES YOU AND FIRES RAPID TEARS.","THEIR LARGE HITBOX MAKES THEM HARD TO MISS." }, "Enemy5.png",3.25},
+		{"BOSSES", "WITHERING ROOT", "Monster6", { "THIS BOSS TELEPORTS TOWARDS YOU EVERY FEW SECONDS, WHILE SHOOTING TEARS.", "THEY HAVE HUGE AMOUNT OF HEALTH."}, "Enemy6.png",1.75},
+
 	};
 	ItemsInfoPages =
 	{
-		{"NON-COLLECTIBLE ITEMS","RED HEART", {"RESTORES 1 HEALTH TO THE PLAYER","GAP","EVERY ENEMY HAS A 30% CHANCE OF DROPPING THIS ITEM"},"HeartContainer.png"},
+		{"NON-COLLECTIBLE ITEMS","RED HEART", {"RESTORES 1 HEALTH TO THE PLAYER","GAP","EVERY ENEMY HAS A 10% CHANCE OF DROPPING THIS ITEM"},"HeartContainer.png"},
+		{"NON-COLLECTIBLE ITEMS","CHAOS STONE", {"RANDOMLY INCREASES/DECREASES PLAYER'S STATS","GAP","EVERY ENEMY HAS A 20% CHANCE OF DROPPING THIS ITEM"},"HeartContainerTMP.png"},//tu zmienic nazwe pnga
 		{"COLLECTIBLE ITEMS","DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5","GAP","HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png"},
 		{"COLLECTIBLE ITEMS","HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1","GAP","HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png"},
 		{"COLLECTIBLE ITEMS","SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5" ,"GAP","HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png"},
-		{"COLLECTIBLE ITEMS","TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.04 (MIN IS 0.10)","GAP","HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png"},
+		{"COLLECTIBLE ITEMS","TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.1","GAP","HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png"},
 		{"COLLECTIBLE ITEMS","TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png"},
+		{"COLLECTIBLE ITEMS","ULTIMATE TRINKET",{"INCREASES EACH","PLAYER'S STAT BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 50 WAVES"}, "AllTrinket.png"},
 	};
 }
 void RulesMenu::Draw()
@@ -798,6 +802,7 @@ void RulesMenu::DrawRules(int page)
 		y_pos -= 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 
 		auto& enemyTexture = LoadingTextures::GetInstance().passCorrectTexture(EnemyPage.textureName, textureType::OBJECT_TEXTURE);
+		textureScale = EnemyPage.textureScale * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		Vector2 enemyPos = { (imagesBar.x + imagesBar.width * 0.6f) - (enemyTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (enemyTexture.height * textureScale * 0.5f) };
 		DrawTextureEx(enemyTexture, enemyPos, 0, textureScale, WHITE);
 
@@ -813,7 +818,7 @@ void RulesMenu::DrawRules(int page)
 		auto& ItemsPage = ItemsInfoPages[page - EnemyInfoLimit - 1];
 
 		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, ItemsPage.title, y_pos);
-		y_pos -= 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+		y_pos += 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		textureScale=4.5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(ItemsPage.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 itemPos = { (imagesBar.x + imagesBar.width * 0.6f) - (itemTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (itemTexture.height * textureScale * 0.5f) };
@@ -840,7 +845,7 @@ void UnlockedItemsMenu::Draw()
 }
 void UnlockedItemsMenu::DrawPage(int Page)
 {
-	float textureScale = 4 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float textureScale = 4* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	float y_pos = ItemsInfoBar.y + (20 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	float addGap = 30* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	float smallerFont = 60 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
@@ -860,6 +865,7 @@ void UnlockedItemsMenu::DrawPage(int Page)
 		for (const auto& line : itemPages.paragraphs1) {
 			GameUI::GetInstance().DrawTextRules(ItemsInfoBar, smallerFont, line, y_pos);
 		}
+		y_pos += addGap;
 		beginingOfBar = y_pos;
 		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(itemPages.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 itemPos = { (ItemsInfoBar.x + ItemsInfoBar.width * 0.5f) - (itemTexture.width * textureScale * 0.5f),y_pos };
@@ -890,8 +896,9 @@ void UnlockedItemsMenu::setPageContent()
 		{"DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5"},{"HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png","DamageTrinket"},
 		{"HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1"},{"HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png","HealthTrinket"},
 		{"SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5"},{"HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png","SpeedTrinket"},
-		{"TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.04"},{"HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png" ,"TearRateTrinket"},
+		{"TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.1"},{"HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png" ,"TearRateTrinket"},
 		{"TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png","TearSpeedTrinket"},
+		{"ULTIMATE TRINKET",{"INCREASES EACH PLAYER'S STAT BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 50 WAVES"}, "AllTrinket.png", "AllTrinket"},
 	};
 }
 MenuResult UnlockedItemsMenu::handleMenuLogic()

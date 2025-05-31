@@ -71,5 +71,14 @@ public:
 	Monster5(Vector2 postion, Texture2D& loadedImage);
 	~Monster5();
 private:
-
+};
+class Monster6 : public Enemy
+{
+public:
+	Monster6(Vector2 postion, Texture2D& loadedImage);
+	~Monster6();
+	void Update(Vector2 PlayerPosition) override;
+private:
+	float teleportDistance;
+	float timeBetweenTeleport, lastTeleportTime;
 };

@@ -132,29 +132,45 @@ void Character::setPlayerHealth(float amount)
 void Character::setPlayerDamage(float amount)
 {
 	stats.playerDamage += amount;
+	if (stats.playerDamage <= 0.1)
+	{
+		stats.playerDamage = 0.1;
+	}
 }
 void Character::setPlayerTearSpeed(float amount)
 {
 	stats.tearSpeed += amount;
+	if (stats.tearSpeed <= 0.1)
+	{
+		stats.tearSpeed = 0.1;
+	}
 }
 void Character::setPlayerTearRate(float amount)
 {
-	if (stats.tearRate >= 0.1)
+	if (stats.tearRate >= 0.15)
 	{
 		stats.tearRate -= amount;
 	}
-	if (stats.tearRate <= 0.1)
+	if (stats.tearRate <= 0.15)
 	{
-		stats.tearRate = 0.1;
+		stats.tearRate = 0.15;
 	}
 }
 void Character::setPlayerSpeed(float amount)
 {
 	stats.playerSpeed += amount;
+	if (stats.playerSpeed < 0.1)
+	{
+		stats.playerSpeed = 0.1;
+	}
 }
 void Character::setPlayerMaxHealth(float amount)
 {
 	stats.maxPlayerHealth += amount;
+	if (stats.maxPlayerHealth < 0)
+	{
+		stats.maxPlayerHealth = 0;
+	}
 }
 characterStats Character::getPlayerStats()
 {

@@ -52,13 +52,20 @@ void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 }
 void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize)
 {
-	GameUI::GetInstance().DrawTextWithOutline("Character Stats:",{ x_pos,starting_y_pos }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("Current Health: " + ConvertToString(playerStats.playerHealth, 0), { x_pos,starting_y_pos + (fontSize) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("Max Health: " + ConvertToString(playerStats.maxPlayerHealth, 0), { x_pos,starting_y_pos + (fontSize*2) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("Damage: " + ConvertToString(playerStats.playerDamage,2), { x_pos,starting_y_pos + (fontSize *3)}, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("Speed: " + ConvertToString(playerStats.playerSpeed, 2), { x_pos,starting_y_pos + (fontSize *4) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("Tear Rate: " + ConvertToString(playerStats.tearRate, 2), { x_pos,starting_y_pos + (fontSize *5) }, fontSize);
-	GameUI::GetInstance().DrawTextWithOutline("Tear Speed: " + ConvertToString(playerStats.tearSpeed, 2), { x_pos,starting_y_pos + (fontSize *6) }, fontSize);
+	vector<string> statsParagraphs;
+	statsParagraphs = {
+		{"Character Stats:"},
+		{"Current Health: " + ConvertToString(playerStats.playerHealth, 0)},
+		{"Max Health: " + ConvertToString(playerStats.maxPlayerHealth, 0)},
+		{"Damage: " + ConvertToString(playerStats.playerDamage,2)},
+		{"Speed: " + ConvertToString(playerStats.playerSpeed, 2)},
+		{"Tear Rate: " + ConvertToString(playerStats.tearRate, 2)},
+		{"Tear Speed: " + ConvertToString(playerStats.tearSpeed, 2)},
+	};
+	for(int i =0;i<statsParagraphs.size();i++)
+	{ 
+		GameUI::GetInstance().DrawTextWithOutline(statsParagraphs[i], {x_pos,starting_y_pos+(fontSize*i)}, fontSize);
+	}
 }
 void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position)
 {
@@ -82,11 +89,13 @@ void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontS
 		break;
 	}
 	vector<string> playerInfo;
-	playerInfo.push_back("MAX HEALTH: " + ConvertToString(stats[characterName].maxPlayerHealth, 0));
-	playerInfo.push_back("DAMAGE: " + ConvertToString(stats[characterName].playerDamage, 2));
-	playerInfo.push_back("SPEED: " + ConvertToString(stats[characterName].playerSpeed, 2));
-	playerInfo.push_back("TEAR RATE: " + ConvertToString(stats[characterName].tearRate, 2));
-	playerInfo.push_back("TEAR SPEED: " + ConvertToString(stats[characterName].tearSpeed, 2));
+	playerInfo = {
+		{"MAX HEALTH: " + ConvertToString(stats[characterName].maxPlayerHealth, 0)},
+		{"DAMAGE: " + ConvertToString(stats[characterName].playerDamage, 2)},
+		{"SPEED: " + ConvertToString(stats[characterName].playerSpeed, 2)},
+		{"TEAR RATE: " + ConvertToString(stats[characterName].tearRate, 2)},
+		{"TEAR SPEED: " + ConvertToString(stats[characterName].tearSpeed, 2)},
+	};
 	for (const auto& playerStats : playerInfo)
 	{
 		GameUI::GetInstance().DrawTextOnBar(bar, fontSize, playerStats, y_position + gap*it);
@@ -98,11 +107,12 @@ void GameUI::DrawEnemyStatsInMenu(string enemyName, Rectangle bar, float fontSiz
 	float gap = fontSize;
 	int it = 0;
 	map<string, enemyStats>stats = CharactersData::getInstance().getEnemyStats();
-	vector<string> enemyInfo;
-	enemyInfo.push_back("MAX HEALTH: " + ConvertToString(stats[enemyName].maxEnemyHealth, 0));
-	enemyInfo.push_back("SPEED: " + ConvertToString(stats[enemyName].enemySpeed, 2));
-	enemyInfo.push_back("TEAR SPEED: " + ConvertToString(stats[enemyName].enemyAttackSpeed, 2));
-	enemyInfo.push_back("SCORE: " + ConvertToString(stats[enemyName].enemyScore, 0));
+	vector<string> enemyInfo = {
+		{"MAX HEALTH: " + ConvertToString(stats[enemyName].maxEnemyHealth, 2)},
+		{"SPEED: " + ConvertToString(stats[enemyName].enemySpeed, 2)},
+		{"TEAR SPEED: " + ConvertToString(stats[enemyName].enemyAttackSpeed, 2)},
+		{"SCORE: " + ConvertToString(stats[enemyName].enemyScore, 0)},
+	};
 	for (const auto& enemyStat : enemyInfo)
 	{
 		GameUI::GetInstance().DrawTextOnBar(bar, fontSize, enemyStat, y_position + gap * it);

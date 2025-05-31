@@ -12,7 +12,7 @@ Game::Game() {
 	amountofEnemies = 5;
 	waveNumber = 1;
 	enemyShootingGap = 1.5;
-	enemyHittingGap = 2;
+	enemyHittingGap = 1;
 	lastTearFired = 0.0;
 	breakTime = 3;
 	lastTimePlayerWasTouched = 0.0;	
@@ -74,13 +74,14 @@ void Game::Update() {
 		if (enemies.empty() && !isCreatingNewWave)
 		{
 			string itemName = "TearRateTrinket";
-			if (waveNumber == 1)
+			if (waveNumber == 1 && getItemProgressWarden(itemName, ItemProgressAction::UPDATE_WARDEN))
 			{
-				tryUnlockItem(itemName, itemProgress[itemName], true, UnlockMethod::TIME_BASED_UNLOCK);
+				tryUnlockItem(itemName, true);
 			}
 			itemName = "SpeedTrinket";
-			if (waveNumber % 5 == 0) {
-				tryUnlockItem(itemName, itemProgress[itemName], false, UnlockMethod::TIME_BASED_UNLOCK);
+			if (waveNumber % 5 == 0&&getItemProgressWarden(itemName, ItemProgressAction::UPDATE_WARDEN))
+			{
+				tryUnlockItem(itemName, false);
 			}
 			isCreatingNewWave = true;
 			thread t(&Game::beginNewWave, this);
@@ -129,7 +130,11 @@ void Game::Draw() {
 			DrawCountdownToNewWave();
 		}
 		DrawScoreAndWaveNumber();
-		GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10, GetScreenHeight() * 0.4, 39 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+		GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, (GetScreenHeight() * 0.5f)-(140 * ScreenSettings::GetInstance().getScreenResolutionFactor().y), 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+		if (itemProgressDrawCountdown)
+		{
+			drawItemProgress();
+		}
 	}
 	else
 	{
@@ -219,6 +224,9 @@ shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
 	case 5:
 		return make_shared<Monster5>(position, texture);
 		break;
+	case 6:
+		return make_shared<Monster6>(position, texture);
+		break;
 	default:
 		return nullptr;
 		break;
@@ -227,13 +235,19 @@ shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
 vector <shared_ptr<Enemy>> Game::CreateEnemy()
 {
 	vector<shared_ptr<Enemy>> enemies;
-
+	random_device rd;
+	mt19937 gen(rd());
 	if (waveNumber % 5 == 0)
 	{
-		enemies.push_back(createEnemyBasedOnType(5));
-		itemProgress["SpeedTrinket"].first = GetTime();
-		return enemies;	}
-
+		uniform_int_distribution<int> typeDistribBosses(5,6);
+		int type = typeDistribBosses(gen);
+		enemies.push_back(createEnemyBasedOnType(type));
+		if (getItemProgressWarden("SpeedTrinket", ItemProgressAction::UPDATE_WARDEN))
+		{
+			updateItemProgress("SpeedTrinket", GetTime(), ItemProgressAction::SET_VALUE);
+		}
+		return enemies;	
+	}
 	int poolOfEnemiesTypes = 3;
 	int amountOfMiniBoss = 0;
 
@@ -246,7 +260,8 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		{
 			poolOfEnemiesTypes = 3;
 		}
-		int type = GetRandomValue(1, poolOfEnemiesTypes);
+		uniform_int_distribution<int> typeDistribEnemies(1, poolOfEnemiesTypes);
+		int type = typeDistribEnemies(gen);
 		if (type == 4)
 		{
 			amountOfMiniBoss++;
@@ -293,9 +308,21 @@ void Game::CollisionCheck()
 		{
 			if (CheckCollisionRecs(Player->getPlayerRect(), (*it)->getItemRect()))
 			{
+				if (Player->getPlayerHealth() == Player->getPlayerMaxHealth() && dynamic_pointer_cast<HeartContainer>(*it))
+				{
+					++it;
+					continue;
+				}
 				(*it)->applyEffect(Player.get());
-				it=items.erase((it));
-				itemProgress["TearSpeedTrinket"].first = 0;
+				//TUTAJ TEZ TA MEDOTA DO DRAW CALE TE (TE DRAWITEMPROGRES ZAMIENIC TAK ZEBY DZIALALO DLA JEDNEGO I DRUGIEGO, TYLKO PRZY WYWOLANIU ZROBIC JAKIEGOS CONST STRINGA KTORY ZMIENIA ZE JEST ABLO UNLOCKED ALBO PICKED UP ITEM)
+				if (!dynamic_pointer_cast<HeartContainer>(*it) && !dynamic_pointer_cast<randomStatsItem>(*it))
+				{
+					if (getItemProgressWarden("TearSpeedTrinket", ItemProgressAction::UPDATE_WARDEN))
+					{
+						updateItemProgress("TearSpeedTrinket", 0, ItemProgressAction::SET_VALUE);
+					}
+				}
+				it = items.erase((it));
 			}
 			else
 			{
@@ -315,7 +342,7 @@ void Game::CollisionCheck()
 					if ((*it)->getEnemyHealth() <= 0)
 					{
 						increasePlayerTotalScore((*it)->getEnemyScore());
-						createRandomLoot((*it)->getEnemyPosition(), waveNumber%5 ==0);
+						createRandomLoot((*it)->getEnemyPosition(), waveNumber % 5 == 0);
 						it = enemies.erase(it);
 					}
 					else
@@ -354,7 +381,10 @@ void Game::CollisionCheck()
 				Player->setPlayerHealth(-1);
 
 				lastTimePlayerWasTouched = GetTime();
-				itemProgress["HealthTrinket"].first = 0;
+				if (getItemProgressWarden("HealthTrinket", ItemProgressAction::UPDATE_WARDEN))
+				{
+					updateItemProgress("HealthTrinket", 0, ItemProgressAction::SET_VALUE);
+				}
 
 			}
 			else
@@ -369,51 +399,154 @@ void Game::CollisionCheck()
 				if (GetTime() - lastTimePlayerWasTouched > enemyHittingGap) {
 					Player->setPlayerHealth(-1);
 					lastTimePlayerWasTouched = GetTime();
-					itemProgress["HealthTrinket"].first = 0;
+					if (getItemProgressWarden("HealthTrinket", ItemProgressAction::UPDATE_WARDEN))
+					{
+						updateItemProgress("HealthTrinket", 0, ItemProgressAction::SET_VALUE);
+					}
 				}
 				enemTear.active = false;
 			}
 		}
 	}
 }
+void Game::drawItemProgress()
+{
+	for (auto& item : itemProgress)
+	{
+		if (item.displayWarden)
+		{
+			float y_pos = 200 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+			float gap = 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+			float x_pos = 600 * ScreenSettings::GetInstance().getScreenResolutionFactor().x;
+			float biggerFont = 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+			float smallerFont = 50 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+			float text_y_pos = 0;
+			Rectangle bar = { (GetScreenWidth() * 0.5f) - x_pos,(GetScreenHeight() * 0.5f) - y_pos,2 * x_pos,2 * y_pos };
+			Rectangle Textbar = { bar.x,bar.y,bar.width * 0.6,bar.height };
+			Rectangle ImageBar = { bar.x +Textbar.width,bar.y,bar.width * 0.4,bar.height };
+			GameUI::GetInstance().DrawBlackBar(bar, 180);
+			text_y_pos = Textbar.y + gap;
+			GameUI::GetInstance().DrawTextRules(Textbar, biggerFont, "ITEM UNLOCKED", text_y_pos);
+			GameUI::GetInstance().DrawTextRules(Textbar, biggerFont, item.itemDisplayName, text_y_pos);
+
+			auto& image = LoadingTextures::GetInstance().passCorrectTexture(item.itemName + ".png", textureType::OBJECT_TEXTURE);
+			float imageScale = 5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+
+			Vector2 imagePos = { (ImageBar.x + ImageBar.width * 0.4f) - (image.width * imageScale * 0.5f), (ImageBar.y + ImageBar.height * 0.5f) - (image.height * imageScale * 0.5f) };
+			DrawTextureEx(image, imagePos, 0, imageScale, WHITE);
+			GameUI::GetInstance().DrawTextRules(Textbar, smallerFont, item.itemDescription, text_y_pos);
+			break;
+		}
+	}
+}
 void Game::setItemProgress()
 {
-	int startingWave = 1;
-	int expectedWave_HT = 10;
-	int expectedWave_TST = 15;
-	double startingTime = GetTime();
-	double expectedTime_ST = 30.0;
-	double expectedTime_TRT = 10.0;
-	itemProgress["TearRateTrinket"] = {startingTime,expectedTime_TRT};
-	itemProgress["HealthTrinket"] = {startingWave,expectedWave_HT};
-	itemProgress["SpeedTrinket"] = {startingTime,expectedTime_ST};
-	itemProgress["TearSpeedTrinket"] = {startingWave,expectedWave_TST};
+	itemProgressDrawCountdown = false;
+	float startingWave = 1;
+	float expectedWave_HT = 10;
+	float expectedWave_TST = 15;
+	float startingTime = GetTime();
+	float expectedTime_ST = 30.0;
+	float expectedTime_TRT = 10.0;
+	float expectedWave_AT = 50;
+	itemProgress = {
+		{"TearRateTrinket",startingTime,expectedTime_TRT,UnlockMethod::TIME_BASED_UNLOCK,false,	!UserInfo::GetInstance().getUserItemValue("TearRateTrinket"), "TEAR RATE TRINKET", "REDUCES TIME BETWEEN SHOTS BY 0.1"},
+		{"HealthTrinket",startingWave,expectedWave_HT,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("HealthTrinket"), "HEALTH TRINKET", "INCREASES PLAYER'S MAX HEALTH BY 1" },
+		{"SpeedTrinket",startingTime,expectedTime_ST,UnlockMethod::TIME_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("SpeedTrinket"),"SPEED TRINKET", "INCREASES PLAYER'S SPEED BY 1.5" },
+		{"TearSpeedTrinket",startingWave,expectedWave_TST,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"), "TEAR SPEED TRINKET", "INCREASES PLAYER'S TEAR SPEED BY 0.5" },
+		{"AllTrinket",startingWave,expectedWave_AT,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("AllTrinket"), "ULTIMATE TRINKET", "INCREASES EACH PLAYER'S STAT BY 0.5" },
+
+	};
 }
-void Game::tryUnlockItem(string itemName,pair<float,float> itemConditions,bool lessThan, UnlockMethod method)
+bool Game::getItemProgressWarden(string itemName, ItemProgressAction wardenType)
 {
-	float unlockType = 0;
-	bool UnlockCondition = lessThan;
-	switch (method)
+	for (auto& progress : itemProgress)
 	{
-	case UnlockMethod::WAVES_BASED_UNLOCK:
-		unlockType = 0;
-		break;
-	case UnlockMethod::TIME_BASED_UNLOCK:
-		unlockType = GetTime();
-		break;
-	default:
-		break;
+		if (progress.itemName == itemName)
+		{
+			if (wardenType == ItemProgressAction::UPDATE_WARDEN)
+			{
+				return progress.updateWarden;
+			}
+			if (wardenType == ItemProgressAction::DISPLAY_WARDEN)
+			{
+				return progress.displayWarden;
+			}
+			break;
+		}
 	}
-	UnlockCondition ? UnlockCondition = (abs(unlockType - itemConditions.first )< itemConditions.second) : UnlockCondition = (abs(unlockType - itemConditions.first) > itemConditions.second);
-	if (UnlockCondition)
+}
+void Game::setItemProgressWarden(string itemName, bool value, ItemProgressAction wardenType)
+{
+	for (auto& progress : itemProgress)
 	{
-		bool itemUnlocked = true;
-		UserInfo::GetInstance().updateUserItems(itemName, itemUnlocked);
+		if (progress.itemName == itemName)
+		{
+			if (wardenType == ItemProgressAction::UPDATE_WARDEN)
+			{
+				progress.updateWarden=value;
+			}
+			if (wardenType == ItemProgressAction::DISPLAY_WARDEN)
+			{
+				progress.displayWarden=value;
+			}
+			break;
+		}
 	}
+}
+void Game::updateItemProgress(string itemName, float value, ItemProgressAction action)
+{
+	for (auto& TrinketCriteria : itemProgress)
+	{
+		if (TrinketCriteria.itemName == itemName)
+		{
+			if (action == ItemProgressAction::INCREASE_VALUE)
+			{
+				TrinketCriteria.startingCondition += value;
+			}
+			if (action == ItemProgressAction::SET_VALUE)
+			{
+				TrinketCriteria.startingCondition = value;
+			}
+			break;
+		}
+	}
+}
+void Game::tryUnlockItem(string itemName,bool lessThan)
+{
+	for (auto& TrinketCriteria : itemProgress)
+	{
+		if (TrinketCriteria.itemName == itemName)
+		{
+			float unlockType = 0;
+			bool UnlockCondition = lessThan;
+			switch (TrinketCriteria.method)
+			{
+			case UnlockMethod::WAVES_BASED_UNLOCK:
+				unlockType = 0;
+				break;
+			case UnlockMethod::TIME_BASED_UNLOCK:
+				unlockType = GetTime();
+				break;
+			default:
+				break;
+			}
+			UnlockCondition ? UnlockCondition = (abs(unlockType - TrinketCriteria.startingCondition) < TrinketCriteria.endingCondition) : UnlockCondition = (abs(unlockType - TrinketCriteria.startingCondition) > TrinketCriteria.endingCondition);
+			if (UnlockCondition)
+			{
+				bool itemUnlocked = true;
+				UserInfo::GetInstance().updateUserItems(TrinketCriteria.itemName, itemUnlocked);
+				setItemProgressWarden(TrinketCriteria.itemName, false, ItemProgressAction::UPDATE_WARDEN);
+				setItemProgressWarden(TrinketCriteria.itemName, true, ItemProgressAction::DISPLAY_WARDEN);
+				cout << "ODBLOKOWANO: " << TrinketCriteria.itemName << endl;
+			}
+		}
+	}
+	
 }
 bool Game::isGameOver()
 {
-	if (Player->getPlayerHealth() == 0)
+	if (Player->getPlayerHealth() <= 0)
 	{
 		if (IsCursorHidden())
 		{
@@ -426,25 +559,45 @@ bool Game::isGameOver()
 		return false;
 	}
 }
+void Game::threadItemProgressUpdate(UnlockMethod method)
+{
+	for (auto& elements : itemProgress)
+	{
+		if (elements.method==method&&elements.updateWarden)
+		{
+			updateItemProgress(elements.itemName, 1, ItemProgressAction::INCREASE_VALUE);
+			tryUnlockItem(elements.itemName, false);
+		}
+	}
+}
+void Game::threadDisableDisplayWarden(string itemName)
+{
+	if (getItemProgressWarden(itemName, ItemProgressAction::DISPLAY_WARDEN)) {
+		itemProgressDrawCountdown = true;
+		this_thread::sleep_for(chrono::seconds(3));
+		setItemProgressWarden(itemName, false, ItemProgressAction::DISPLAY_WARDEN);
+		itemProgressDrawCountdown = false;
+	}
+}
 void Game::beginNewWave()
 {
 	disableEnemyTears();
 	increasePlayerTotalScore(200 * waveNumber);
 	waveNumber++;
-	string itemName = "HealthTrinket";
-	tryUnlockItem(itemName, itemProgress[itemName], false, UnlockMethod::WAVES_BASED_UNLOCK);
-	itemProgress[itemName].first++;
-	itemName="TearSpeedTrinket";
-	tryUnlockItem(itemName, itemProgress[itemName], false, UnlockMethod::WAVES_BASED_UNLOCK);
-	itemProgress[itemName].first++;
+	threadItemProgressUpdate(UnlockMethod::WAVES_BASED_UNLOCK);
+	for (auto& elements : itemProgress)
+	{
+		threadDisableDisplayWarden(elements.itemName);
+	}
 	breakStartingTime = GetTime();
 	startCountdown = true;
 	this_thread::sleep_for(chrono::seconds(breakTime));
-	if (!items.empty() && waveNumber%5!=0)
+	startCountdown = false;
+	if (!items.empty() && waveNumber % 5 != 0)
 	{
 		for (auto it = items.begin(); it != items.end();)
 		{
-			if (dynamic_pointer_cast<HeartContainer>(*it))
+			if (dynamic_pointer_cast<HeartContainer>(*it) || dynamic_pointer_cast<randomStatsItem>(*it))
 			{
 				it = items.erase((it));
 			}
@@ -454,8 +607,7 @@ void Game::beginNewWave()
 			}
 		}
 	}
-	startCountdown = false;
-	if (amountofEnemies < 20)
+	if (amountofEnemies < 30)
 	{
 		amountofEnemies++;
 	}
@@ -484,11 +636,15 @@ void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 {
 	bool lootGenerated = false;
 	shared_ptr<Items> Loot;
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<int> typeDistrib(1, 6);
+	uniform_int_distribution<int> randomDistrib(1, 10);
 	if (condition)
 	{
 		while (!lootGenerated)
 		{
-			int type = GetRandomValue(1, 5);
+			int type = typeDistrib(gen);
 			switch (type)
 			{
 			case 1:
@@ -526,6 +682,13 @@ void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 					lootGenerated = true;
 				}
 				break;
+			case 6:
+				if (UserInfo::GetInstance().getUserItemValue("AllTrinket"))
+				{
+					Loot = make_shared<AllTrinket>(LoadingTextures::GetInstance().passCorrectTexture("AllTrinket.png", textureType::OBJECT_TEXTURE), enemyPos);
+					lootGenerated = true;
+				}
+				break;
 			default:
 				break;
 			}
@@ -534,10 +697,15 @@ void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 	}
 	else
 	{
-		int random = GetRandomValue(1, 10);
-		if (random % 5 == 0 || random % 7 == 0)
+		int random = randomDistrib(gen);
+		if (random == 9)
 		{
 			Loot = make_shared<HeartContainer>(LoadingTextures::GetInstance().passCorrectTexture("HeartContainer.png", textureType::OBJECT_TEXTURE), enemyPos);
+			items.push_back(Loot);
+		}
+		if (random % 5 == 0)
+		{
+			Loot = make_shared<randomStatsItem>(LoadingTextures::GetInstance().passCorrectTexture("HeartContainerTMP.png", textureType::OBJECT_TEXTURE), enemyPos);
 			items.push_back(Loot);
 		}
 	}

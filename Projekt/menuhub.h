@@ -189,6 +189,7 @@ private:
 		string enemyName;
 		vector<string> paragraphs;
 		string textureName;
+		float textureScale;
 	};
 	Rectangle GameInfoBar;
 	vector<GameInfo> GameInfoPages;

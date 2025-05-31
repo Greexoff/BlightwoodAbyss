@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include "typ.h"
 #include <string>
+#include <random>
 
 class Items
 {
@@ -62,11 +63,27 @@ public:
 private:
 
 };
+class AllTrinket : public Items
+{
+public:
+	AllTrinket(Texture2D& loadedImage, Vector2 enemyPos);
+	void applyEffect(Character* player) override;
+	~AllTrinket();
+private:
+};
 class HeartContainer : public Items
 {
 public:
 	HeartContainer(Texture2D& loadedImage, Vector2 enemyPos);
 	void applyEffect(Character* player) override;
 	~HeartContainer();
+private:
+};
+class randomStatsItem : public Items
+{
+public:
+	randomStatsItem(Texture2D& loadedImage, Vector2 enemyPos);
+	void applyEffect(Character* player) override;
+	~randomStatsItem();
 private:
 };

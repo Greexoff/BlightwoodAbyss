@@ -50,6 +50,17 @@ Monster5::Monster5(Vector2 position, Texture2D& loadedImage)//Boss
 	loadEnemyStats();
 }
 Monster5::~Monster5() {}
+Monster6::Monster6(Vector2 position, Texture2D& loadedImage)//Boss
+{
+	teleportDistance = 350;
+	timeBetweenTeleport = 2.5f;
+	lastTeleportTime = GetTime();
+	enemyName = "Monster6";
+	image = &loadedImage;
+	this->position = position;
+	loadEnemyStats();
+}
+Monster6::~Monster6() {}
 //|---------------------------------------------------------------------------------------|
 void Enemy::Draw() {
 	DrawTextureEx(*image, position, 0, stats.imageScale, WHITE);
@@ -142,7 +153,7 @@ void Enemy::DrawEnemyHealthBar()
 	float healthBarHeight = 10;
 
 	Vector2 healthBarPos = { position.x ,position.y - 15 };
-	float healthPercent = (float)stats.enemyHealth / stats.maxEnemyHealth;
+	float healthPercent = (float)(stats.enemyHealth / stats.maxEnemyHealth);
 	float currentHealthWidth = (float)((healthBarWidth-10) * healthPercent);
 	DrawRectangle(healthBarPos.x, healthBarPos.y, healthBarWidth, healthBarHeight, BLACK);
 	DrawRectangle(healthBarPos.x+5, healthBarPos.y+2.5, currentHealthWidth, (healthBarHeight/2), RED);
@@ -173,4 +184,34 @@ void Enemy::loadEnemyStats()
 			stats = enemyStats;
 		}
 	}
+}
+void Monster6::Update(Vector2 PlayerPosition) {
+	Vector2 dir = { 0,0 };
+	float dx = PlayerPosition.x - getEnemyPosition().x;
+	float dy = PlayerPosition.y - getEnemyPosition().y;
+	float length = sqrt(dx * dx + dy * dy);
+
+	if (length != 0) {
+		dir.x = dx / length;
+		dir.y = dy / length;
+	}
+	position.x += dir.x * stats.enemySpeed;
+	position.y += dir.y * stats.enemySpeed;
+	if (GetTime() - lastTeleportTime >= timeBetweenTeleport)
+	{
+		position.x += dir.x * teleportDistance;
+		position.y += dir.y * teleportDistance;
+		lastTeleportTime = GetTime();
+	}
+
+
+	float enemyWidth = image->width * stats.imageScale;
+	float enemyHeight = image->height * stats.imageScale;
+
+	Vector2 minLimit = { ScreenSettings::GetInstance().getMinMapWalls().x,ScreenSettings::GetInstance().getMinMapWalls().y };
+	Vector2 maxLimit = { ScreenSettings::GetInstance().getMaxMapWalls().x,ScreenSettings::GetInstance().getMaxMapWalls().y };
+
+	position.x = ScreenSettings::GetInstance().Clamp(position.x, minLimit.x, maxLimit.x - enemyWidth);
+	position.y = ScreenSettings::GetInstance().Clamp(position.y, minLimit.y - (enemyHeight * 0.5), maxLimit.y - enemyHeight);
+
 }

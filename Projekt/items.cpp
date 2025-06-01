@@ -75,41 +75,66 @@ Rectangle Items::getItemRect()
 {
 	return {position.x,position.y,(float)image->width,(float)image->height };
 }
-void DamageTrinket::applyEffect(Character* player)
+
+void DamageTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	player->setPlayerDamage(1.5);
+	float damage = 1.5;
+	player->setPlayerDamage(damage);
+	statsChanges["Damage"] = damage;
 }
-void TearRateTrinket::applyEffect(Character* player)
+void TearRateTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	player->setPlayerTearRate(0.1);
+	float tearRate = 0.1;
+	player->setPlayerTearRate(tearRate);
+	statsChanges["TearRate"] = -1.0f*tearRate;
 }
-void SpeedTrinket::applyEffect(Character* player)
+void SpeedTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
+	float speed = 1.5;
 	player->setPlayerSpeed(1.5);
+	statsChanges["Speed"] = speed;
 }
-void HealthTrinket::applyEffect(Character* player)
+void HealthTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	player->setPlayerMaxHealth(1);
+	float health = 1;
+	player->setPlayerMaxHealth(health);
 	player->setPlayerHealth(player->getPlayerMaxHealth());
+	statsChanges["MaxHealth"] = health;
 }
-void TearSpeedTrinket::applyEffect(Character* player)
+void TearSpeedTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	player->setPlayerTearSpeed(0.5);
+	float tearSpeed = 0.5;
+	player->setPlayerTearSpeed(tearSpeed);
+	statsChanges["TearSpeed"] = tearSpeed;
+
 }
-void AllTrinket::applyEffect(Character* player)
+void AllTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	player->setPlayerDamage(0.5);
-	player->setPlayerTearRate(0.1);
-	player->setPlayerSpeed(0.5);
-	player->setPlayerMaxHealth(1);
+	float stats = 0.5;
+	float tearRate = 0.1;
+	float health = 1;
+
+	player->setPlayerDamage(stats);
+	player->setPlayerTearRate(tearRate);
+	player->setPlayerSpeed(stats);
+	player->setPlayerMaxHealth(health);
 	player->setPlayerHealth(player->getPlayerMaxHealth());
-	player->setPlayerTearSpeed(0.5);
+	player->setPlayerTearSpeed(stats);
+
+	statsChanges["Damage"] = stats;
+	statsChanges["TearRate"] = -1.0f*tearRate;
+	statsChanges["Speed"] = stats;
+	statsChanges["TearSpeed"] = stats;
+	statsChanges["MaxHealth"] = health;
+	statsChanges["Health"] = health;
 }
-void HeartContainer::applyEffect(Character* player)
+void HeartContainer::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	player->setPlayerHealth(1);
+	float health = 1;
+	player->setPlayerHealth(health);
+	statsChanges["Health"] = health;
 }
-void randomStatsItem::applyEffect(Character* player)
+void randomStatsItem::applyEffect(Character* player, map<string, float>& statsChanges)
 {
 	random_device rd;
 	mt19937 gen(rd());
@@ -120,8 +145,14 @@ void randomStatsItem::applyEffect(Character* player)
 	float tearRate = tearRateDistrib(gen);
 	float speed = normalDistrib(gen);
 	float tearSpeed = normalDistrib(gen);
+
 	player->setPlayerDamage(damage);
 	player->setPlayerTearRate(tearRate);
 	player->setPlayerSpeed(speed);
 	player->setPlayerTearSpeed(tearSpeed);
+
+	statsChanges["Damage"] =damage;
+	statsChanges["TearRate"] = -1.0f*tearRate;
+	statsChanges["Speed"] =speed;
+	statsChanges["TearSpeed"] =tearSpeed;
 }

@@ -1,14 +1,13 @@
 #include "raylib.h"
 #include "game.h"
-#include <thread>
-#include <memory>
+
 
 using namespace std;
 
 Game::Game(int CharacterType) {
+
 	minMapLimit = ScreenSettings::GetInstance().getMinMapLimit();
 	maxMapLimit = ScreenSettings::GetInstance().getMaxMapLimit();
-	setLastTimePlayerWasTouched();
 	setPlayerCharacter(CharacterType);
 	setItemProgress();
 	amountofEnemies = 5;
@@ -24,10 +23,20 @@ Game::Game(int CharacterType) {
 	breakStartingTime = 0;
 	wasDatabaseUpdated = false;
 	isNewScoreHigher = false;
+	drawStatsChanges = false;
 	postTabClosed = false;
+	setLastTimePlayerWasTouched();
+	lastStatChangeTime = GetTime();
+	statsThread=thread(&Game::thread_StatsChangesTimer, this);
 }
 Game::~Game() {
 	enemies.clear();	
+	statsChanges.clear();
+	stopThread = true;
+	if (statsThread.joinable())
+	{
+		statsThread.join();
+	}
 }
 void Game::DrawBackground()
 {
@@ -130,10 +139,12 @@ void Game::Draw() {
 			DrawCountdownToNewWave();
 		}
 		DrawScoreAndWaveNumber();
-		GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, (GetScreenHeight() * 0.5f)-(140 * ScreenSettings::GetInstance().getScreenResolutionFactor().y), 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+		float stats_starting_y_pos = (GetScreenHeight() * 0.5f) - (140 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
+		float stats_fontSize = 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+		GameUI::GetInstance().DrawCharacterStatsInGame(Player->getPlayerStats(), 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().x, stats_starting_y_pos, stats_fontSize,statsChanges,drawStatsChanges);
 		if (itemProgressDrawCountdown)
 		{
-			drawItemProgress();
+			drawItemInfoInGame();
 		}
 	}
 	else
@@ -141,8 +152,6 @@ void Game::Draw() {
 		EndMode2D();
 		handlePostGameTab();
 	}
-	
-	
 }
 void Game::InputHandle() {
 	int moveX = 0;
@@ -233,7 +242,31 @@ shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
 		break;
 	}
 }
-
+void Game::statChange(shared_ptr<Items> item)
+{
+	lock_guard<mutex> lock(mtx);
+	item->applyEffect(Player.get(), statsChanges);
+	drawStatsChanges = true;
+	newStatsChangeHappened = true;
+}
+void Game::thread_StatsChangesTimer()
+{
+	while (!stopThread)
+	{
+		if (newStatsChangeHappened.exchange(false))
+		{
+			lastStatChangeTime = GetTime();
+		}
+		double currTime = GetTime();
+		if(currTime-lastStatChangeTime>2)
+		{
+			lock_guard<mutex> loct(mtx);
+			statsChanges.clear();
+			drawStatsChanges = false;
+			lastStatChangeTime = currTime;
+		}
+	}
+}
 vector <shared_ptr<Enemy>> Game::CreateEnemy()
 {
 	vector<shared_ptr<Enemy>> enemies;
@@ -311,7 +344,7 @@ void Game::CollisionCheck()
 					++it;
 					continue;
 				}
-				(*it)->applyEffect(Player.get());
+				statChange((*it));
 				if (!dynamic_pointer_cast<HeartContainer>(*it) && !dynamic_pointer_cast<randomStatsItem>(*it))
 				{
 					if (getItemProgressWarden("TearSpeedTrinket", ItemProgressAction::UPDATE_WARDEN))
@@ -406,7 +439,7 @@ void Game::CollisionCheck()
 		}
 	}
 }
-void Game::drawItemProgress()
+void Game::drawItemInfoInGame()
 {
 	for (auto& item : itemProgress)
 	{
@@ -414,7 +447,7 @@ void Game::drawItemProgress()
 		{
 			float y_pos = 200 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 			float gap = 30 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
-			float x_pos = 600 * ScreenSettings::GetInstance().getScreenResolutionFactor().x;
+			float x_pos = 540 * ScreenSettings::GetInstance().getScreenResolutionFactor().x;
 			float biggerFont = 80 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 			float smallerFont = 50 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 			float text_y_pos = 0;

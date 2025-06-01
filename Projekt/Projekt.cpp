@@ -58,7 +58,3 @@ int main()
 	}
 	CloseWindow();
 }
-/*|---TODO-----------------------------------------------------------------------|
-* !!!Dodac info o podnoszonym itemie i o odblokowywanym itemie (z kolorkami jak się uda
-* !!Sprawdzić czy wszystkie wektory itp są usuwane w tych klasach w destruktorach
-*/

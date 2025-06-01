@@ -7,6 +7,8 @@
 #include "Textures.h"
 #include <random>
 #include <map>
+#include <atomic>
+#include <mutex>
 #include <filesystem>
 #include <iostream>
 #include <memory>
@@ -50,12 +52,21 @@ private:
 		string itemDisplayName;
 		string itemDescription;
 	};
+	void statChange(shared_ptr<Items> item);
+	void thread_StatsChangesTimer();
+	map<string, float> statsChanges;
+	bool drawStatsChanges;
+	atomic<bool> newStatsChangeHappened{ false };
+	atomic<bool> stopThread{ false };
+	mutex mtx;
+	thread statsThread;
+	double lastStatChangeTime;
 	void setLastTimePlayerWasTouched();
 	void setPlayerCharacter(int Character);
 	bool itemProgressDrawCountdown;
 	vector<unlockingItems> itemProgress;
 	void updateItemProgress(string itemName, float value, ItemProgressAction action);
-	void drawItemProgress();
+	void drawItemInfoInGame();
 	bool getItemProgressWarden(string itemName, ItemProgressAction wardenType);
 	void setItemProgressWarden(string itemName, bool value, ItemProgressAction wardenType);
 	void tryUnlockItem(string itemName, bool lessThan);

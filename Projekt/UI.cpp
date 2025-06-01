@@ -45,30 +45,42 @@ void GameUI::DrawComments(string comment1, string comment2, Rectangle bar)
 	GameUI::GetInstance().DrawTextOnBar(bar, 62 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, comment1, bar.y + (25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
 	GameUI::GetInstance().DrawTextOnBar(bar, 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, comment2, bar.y + (150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
 }
-void GameUI::DrawStatsUpdate(map<string, float>& upgrades)
-{
-
-}
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
 	DrawRectangleRounded(borders, 0.25, 16, { 0,0,0,opacity });
 	DrawRectangleRoundedLinesEx(borders, 0.25, 16, 10 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, BLACK);
 }
-void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize)
+void GameUI::DrawCharacterStatsInGame(characterStats playerStats, float x_pos, float starting_y_pos, float fontSize, map<string, float>& statsChange, bool drawChanges)
 {
 	vector<string> statsParagraphs;
-	statsParagraphs = {
-		{"Character Stats:"},
-		{"Current Health: " + ConvertToString(playerStats.playerHealth, 0)},
-		{"Max Health: " + ConvertToString(playerStats.maxPlayerHealth, 0)},
-		{"Damage: " + ConvertToString(playerStats.playerDamage,2)},
-		{"Speed: " + ConvertToString(playerStats.playerSpeed, 2)},
-		{"Tear Rate: " + ConvertToString(playerStats.tearRate, 2)},
-		{"Tear Speed: " + ConvertToString(playerStats.tearSpeed, 2)},
-	};
-	for(int i =0;i<statsParagraphs.size();i++)
-	{ 
-		GameUI::GetInstance().DrawTextWithOutline(statsParagraphs[i], {x_pos,starting_y_pos+(fontSize*i)}, fontSize);
+	statsParagraphs.push_back("Character Stats:");
+
+	auto addStatLine = [&](string description, float currentValue,string statName, int precision)
+		{
+			string line = description + ": " + ConvertToString(currentValue, precision);
+			if (drawChanges && !statsChange.empty())
+			{
+				for (auto stats : statsChange)
+				{
+					if (stats.first==statName&&stats.second != 0.0f)
+					{
+						line += " " + ConvertStatToString(stats.second, precision);
+					}
+				}
+			}
+			statsParagraphs.push_back(line);
+		};
+
+	addStatLine("Current Health", playerStats.playerHealth, "Health", 0);
+	addStatLine("Max Health", playerStats.maxPlayerHealth, "MaxHealth", 0);
+	addStatLine("Damage", playerStats.playerDamage, "Damage", 2);
+	addStatLine("Speed", playerStats.playerSpeed, "Speed", 2);
+	addStatLine("Tear Rate", playerStats.tearRate, "TearRate", 2);
+	addStatLine("Tear Speed", playerStats.tearSpeed, "TearSpeed", 2);
+
+	for (int i = 0; i < statsParagraphs.size(); i++)
+	{
+		GameUI::GetInstance().DrawTextWithOutline(statsParagraphs[i], { x_pos, starting_y_pos + (fontSize * i) }, fontSize);
 	}
 }
 void GameUI::DrawCharacterStatsInMenu(int pageNumber, Rectangle bar, float fontSize, float y_position)

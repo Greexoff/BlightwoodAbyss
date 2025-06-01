@@ -460,7 +460,7 @@ void Game::drawItemInfoInGame()
 			GameUI::GetInstance().DrawTextRules(Textbar, biggerFont, item.itemDisplayName, text_y_pos);
 
 			auto& image = LoadingTextures::GetInstance().passCorrectTexture(item.itemName + ".png", textureType::OBJECT_TEXTURE);
-			float imageScale = 5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+			float imageScale = 1.25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 
 			Vector2 imagePos = { (ImageBar.x + ImageBar.width * 0.4f) - (image.width * imageScale * 0.5f), (ImageBar.y + ImageBar.height * 0.5f) - (image.height * imageScale * 0.5f) };
 			DrawTextureEx(image, imagePos, 0, imageScale, WHITE);
@@ -480,11 +480,11 @@ void Game::setItemProgress()
 	float expectedTime_TRT = 10.0;
 	float expectedWave_AT = 50;
 	itemProgress = {
-		{"TearRateTrinket",startingTime,expectedTime_TRT,UnlockMethod::TIME_BASED_UNLOCK,false,	!UserInfo::GetInstance().getUserItemValue("TearRateTrinket"), "TEAR RATE TRINKET", "REDUCES TIME BETWEEN SHOTS BY 0.1"},
-		{"HealthTrinket",startingWave,expectedWave_HT,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("HealthTrinket"), "HEALTH TRINKET", "INCREASES PLAYER'S MAX HEALTH BY 1" },
-		{"SpeedTrinket",startingTime,expectedTime_ST,UnlockMethod::TIME_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("SpeedTrinket"),"SPEED TRINKET", "INCREASES PLAYER'S SPEED BY 1.5" },
-		{"TearSpeedTrinket",startingWave,expectedWave_TST,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"), "TEAR SPEED TRINKET", "INCREASES PLAYER'S TEAR SPEED BY 0.5" },
-		{"AllTrinket",startingWave,expectedWave_AT,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("AllTrinket"), "ULTIMATE TRINKET", "INCREASES EACH PLAYER'S STAT BY 0.5" },
+		{"TearRateTrinket",startingTime,expectedTime_TRT,UnlockMethod::TIME_BASED_UNLOCK,false,	!UserInfo::GetInstance().getUserItemValue("TearRateTrinket"), "RIPPLEGILL", "REDUCES TIME BETWEEN SHOTS BY 0.15"},
+		{"HealthTrinket",startingWave,expectedWave_HT,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("HealthTrinket"), "HEARTHROOT", "INCREASES PLAYER'S MAX HEALTH BY 1" },
+		{"SpeedTrinket",startingTime,expectedTime_ST,UnlockMethod::TIME_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("SpeedTrinket"),"SKYVEIL SPORE", "INCREASES PLAYER'S SPEED BY 1" },
+		{"TearSpeedTrinket",startingWave,expectedWave_TST,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("TearSpeedTrinket"), "BLINKSHROOM", "INCREASES PLAYER'S TEAR SPEED BY 0.5" },
+		{"AllTrinket",startingWave,expectedWave_AT,UnlockMethod::WAVES_BASED_UNLOCK,false,!UserInfo::GetInstance().getUserItemValue("AllTrinket"), "NOCTILUMEN", "INCREASES EACH PLAYER'S STAT BY 0.5" },
 
 	};
 }
@@ -568,7 +568,6 @@ void Game::tryUnlockItem(string itemName,bool lessThan)
 				UserInfo::GetInstance().updateUserItems(TrinketCriteria.itemName, itemUnlocked);
 				setItemProgressWarden(TrinketCriteria.itemName, false, ItemProgressAction::UPDATE_WARDEN);
 				setItemProgressWarden(TrinketCriteria.itemName, true, ItemProgressAction::DISPLAY_WARDEN);
-				cout << "ODBLOKOWANO: " << TrinketCriteria.itemName << endl;
 			}
 		}
 	}
@@ -604,7 +603,7 @@ void Game::threadDisableDisplayWarden(string itemName)
 {
 	if (getItemProgressWarden(itemName, ItemProgressAction::DISPLAY_WARDEN)) {
 		itemProgressDrawCountdown = true;
-		this_thread::sleep_for(chrono::seconds(3));
+		this_thread::sleep_for(chrono::seconds(5));
 		setItemProgressWarden(itemName, false, ItemProgressAction::DISPLAY_WARDEN);
 		itemProgressDrawCountdown = false;
 	}
@@ -739,7 +738,7 @@ void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 		}
 		if (random == 4)
 		{
-			Loot = make_shared<randomStatsItem>(LoadingTextures::GetInstance().passCorrectTexture("HeartContainerTMP.png", textureType::OBJECT_TEXTURE), enemyPos);
+			Loot = make_shared<randomStatsItem>(LoadingTextures::GetInstance().passCorrectTexture("ChaosStone.png", textureType::OBJECT_TEXTURE), enemyPos);
 			items.push_back(Loot);
 		}
 	}

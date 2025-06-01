@@ -8,42 +8,42 @@ Items::~Items()
 }
 DamageTrinket::DamageTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale = 1.1f;
+	imageScale = 0.3f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
 DamageTrinket::~DamageTrinket() {}
 TearRateTrinket::TearRateTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale = 1.1f;
+	imageScale = 0.3f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
 TearRateTrinket::~TearRateTrinket() {}
 SpeedTrinket::SpeedTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale = 1.1f;
+	imageScale = 0.3f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
 SpeedTrinket::~SpeedTrinket() {}
 HealthTrinket::HealthTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale = 1.1f;
+	imageScale = 0.3f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
 HealthTrinket::~HealthTrinket() {}
 TearSpeedTrinket::TearSpeedTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale =1.1f;
+	imageScale =0.3f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
 TearSpeedTrinket::~TearSpeedTrinket() {}
 AllTrinket::AllTrinket(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale = 1.2f;
+	imageScale = 0.3f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
@@ -57,7 +57,7 @@ HeartContainer::HeartContainer(Texture2D& loadedImage, Vector2 enemyPos)
 HeartContainer::~HeartContainer() {}
 randomStatsItem::randomStatsItem(Texture2D& loadedImage, Vector2 enemyPos)
 {
-	imageScale = 0.7f;
+	imageScale = 0.2f;
 	image = &loadedImage;
 	setPosition(enemyPos);
 }
@@ -73,25 +73,25 @@ void Items::setPosition(Vector2 enemyPos)
 }
 Rectangle Items::getItemRect()
 {
-	return {position.x,position.y,(float)image->width,(float)image->height };
+	return {position.x,position.y,(float)image->width*imageScale,(float)image->height*imageScale };
 }
 
 void DamageTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	float damage = 1.5;
+	float damage = 0.5;
 	player->setPlayerDamage(damage);
 	statsChanges["Damage"] = damage;
 }
 void TearRateTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	float tearRate = 0.1;
+	float tearRate = 0.15;
 	player->setPlayerTearRate(tearRate);
 	statsChanges["TearRate"] = -1.0f*tearRate;
 }
 void SpeedTrinket::applyEffect(Character* player, map<string, float>& statsChanges)
 {
-	float speed = 1.5;
-	player->setPlayerSpeed(1.5);
+	float speed = 1;
+	player->setPlayerSpeed(speed);
 	statsChanges["Speed"] = speed;
 }
 void HealthTrinket::applyEffect(Character* player, map<string, float>& statsChanges)

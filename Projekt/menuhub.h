@@ -168,6 +168,7 @@ private:
 		string itemName;
 		vector<string> paragraphs;
 		string textureName;
+		float textureScale;
 	};
 	struct GameInfo
 	{

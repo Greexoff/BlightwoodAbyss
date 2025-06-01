@@ -725,14 +725,14 @@ void RulesMenu::setPagesContent()
 	};
 	ItemsInfoPages =
 	{
-		{"NON-COLLECTIBLE ITEMS","RED HEART", {"RESTORES 1 HEALTH TO THE PLAYER","GAP","EVERY ENEMY HAS A 10% CHANCE OF DROPPING THIS ITEM"},"HeartContainer.png"},
-		{"NON-COLLECTIBLE ITEMS","CHAOS STONE", {"RANDOMLY INCREASES/DECREASES PLAYER'S STATS","GAP","EVERY ENEMY HAS A 10% CHANCE OF DROPPING THIS ITEM"},"HeartContainerTMP.png"},//tu zmienic nazwe pnga
-		{"COLLECTIBLE ITEMS","DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5","GAP","HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png"},
-		{"COLLECTIBLE ITEMS","HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1","GAP","HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png"},
-		{"COLLECTIBLE ITEMS","SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5" ,"GAP","HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png"},
-		{"COLLECTIBLE ITEMS","TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.1","GAP","HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png"},
-		{"COLLECTIBLE ITEMS","TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png"},
-		{"COLLECTIBLE ITEMS","ULTIMATE TRINKET",{"INCREASES EACH","PLAYER'S STAT BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 50 WAVES"}, "AllTrinket.png"},
+		{"NON-COLLECTIBLE ITEMS","RED HEART", {"RESTORES 1 HEALTH TO THE PLAYER","GAP","EVERY ENEMY HAS A 10% CHANCE OF DROPPING THIS ITEM"},"HeartContainer.png",4.4},
+		{"NON-COLLECTIBLE ITEMS","CHAOS STONE", {"RANDOMLY INCREASES/DECREASES PLAYER'S STATS","GAP","EVERY ENEMY HAS A 10% CHANCE OF DROPPING THIS ITEM"},"ChaosStone.png",1.2},
+		{"COLLECTIBLE ITEMS","EMBERCAP BLOOM",{"INCREASES PLAYER'S DAMAGE BY 0.5","GAP","HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png",1.5},
+		{"COLLECTIBLE ITEMS","HEARTHROOT FUNGUS",{"INCREASES PLAYER'S MAX HEALTH BY 1","GAP","HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png",1.5},
+		{"COLLECTIBLE ITEMS","SKYVEIL SPORE",{"INCREASES PLAYER'S SPEED BY 1" ,"GAP","HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png",1.5},
+		{"COLLECTIBLE ITEMS","RIPPLEGILL",{"REDUCES TIME BETWEEN SHOTS BY 0.15","GAP","HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png",1.5},
+		{"COLLECTIBLE ITEMS","BLINKSHROOM",{"INCREASES PLAYER'S TEAR SPEED BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png",1.5},
+		{"COLLECTIBLE ITEMS","NOCTILUMEN",{"INCREASES EACH","PLAYER'S STAT BY 0.5","GAP","HOW TO UNLOCK:", "SURVIVE 50 WAVES"}, "AllTrinket.png",1.5},
 	};
 }
 void RulesMenu::Draw()
@@ -816,10 +816,9 @@ void RulesMenu::DrawRules(int page)
 	if (page > EnemyInfoLimit && page <= ItemsInfoLimit)
 	{
 		auto& ItemsPage = ItemsInfoPages[page - EnemyInfoLimit - 1];
-
+		textureScale= ItemsPage.textureScale* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		GameUI::GetInstance().DrawTextRules(GameInfoBar, biggerFont, ItemsPage.title, y_pos);
 		y_pos += 25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
-		textureScale=4.5 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 		auto& itemTexture = LoadingTextures::GetInstance().passCorrectTexture(ItemsPage.textureName, textureType::OBJECT_TEXTURE);
 		Vector2 itemPos = { (imagesBar.x + imagesBar.width * 0.6f) - (itemTexture.width * textureScale * 0.5f),(imagesBar.y + imagesBar.height * 0.5f) - (itemTexture.height * textureScale * 0.5f) };
 		DrawTextureEx(itemTexture, itemPos, 0, textureScale, WHITE);
@@ -845,7 +844,7 @@ void UnlockedItemsMenu::Draw()
 }
 void UnlockedItemsMenu::DrawPage(int Page)
 {
-	float textureScale = 4* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
+	float textureScale = 1.15* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	float y_pos = ItemsInfoBar.y + (20 * ScreenSettings::GetInstance().getScreenResolutionFactor().y);
 	float addGap = 30* ScreenSettings::GetInstance().getScreenResolutionFactor().y;
 	float smallerFont = 60 * ScreenSettings::GetInstance().getScreenResolutionFactor().y;
@@ -893,12 +892,12 @@ void UnlockedItemsMenu::setPageContent()
 {
 	ItemsInfoPages =
 	{
-		{"DAMAGE TRINKET",{"INCREASES PLAYER'S DAMAGE BY 1.5"},{"HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png","DamageTrinket"},
-		{"HEALTH TRINKET",{"INCREASES PLAYER'S MAX HEALTH BY 1"},{"HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png","HealthTrinket"},
-		{"SPEED TRINKET",{"INCREASES PLAYER'S SPEED BY 1.5"},{"HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png","SpeedTrinket"},
-		{"TEAR RATE TRINKET",{"REDUCES TIME BETWEEN SHOTS BY 0.1"},{"HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png" ,"TearRateTrinket"},
-		{"TEAR SPEED TRINKET",{"INCREASES PLAYER'S TEAR SPEED BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png","TearSpeedTrinket"},
-		{"ULTIMATE TRINKET",{"INCREASES EACH PLAYER'S STAT BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 50 WAVES"}, "AllTrinket.png", "AllTrinket"},
+		{"EMBERCAP BLOOM",{"INCREASES PLAYER'S DAMAGE BY 0.5"},{"HOW TO UNLOCK:","ITEM AVAIABLE RIGHT AWAY!"}, "DamageTrinket.png","DamageTrinket"},
+		{"HEARTHROOT",{"INCREASES PLAYER'S MAX HEALTH BY 1"},{"HOW TO UNLOCK:","SURVIVE 10 WAVES WITHOUT TAKING ANY DAMAGE"}, "HealthTrinket.png","HealthTrinket"},
+		{"SKYVEIL SPORE",{"INCREASES PLAYER'S SPEED BY 1"},{"HOW TO UNLOCK:","LAST 30 SECONDS DURING A BOSS FIGHT"}, "SpeedTrinket.png","SpeedTrinket"},
+		{"RIPPLEGILL",{"REDUCES TIME BETWEEN SHOTS BY 0.15"},{"HOW TO UNLOCK:", "DEFEAT FIRST WAVE WITHIN 10 SECONDS"}, "TearRateTrinket.png" ,"TearRateTrinket"},
+		{"BLINKSHROOM",{"INCREASES PLAYER'S TEAR SPEED BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 15 WAVES WITHOUT PICKING ANY ITEM"}, "TearSpeedTrinket.png","TearSpeedTrinket"},
+		{"NOCTILUMEN",{"INCREASES EACH PLAYER'S STAT BY 0.5"},{"HOW TO UNLOCK:", "SURVIVE 50 WAVES"}, "AllTrinket.png", "AllTrinket"},
 	};
 }
 MenuResult UnlockedItemsMenu::handleMenuLogic()

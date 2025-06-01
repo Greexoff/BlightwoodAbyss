@@ -45,6 +45,10 @@ void GameUI::DrawComments(string comment1, string comment2, Rectangle bar)
 	GameUI::GetInstance().DrawTextOnBar(bar, 62 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, comment1, bar.y + (25 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
 	GameUI::GetInstance().DrawTextOnBar(bar, 40 * ScreenSettings::GetInstance().getScreenResolutionFactor().y, comment2, bar.y + (150 * ScreenSettings::GetInstance().getScreenResolutionFactor().y));
 }
+void GameUI::DrawStatsUpdate(map<string, float>& upgrades)
+{
+
+}
 void GameUI::DrawBlackBar(Rectangle borders, unsigned char opacity)
 {
 	DrawRectangleRounded(borders, 0.25, 16, { 0,0,0,opacity });

@@ -5,15 +5,15 @@
 
 using namespace std;
 
-Game::Game() {
+Game::Game(int CharacterType) {
 	minMapLimit = ScreenSettings::GetInstance().getMinMapLimit();
 	maxMapLimit = ScreenSettings::GetInstance().getMaxMapLimit();
+	setLastTimePlayerWasTouched();
+	setPlayerCharacter(CharacterType);
 	setItemProgress();
 	amountofEnemies = 5;
 	waveNumber = 1;
-	enemyShootingGap = 1.5;
 	enemyHittingGap = 1;
-	lastTearFired = 0.0;
 	breakTime = 3;
 	lastTimePlayerWasTouched = 0.0;	
 	isCreatingNewWave = false;
@@ -208,6 +208,7 @@ shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
 	string textureName = "Enemy" + to_string(type) + ".png";
 	Texture2D& texture = LoadingTextures::GetInstance().passCorrectTexture(textureName, textureType::OBJECT_TEXTURE);
 	Vector2 position = getRandomPosition(texture);
+	position = getRandomPosition(texture);
 	switch (type) {
 	case 1:
 		return make_shared<Monster1>(position, texture);
@@ -232,12 +233,13 @@ shared_ptr<Enemy> Game::createEnemyBasedOnType(int type)
 		break;
 	}
 }
+
 vector <shared_ptr<Enemy>> Game::CreateEnemy()
 {
 	vector<shared_ptr<Enemy>> enemies;
 	random_device rd;
 	mt19937 gen(rd());
-	if (waveNumber % 5 == 0)
+	if (waveNumber % 5 == 0 && waveNumber<50)
 	{
 		uniform_int_distribution<int> typeDistribBosses(5,6);
 		int type = typeDistribBosses(gen);
@@ -250,6 +252,7 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 	}
 	int poolOfEnemiesTypes = 3;
 	int amountOfMiniBoss = 0;
+	int amountOfBoss = 0;
 
 	for (int i = 0; i < amountofEnemies; ++i) {
 		if (waveNumber >= 5 && amountOfMiniBoss == 0)
@@ -260,11 +263,19 @@ vector <shared_ptr<Enemy>> Game::CreateEnemy()
 		{
 			poolOfEnemiesTypes = 3;
 		}
+		if (waveNumber >= 50 && amountOfBoss <1)
+		{
+			poolOfEnemiesTypes = 6;
+		}
 		uniform_int_distribution<int> typeDistribEnemies(1, poolOfEnemiesTypes);
 		int type = typeDistribEnemies(gen);
 		if (type == 4)
 		{
 			amountOfMiniBoss++;
+		}
+		if (type == 5 || type == 6)
+		{
+			amountOfBoss++;
 		}
 		enemies.push_back(createEnemyBasedOnType(type));
 	}
@@ -279,23 +290,10 @@ void Game::MoveEnemies()
 void Game::EnemyShootTears()
 {
 	if (!enemies.empty()) {
-		if (GetTime() - lastTearFired >= enemyShootingGap)
+		for (auto it = enemies.begin(); it != enemies.end();)
 		{
-			int randomInd = GetRandomValue(0, enemies.size() - 1);
-			shared_ptr <Enemy> enem = enemies[randomInd];
-			if (auto monsterPtr = dynamic_pointer_cast<Monster3>(enem))
-			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyShootingPosition(2.8,2.8), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy3Tear.png", textureType::OBJECT_TEXTURE)));
-			}
-			if (auto monsterPtr = dynamic_pointer_cast<Monster4>(enem))
-			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyShootingPosition(4.1,3.8), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy4Tear.png", textureType::OBJECT_TEXTURE)));
-			}
-			if (auto monsterPtr = dynamic_pointer_cast<Monster5>(enem))
-			{
-				EnemyTears.push_back(enemyTears(monsterPtr->getEnemyShootingPosition(4.5,4.25), enem->getEnemyAttackSpeed(), Player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture("Enemy5Tear.png", textureType::OBJECT_TEXTURE)));
-			}
-			lastTearFired = GetTime();
+			(*it)->shootTears(EnemyTears, Player.get());
+			++it;
 		}
 	}
 
@@ -314,7 +312,6 @@ void Game::CollisionCheck()
 					continue;
 				}
 				(*it)->applyEffect(Player.get());
-				//TUTAJ TEZ TA MEDOTA DO DRAW CALE TE (TE DRAWITEMPROGRES ZAMIENIC TAK ZEBY DZIALALO DLA JEDNEGO I DRUGIEGO, TYLKO PRZY WYWOLANIU ZROBIC JAKIEGOS CONST STRINGA KTORY ZMIENIA ZE JEST ABLO UNLOCKED ALBO PICKED UP ITEM)
 				if (!dynamic_pointer_cast<HeartContainer>(*it) && !dynamic_pointer_cast<randomStatsItem>(*it))
 				{
 					if (getItemProgressWarden("TearSpeedTrinket", ItemProgressAction::UPDATE_WARDEN))
@@ -342,7 +339,7 @@ void Game::CollisionCheck()
 					if ((*it)->getEnemyHealth() <= 0)
 					{
 						increasePlayerTotalScore((*it)->getEnemyScore());
-						createRandomLoot((*it)->getEnemyPosition(), waveNumber % 5 == 0);
+						createRandomLoot((*it)->getEnemyPosition(), waveNumber % 5 == 0 && waveNumber<50);
 						it = enemies.erase(it);
 					}
 					else
@@ -607,9 +604,13 @@ void Game::beginNewWave()
 			}
 		}
 	}
-	if (amountofEnemies < 30)
+	if (amountofEnemies < 25)
 	{
 		amountofEnemies++;
+	}
+	if (waveNumber%50==0)
+	{
+		amountofEnemies = 5;
 	}
 	proceedCreatingEnemies = true;
 	isCreatingNewWave = false;
@@ -703,7 +704,7 @@ void Game::createRandomLoot(Vector2 enemyPos, bool condition)
 			Loot = make_shared<HeartContainer>(LoadingTextures::GetInstance().passCorrectTexture("HeartContainer.png", textureType::OBJECT_TEXTURE), enemyPos);
 			items.push_back(Loot);
 		}
-		if (random % 5 == 0)
+		if (random == 4)
 		{
 			Loot = make_shared<randomStatsItem>(LoadingTextures::GetInstance().passCorrectTexture("HeartContainerTMP.png", textureType::OBJECT_TEXTURE), enemyPos);
 			items.push_back(Loot);
@@ -722,7 +723,7 @@ void Game::DrawCountdownToNewWave()
 {
 	double remainingTime =breakTime-(int)(GetTime()- breakStartingTime);
 	string information = "NEW WAVE BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
-	if (waveNumber % 5 == 0)
+	if (waveNumber % 5 == 0 && waveNumber<=50)
 	{
 		information = "BOSS FIGHT BEGINS IN: " + GameUI::GetInstance().ConvertToString((float)remainingTime, 0);
 	}

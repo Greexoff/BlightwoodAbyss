@@ -8,10 +8,13 @@ Enemy::~Enemy()
 }
 Monster1::Monster1(Vector2 position, Texture2D& loadedImage)//Tank
 {
+
 	enemyName = "Monster1";
 	image = &loadedImage;
 	this->position = position;
 	loadEnemyStats();
+	enemyShootingPos = { 0,0 };
+	generateDelayOnShooting();
 }
 Monster1::~Monster1() {}
 
@@ -21,6 +24,8 @@ Monster2::Monster2(Vector2 position, Texture2D& loadedImage)//Szybki
 	image = &loadedImage;
 	this->position = position;
 	loadEnemyStats();
+	enemyShootingPos = { 0,0 };
+	generateDelayOnShooting();
 }
 Monster2::~Monster2() {}
 
@@ -30,6 +35,8 @@ Monster3::Monster3(Vector2 position, Texture2D& loadedImage)//Strzelajacy
 	image = &loadedImage;
 	this->position = position;
 	loadEnemyStats();
+	enemyShootingPos = {2.8,2.8};
+	generateDelayOnShooting();
 }
 Monster3::~Monster3() {}
 
@@ -39,6 +46,8 @@ Monster4::Monster4(Vector2 position, Texture2D& loadedImage)//Strzelajacy Mini-B
 	image = &loadedImage;
 	this->position = position;
 	loadEnemyStats();
+	enemyShootingPos = {4.1,3.8};
+	generateDelayOnShooting();
 }
 Monster4::~Monster4() {}
 
@@ -48,17 +57,23 @@ Monster5::Monster5(Vector2 position, Texture2D& loadedImage)//Boss
 	image = &loadedImage;
 	this->position = position;
 	loadEnemyStats();
+	enemyShootingPos = { 4.5,4.25 };
+	minShootingDelay = 0.15;
+	maxShootingDelay = 0.5;
+	generateDelayOnShooting();
 }
 Monster5::~Monster5() {}
 Monster6::Monster6(Vector2 position, Texture2D& loadedImage)//Boss
 {
-	teleportDistance = 350;
 	timeBetweenTeleport = 2.5f;
 	lastTeleportTime = GetTime();
 	enemyName = "Monster6";
 	image = &loadedImage;
 	this->position = position;
 	loadEnemyStats();
+	enemyShootingPos = { 2.0,5.75 };
+	teleportBackoff = (image->width * stats.imageScale) + 70;
+	generateDelayOnShooting();
 }
 Monster6::~Monster6() {}
 //|---------------------------------------------------------------------------------------|
@@ -88,6 +103,23 @@ void Enemy::Update(Vector2 PlayerPosition) {
 	position.y = ScreenSettings::GetInstance().Clamp(position.y, minLimit.y - (enemyHeight * 0.5), maxLimit.y - enemyHeight);
 	
 }	
+void Enemy::shootTears(vector<enemyTears>& enemTears, Character* player)
+{
+	float currTime = GetTime();
+	if (stats.enemyAttackRate!=0 && currTime - lastTearFiredTime >= stats.enemyAttackRate + nextShootDelay)
+	{
+		enemTears.push_back(enemyTears(getEnemyShootingPosition(), getEnemyAttackSpeed(), player->GetXYPlayerPoint(), LoadingTextures::GetInstance().passCorrectTexture( stats.tearTextureName + ".png", textureType::OBJECT_TEXTURE)));
+		lastTearFiredTime = currTime;
+		generateDelayOnShooting();
+	}
+}
+void Enemy::generateDelayOnShooting()
+{
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_real_distribution<float> delayDistrib(minShootingDelay, maxShootingDelay);
+	nextShootDelay = delayDistrib(gen);
+}
 void Enemy::UpdateColl(Vector2 Direction)
 {
 	position.x += stats.enemySpeed *Direction.x;
@@ -167,9 +199,9 @@ int Enemy::getEnemyScore()
 	return stats.enemyScore;
 }
 
-Vector2 Enemy::getEnemyShootingPosition(float divideX, float divideY)
+Vector2 Enemy::getEnemyShootingPosition()
 {
-	return { position.x+(image->width* stats.imageScale /divideX *stats.imageScale),position.y+(image->height* stats.imageScale /divideY* stats.imageScale) };
+	return { position.x+(image->width* stats.imageScale /enemyShootingPos.x *stats.imageScale),position.y+(image->height* stats.imageScale / enemyShootingPos.y * stats.imageScale) };
 }
 Vector2 Enemy::getEnemyPosition()
 {
@@ -199,8 +231,8 @@ void Monster6::Update(Vector2 PlayerPosition) {
 	position.y += dir.y * stats.enemySpeed;
 	if (GetTime() - lastTeleportTime >= timeBetweenTeleport)
 	{
-		position.x += dir.x * teleportDistance;
-		position.y += dir.y * teleportDistance;
+		position.x = PlayerPosition.x- (image->width * stats.imageScale*0.5) +dir.x * teleportBackoff;
+		position.y = PlayerPosition.y - (image->height * stats.imageScale*0.5) +dir.y * teleportBackoff;
 		lastTeleportTime = GetTime();
 	}
 

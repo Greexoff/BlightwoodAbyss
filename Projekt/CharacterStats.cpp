@@ -49,7 +49,7 @@ void CharactersData::LoadEnemyStats() {
     {
         return;
     }
-    regex r(R"((\w+):\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+))");
+    regex r(R"((\w+):\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\d\.]+)\s+([\w\.]+))");
     string line;
     smatch match;
 
@@ -59,9 +59,11 @@ void CharactersData::LoadEnemyStats() {
             stats.enemyHealth = stof(match[2]);
             stats.maxEnemyHealth = stof(match[3]);
             stats.enemySpeed = stof(match[4]);
-            stats.enemyAttackSpeed = stof(match[5]);
-            stats.enemyScore = stof(match[6]);
-            stats.imageScale = stof(match[7]);
+            stats.enemyAttackRate = stof(match[5]);
+            stats.enemyAttackSpeed = stof(match[6]);
+            stats.enemyScore = stof(match[7]);
+            stats.imageScale = stof(match[8]);
+            stats.tearTextureName = match[9];
             EnemyStats[match[1]] = stats;
         }
     }

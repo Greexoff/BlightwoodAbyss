@@ -29,15 +29,13 @@ enum class ItemProgressAction
 };
 class Game {
 public:
-	Game();
+	Game(int CharacterType);
 	~Game();
 	void Draw();
 	void Update();
 	void DrawBackground();
 	void InputHandle();
 	int playerTotalScore;
-	void setPlayerCharacter(int Character);
-	void setLastTimePlayerWasTouched();
 	int getWaveNumber();
 	bool isPostTabClosed();
 private:
@@ -52,6 +50,8 @@ private:
 		string itemDisplayName;
 		string itemDescription;
 	};
+	void setLastTimePlayerWasTouched();
+	void setPlayerCharacter(int Character);
 	bool itemProgressDrawCountdown;
 	vector<unlockingItems> itemProgress;
 	void updateItemProgress(string itemName, float value, ItemProgressAction action);
@@ -80,9 +80,7 @@ private:
 	void MoveEnemies();
 	vector<enemyTears>EnemyTears;
 	void EnemyShootTears();
-	double enemyShootingGap;
 	double enemyHittingGap;
-	double lastTearFired;
 	double lastTimePlayerWasTouched;
 	vector<shared_ptr<Items>> items;
 	void CollisionCheck();

@@ -3,7 +3,11 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <random>
 #include "screenSettings.h"
+#include "tears.h"
+#include "typ.h"
+#include "Textures.h"
 import CharacterStats;
 
 
@@ -14,6 +18,7 @@ public:
 	virtual void Update(Vector2 PlayerPosition);
 	virtual void Draw();
 	virtual void DrawEnemyHealthBar();
+	virtual void shootTears(vector<enemyTears>& enemTears, Character* player);
 	virtual ~Enemy();
 	virtual Rectangle getEnemyRect();
 	virtual void UpdateColl(Vector2 Direction);
@@ -23,14 +28,19 @@ public:
 	virtual float getEnemySpeed();
 	virtual int getEnemyAttackSpeed();
 	virtual int getEnemyScore();
-	virtual Vector2 getEnemyShootingPosition(float divideX, float divideY);
+	virtual Vector2 getEnemyShootingPosition();
 	virtual Vector2 getEnemyPosition();
 	virtual void loadEnemyStats();
 protected:
+	void generateDelayOnShooting();
 	Texture2D* image=nullptr;
 	Vector2 position;
 	enemyStats stats;
 	string enemyName;
+	double lastTearFiredTime=GetTime();
+	Vector2 enemyShootingPos;
+	float minShootingDelay=0.1, maxShootingDelay=8;
+	float nextShootDelay;
 private:
 };
 class Monster1 : public Enemy
@@ -79,6 +89,6 @@ public:
 	~Monster6();
 	void Update(Vector2 PlayerPosition) override;
 private:
-	float teleportDistance;
+	float teleportBackoff;
 	float timeBetweenTeleport, lastTeleportTime;
 };

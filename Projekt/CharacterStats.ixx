@@ -22,9 +22,11 @@ export struct enemyStats
     float enemyHealth;
     float maxEnemyHealth;
     float enemySpeed;
+    float enemyAttackRate;
     float enemyAttackSpeed;
     float enemyScore;
     float imageScale;
+    string tearTextureName;
 };
  
 export class CharactersData

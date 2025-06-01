@@ -32,6 +32,7 @@ public:
 	void DrawData(string& name, Rectangle bar, float& fontSize);//LOGIN_MENU: Wyświetla dane wpisywane przez uzytkownika
 	void DrawError(string information, Rectangle bar);//LOGIN_MENU: Wyświetla komunikaty błędów podczas logowania/tworzenia konta
 	void DrawComments(string comment1, string comment2, Rectangle Bar);
+	void DrawStatsUpdate(map<string, float>& upgrades);
 	void DrawEnemyStatsInMenu(string enemyName, Rectangle bar, float fontSize, float y_position);
 	void DrawGameUI(const string& text, float fontSize, float y_pos);//GAME: Wyświetla Wave+waveNumber oraz Score+score wysrodkowane wzgledem srodka ekranu
 	string CreateTextWithLeadingZerosGameUI(int number, int amountOfZeros, const string& text);//GENERAL:: Tworzy tekst wraz z liczbą z poprzedzającymi zerami np. 001234

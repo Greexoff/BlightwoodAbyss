@@ -1,2 +1,2 @@
 Username, Password, Highest Score: 000000, AllTrinket: 0, DamageTrinket: 1, HealthTrinket: 0, SpeedTrinket: 0, TearRateTrinket: 0, TearSpeedTrinket: 0,
-Greexoff, Beka3, Highest Score: 029700, AllTrinket: 1, DamageTrinket: 0, HealthTrinket: 0, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 0, 
+Greexoff, Beka3, Highest Score: 099200, AllTrinket: 1, DamageTrinket: 1, HealthTrinket: 1, SpeedTrinket: 1, TearRateTrinket: 1, TearSpeedTrinket: 1, 

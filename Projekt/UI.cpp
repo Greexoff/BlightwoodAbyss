@@ -278,6 +278,17 @@ string GameUI::ConvertToString(float number, int prec)
 	text << fixed << setprecision(prec) << number;
 	return text.str();
 }
+string GameUI::ConvertStatToString(float number, int prec)
+{
+	string addPlus = "";
+	if (number >= 0)
+	{
+		addPlus = "+";
+	}
+	ostringstream text;
+	text << addPlus << fixed << setprecision(prec) << number;
+	return text.str();
+}
 vector<string> GameUI::DivideTextIntoParts(const string& text, float fontSize, float maxWidth)
 {
 	vector<string> result;
@@ -332,16 +343,6 @@ Rectangle GameUI::setBarArea(float fontSize, string text, Vector2 textPosition, 
 		return{ 0,0,0,0 };
 		break;
 	}
-}
-Vector2 GameUI::MeasureTextBar(float& fontSize, string text)
-{
-	Vector2 measurements = MeasureTextEx(*font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
-	while (measurements.x + 30 > GetScreenWidth() || measurements.y + 30 > GetScreenHeight())
-	{
-		fontSize -= 1;
-		measurements = MeasureTextEx(*font, text.c_str(), fontSize, (int)((fontSize / 20.0) + 0.5));
-	}
-	return measurements;
 }
 Vector2 GameUI::MeasureText(float fontSize, string text)
 {

@@ -75,8 +75,8 @@ public:
 	StartingMenu();
 	~StartingMenu();
 private:
-	string titleName;//przechowanie nazwy gry
-	float titleFontSize;//przechowanie rozmiaru czcionki
+	string titleName;
+	float titleFontSize;
 };
 class LoginMenu : public Menu
 {
@@ -84,33 +84,31 @@ public:
 	LoginMenu();
 	~LoginMenu();
 
-	MenuResult handleMenuLogic() override;//Metoda wykonujaca odpowiednie dzialanie w zaleznosci od wybranej opcji
-	void Draw() override;//Metoda wyswietlajaca informacje na ekranie
+	MenuResult handleMenuLogic() override;
+	void Draw() override;
 private:
-	//|-----Zmienne------------------------------------------------------------------------------------------|
 	string username, password;
-	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea, ReturnButtonArea; //przechowanie prostokatow przyciskow
-	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition, ReturnPosition;//przechowanie pozycji x i y przyciskow
-	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize, ReturnButtonFontSize;// przechowanie rozmiaru czcionki poszczegolnych elementow
-	bool isSignupAreaActive;//zmienna do sprawdzenia czy wyswietla sie przycisk SignUp
+	Rectangle LoginMenu_ConfirmArea, LoginMenu_UsernameBarArea, LoginMenu_PasswordBarArea, LoginMenu_SingupArea, ReturnButtonArea; 
+	Vector2 ConfirmPosition, UsernamePosition, PasswordPosition, SignupPosition, ReturnPosition;
+	float UsernameTextFontSize, PasswordTextFontSize, ConfirmTextFontSize, SignupTextFontSize, InsertedDataFontSize, ReturnButtonFontSize;
+	bool isSignupAreaActive;
 	bool userExist;
-	int error;//zmienna do przechowywania typu bledu, ktory nalezy wyswietlic
-	enum errorType {NO_ERROR, REGEX_ERROR, PASSWORD_ERROR, USERNAME_ERROR, IN_USE_ERROR };//typy bledow
-	atomic<bool> showError;//zmienna, ktora aktywuje wyswietlanie bledu jezeli taki istnieje
-	long long errorDurationTime;//zmienna przechowujaca dlugosc wyswietlania bledu na ekranie
-	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };//typ przycisnietego przycisku
+	int error;
+	enum errorType {NO_ERROR, REGEX_ERROR, PASSWORD_ERROR, USERNAME_ERROR, IN_USE_ERROR };
+	atomic<bool> showError;
+	long long errorDurationTime;
+	enum Pressed { NOTHING, CONFIRM_BUTTON, USERNAME_BAR, PASSWORD_BAR, SIGNUP_BAR };
 	int setAction;
-	//|-----Metody-------------------------------------------------------------------------------------------|
-	void setFontSizes();//Ustawianie rozmiaru czcionek poszczegolnych napisow
-	void setBarAreas();//Ustawianie rozmiarow poszczegolnych napisow
-	void showLoginError();//Metoda pod wątek wyświetlania błędów - ustawia wyświetlanie błędu na ekranie na określony czas
-	void insertData(string& name, string type);//Ustawianie wartosci dla zmiennych username/password 
-	void ChooseErrorType();//Ustawianie napisu, który zostanie wyświetlony i wywolanie funkcji rysujacej na ekranie
-	bool checkIsLoginCorrect();//Sprawdzanie czy kryteria (regex) username/password są spelnione 
-	int isButtonClicked();//Sprawdzanie, czy któryś z przycisków został wciśnięty
-	bool checkIsPlayerInDataBase();//Sprawdzanie, czy użytkownik znajduje się w DataBase
-	void addPlayerToDataBase();//Dodawanie nowo stworzonego konta gracza, do DataBase
-	void clearUsernameandPassword();//Czyszczenie zmiennych username/password, w momencie kiedy przycisnieto SignUp
+	void setFontSizes();
+	void setBarAreas();
+	void showLoginError();
+	void insertData(string& name, string type);
+	void ChooseErrorType();
+	bool checkIsLoginCorrect();
+	int isButtonClicked();
+	bool checkIsPlayerInDataBase();
+	void addPlayerToDataBase();
+	void clearUsernameandPassword();
 	
 };
 class MainMenu : public Menu
@@ -118,39 +116,35 @@ class MainMenu : public Menu
 public:
 	MainMenu();
 	~MainMenu();
-	MenuResult handleMenuLogic() override;//Ustawianie kolejnego etapu programu
-	void Draw() override;//Metoda wyswietalajaca informacje na ekranie
+	MenuResult handleMenuLogic() override;
+	void Draw() override;
 private:
-	//|---Zmienne------------------------------------------------------------------------------------|
-	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };//typy przyciskow
+	enum Pressed { NOTHING, NEWGAME_BUTTON, RULES_BUTTON, UNLOCKED_BUTTON, SCORE_BUTTON, EXIT_BUTTON };
 	float buttonsFontSize, baseButtonsFontSize;
-	map<string, ButtonData>Buttons;//Mapa przyciskow - nazwy, rectangle i position (ButtonData)
-	vector<string> ButtonNames;//Vector przechowujacy nazwy przyciskow
+	map<string, ButtonData>Buttons;
+	vector<string> ButtonNames;
 	int setAction;
-	//|---Metody-------------------------------------------------------------------------------------|
-	void setButtonsPosition();//Ustawianie pozycji przyciskow na ekranie
-	int isButtonClicked();//Sprawdzanie, ktory przycisk zostal wcisniety
+	void setButtonsPosition();
+	int isButtonClicked();
 };
 class CharacterSelectionMenu : public Menu
 {
 public:
 	CharacterSelectionMenu();
 	~CharacterSelectionMenu();
-	int getPageNumber();//Metoda zwracajaca numer aktualnej strony (czyli ktora postac jest aktualnie wybrana)
+	int getPageNumber();
 	MenuResult handleMenuLogic() override;
-	void Draw() override;//Metoda wyświetlająca na ekranie
+	void Draw() override;
 private:
-	//|---Zmienne---------------------------------------------------------------------------------|
 	enum CommentType{NOTHING, SWITCH_CHARACTER, SELECT_CHARACTER, STATS_CHARACTER, RETURN_BUTTON};
-	Rectangle ArrowArea, ConfirmArea, CharacterInformationArea, ReturnArea;//Przechowanie polozen przyciskow, ktore wykonuja dane funkcje (+wyswietlaja informacje)
-	Rectangle SmallerCommentsBar, BiggerCommentsBar;//Przechowanie rozmiarow tla na ktorym wyswietlane sa comments (bigger dla statystyk postaci)
-	int pageNumber;//Przechowanie strony na której jest gracz (czyli identyfikacja, która postać jest wybrana)
-	int leftSidePageLimit;//Przechowanie limitu lewostronnego
-	int rightSidePageLimit;//Przechowanie limitu prawostronnego
+	Rectangle ArrowArea, ConfirmArea, CharacterInformationArea, ReturnArea;
+	Rectangle SmallerCommentsBar, BiggerCommentsBar;
+	int pageNumber;
+	int leftSidePageLimit;
+	int rightSidePageLimit;
 	float textureScale;
-	//|---Metody----------------------------------------------------------------------------------|
-	void DrawComments(CommentType type);//Metoda wyświetlająca wlasciwe informacje w zaleznosci od typu komentarza
-	void chooseExplanationType();//Metoda wybierajaca typ komentarza na podstawie polozenia kursora
+	void DrawComments(CommentType type);
+	void chooseExplanationType();
 	void DrawPlayerCharacterImage();
 	void setAreas();
 };

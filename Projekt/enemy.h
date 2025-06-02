@@ -2,7 +2,6 @@
 #include "raylib.h"
 #include <string>
 #include <vector>
-#include <cmath>
 #include <random>
 #include "screenSettings.h"
 #include "tears.h"

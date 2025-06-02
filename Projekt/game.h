@@ -36,11 +36,11 @@ public:
 	void Draw();
 	void Update();
 	void DrawBackground();
-	void InputHandle();
-	int playerTotalScore;
 	int getWaveNumber();
 	bool isPostTabClosed();
 private:
+	int playerTotalScore;
+	void InputHandle();
 	struct unlockingItems
 	{
 		string itemName;

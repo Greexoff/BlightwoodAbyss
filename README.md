@@ -25,13 +25,13 @@ Blightwood Abyss is 2D Survival Mode game where the player faces endless waves o
 ---
 
 ### Gameplay & Visuals
-* **User Registration** The build-in system allows players to create local accounts or sign in to already existing account. ![](Documentation/Images/Log-in.jpg)
-* **Main Menu** The central navigation hub providing access to the core game, rules, collection and the highest score leaderboards. ![](Documentation/Images/MainMenu.jpg)
-* **Game Rules & Bestiary** A guide that explains core mechanics and provides detailed stats for every monster, character and item. ![](Documentation/Images/GameRules.jpg)
-* **Collection** A dedicated menu for tracking unlocked items, including specific hints on how to obtain currently locked content. ![](Documentation/Images/Unlockables.jpg)
-* **Gameplay Loop** Core gameplay loop with basic wave of enemies. ![](Documentation/Images/GameplayLoop.jpg)
-* **Boss Fight** Special fight with powerful bosses with unique abilities. ![](Documentation/Images/BossFight.jpg)
-* **Dropped Loot** Randomized items that drop after defeating enemies. ![](Documentation/Images/ItemDropped.jpg)
+* **User Registration:** The build-in system allows players to create local accounts or sign in to already existing account. ![](Documentation/Images/Log-in.jpg)
+* **Main Menu:** The central navigation hub providing access to the core game, rules, collection and the highest score leaderboards. ![](Documentation/Images/MainMenu.jpg)
+* **Game Rules & Bestiary:** A guide that explains core mechanics and provides detailed stats for every monster, character and item. ![](Documentation/Images/GameRules.jpg)
+* **Collection:** A dedicated menu for tracking unlocked items, including specific hints on how to obtain currently locked content. ![](Documentation/Images/Unlockables.jpg)
+* **Gameplay Loop:** Core gameplay loop with basic wave of enemies. ![](Documentation/Images/GameplayLoop.jpg)
+* **Boss Fight:** Special fight with powerful bosses with unique abilities. ![](Documentation/Images/BossFight.jpg)
+* **Dropped Loot:** Randomized items that drop after defeating enemies. ![](Documentation/Images/ItemDropped.jpg)
 
 *\*Background assets were generated using AI tools, while character and entity models are custom-edited sprites based on original assets from The Binding of Issac.*
 

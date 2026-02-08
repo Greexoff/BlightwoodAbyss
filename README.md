@@ -1,18 +1,18 @@
 # Blightwood Abyss - Survival Game
 
-### Overview
+## Overview
 Blightwood Abyss is 2D Survival Mode game where the player faces endless waves of enemies in a closed arena. The project focuses on high replayablility through a system of random loot, character progression, and unlockable items. The player's main objective is to survive as long as possible and achieve highest possible score.
 
 ---
 
-### Tech Stack
+## Technology Stack
 * **Language:** C++20
 * **Graphics Library:** Raylib
-* **Environment:** Visual Studio
+* **Development Environment:** Visual Studio
 
 ---
 
-### Core Features
+## Core Features
 * **Wave System:** Survival against increasingly numerous waves of monsters.
 * **Tears Combat System:** Player eliminate enemies by shooting projectiles called tears.
 * **Boss Fights:** Every 5th wave, player face one of two bosses with high health and unique attack patterns.
@@ -24,7 +24,7 @@ Blightwood Abyss is 2D Survival Mode game where the player faces endless waves o
 
 ---
 
-### Gameplay & Visuals
+## Gameplay & Visuals
 * **User Registration:** The build-in system allows players to create local accounts or sign in to already existing account. ![](Documentation/Images/Log-in.jpg)
 * **Main Menu:** The central navigation hub providing access to the core game, rules, collection and the highest score leaderboards. ![](Documentation/Images/MainMenu.jpg)
 * **Game Rules & Bestiary:** A guide that explains core mechanics and provides detailed stats for every monster, character and item. ![](Documentation/Images/GameRules.jpg)
@@ -37,7 +37,7 @@ Blightwood Abyss is 2D Survival Mode game where the player faces endless waves o
 
 ---
 
-### Documentation
+## Documentation
 
 Full technical documentation is available in Polish and provides an in-depth look at the project's engineering process. Documentation includes:
 * **Project Specification:** Detailed game design goals, requirements, and technology overview.

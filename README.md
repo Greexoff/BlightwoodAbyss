@@ -6,7 +6,7 @@ Blightwood Abyss is 2D Survival Mode game where the player faces endless waves o
 ---
 
 ### Tech Stack
-* **Language:** C++21
+* **Language:** C++20
 * **Graphics Library:** Raylib
 * **Environment:** Visual Studio
 
